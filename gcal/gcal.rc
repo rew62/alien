@@ -1,0 +1,44 @@
+-- gcal.rc - Conky config that renders the gcalcli calendar widget
+-- v1.0 2026-04-04 @rew62
+
+conky.config = {
+    -- ── window ──────────────────────────────────────────────────────────────
+    alignment          = 'top_right',
+    gap_x              = 20,
+    gap_y              = 60,
+    minimum_width      = 420,
+    maximum_width      = 420,
+    minimum_height     = 920,
+
+    -- ── look ────────────────────────────────────────────────────────────────
+    own_window         = true,
+    own_window_type    = 'normal',       -- sits on the wallpaper
+    own_window_title   = 'gcal',
+    own_window_hints   = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_argb_visual = true,
+    own_window_argb_value  = 0,           -- fully transparent background
+
+    double_buffer      = true,
+    draw_shades        = false,
+    draw_outline       = false,
+    draw_borders       = false,
+
+    -- ── fonts & colors (fallback text; lua handles the real rendering) ──────
+    use_xft            = true,
+    font               = 'Ubuntu:size=10',
+    default_color      = 'aaccff',
+    default_shade_color = '000000',
+
+    -- ── timing ───────────────────────────────────────────────────────────────
+    update_interval    = 600,             -- refresh every 5 minutes
+    total_run_times    = 0,
+
+    -- ── lua ──────────────────────────────────────────────────────────────────
+    lua_load = './settings.lua ./loadall.lua',
+    lua_draw_hook_post = 'main',
+    lua_startup_hook = 'vars',
+}
+
+-- All drawing is done by Lua.
+conky.text = [[
+]]

@@ -1,0 +1,38 @@
+-- rss2.rc - RSS viewer widget (variant 2)
+-- v1.1 2026-04-09 @rew62
+
+conky.config = {
+    update_interval = 1,
+    double_buffer = true,
+
+    own_window = true,
+    own_window_type = 'normal',
+    own_window_title = 'rss',
+    own_window_transparent = true,
+    own_window_argb_visual = true,
+    own_window_argb_value = 0,
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+
+    alignment = 'top_right',
+    gap_x = 20,
+    gap_y = 1250,
+
+    minimum_width = 420,
+    maximum_width = 420,
+
+    use_xft = true,
+    --font = 'DejaVu Sans:size=8',
+    --font = 'Archivo Narrow:size=10',
+    font = 'Barlow Condensed:size=10',
+    default_color = 'white',
+
+    -- lua load
+    lua_load = './settings.lua ./loadall.lua',
+    lua_draw_hook_post = 'main',
+    lua_startup_hook = 'startup',
+};
+
+conky.text = [[
+${voffset 10}${execp cat /dev/shm/rss/rss.txt}
+#${voffset 10}${cat /dev/shm/rss/rss.txt | sed 's/▶/${font Noto Sans Symbols:size=10}▶${font}/g' }
+]];

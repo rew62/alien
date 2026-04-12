@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+SESSION="conky"
+PANES_PER_WINDOW=4
+
+# --- Resolve base directory of this script ---
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# --- Code → "dir|rcfile" map (single source of truth) ---
+declare -A MAP
+
+MAP[c]="calendar|hcal2.rc"
+MAP[s]="calendar|sys-small.rc"
+MAP[a]="arc|arc2.rc"
+MAP[g]="gcal|gcal.rc"
+MAP[t]="clock|clock.rc"
+MAP[m]="clock|song-info.rc"
+MAP[wc]="weather|current.rc"
+MAP[dc]="weather|forecast.rc"
+MAP[v]="vnstat|vnstat.rc"
+MAP[r]="rss|rss2.rc"
+MAP[e]="earth|earth-standalone.rc"
+
+# --- Input check ---
+if [ "$#" -eq 0 ]; then
+    echo "Usage: $0 [codes...]"
+    exit 1
+fi
+
+# --- Optional bracket parsing ---
+if [[ "$1" =~ ^\[.*\]$ ]]; then
+    args=$(echo "$1" | tr -d '[]' | tr ',' ' ')
+    set -- $args
+fi
+
+# --- Remove duplicates ---
+declare -A SEEN
+FILTERED=()
+
+for code in "$@"; do
+    if [[ -z "${SEEN[$code]}" ]]; then
+        SEEN[$code]=1
+        FILTERED+=("$code")
+    fi
+done
+
+win=0
+pane=0
+
+for code in "${FILTERED[@]}"; do
+
+    entry="${MAP[$code]}"
+
+    # --- Ignore invalid codes ---
+    if [ -z "$entry" ]; then
+        echo "Skipping unknown code: $code"
+        continue
+    fi
+
+    dir="${entry%%|*}"
+    rc="${entry##*|}"
+
+    full_dir="$BASE_DIR/$dir"
+    full_rc="$full_dir/$rc"
+
+    # --- Validation checks ---
+    if [ ! -d "$full_dir" ]; then
+        echo "Skipping $code → directory not found: $full_dir"
+        continue
+    fi
+
+    if [ ! -f "$full_rc" ]; then
+        echo "Skipping $code → rc file not found: $full_rc"
+        continue
+    fi
+
+    cmd="conky -c $rc"
+
+    # --- New window every N panes ---
+    if (( pane == 0 )); then
+        # Create session with the first entry's working directory
+        tmux new-session -d -s "$SESSION" -n "Conky-1" -c "$full_dir"
+        tmux send-keys -t "$SESSION:0.0" "$cmd" C-m
+    elif (( pane % PANES_PER_WINDOW == 0 )); then
+        ((win++))
+        tmux new-window -t "$SESSION:$win" -n "Conky-$((win+1))" -c "$full_dir"
+        tmux send-keys -t "$SESSION:$win.0" "$cmd" C-m
+    else
+        tmux split-window -t "$SESSION:$win" -c "$full_dir"
+        tmux select-layout -t "$SESSION:$win" tiled
+        tmux send-keys -t "$SESSION:$win" "$cmd" C-m
+    fi
+
+    ((pane++))
+done
+
+# --- Final layout cleanup ---
+for ((i=0; i<=win; i++)); do
+    tmux select-layout -t "$SESSION:$i" tiled
+done
+
+tmux attach-session -t "$SESSION"

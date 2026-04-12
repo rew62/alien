@@ -1,0 +1,66 @@
+-- sys-small.rc - Single Line Conky System Monitor
+-- v1.0 2026-04-02 @rew62
+
+conky.config = {
+    -- Window / positioning
+    alignment          = 'top_middle',
+    gap_x              = 0,
+    gap_y              = 160,
+
+    -- Transparent background
+    own_window         = true,
+    own_window_type    = 'normal',
+    own_window_title   = 'sys-small',
+    own_window_hints   = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    draw_shades        = false,
+    draw_outline       = false,
+    draw_borders       = false,
+    own_window_transparent = true,
+    own_window_argb_visual = true,
+    own_window_argb_value  = 0,          -- 0 = fully transparent
+    own_window_colour  = '#000000',
+
+    -- No borders / decorations
+    draw_borders       = false,
+    draw_graph_borders = false,
+    border_width       = 0,
+
+    -- Rendering
+    double_buffer      = true,
+    --no_buffers       = true,
+    update_interval    = 0.5,
+    short_units        = true,
+    cpu_avg_samples    = 2,
+    use_xft            = true,
+
+    -- Fonts
+    font               = 'FiraCode Nerd Font:size=10',
+    font2              = 'SpaceMono Nerd Font:size=18',
+    override_utf8_locale = true,
+
+    -- Colors
+    default_color      = 'white',
+    color1             = 'f5d080',       -- values / totals (bright)
+    color2             = '60c888',       -- RX (green)
+    color3             = 'e07050',       -- TX (red-orange)
+    color4             = '8a6030',       -- dimmed / comments
+    color5             = 'a06828',       -- tree lines
+    color6             = 'f0c070',       -- section headers
+
+    -- Templates
+    template1          = "wlp2s0",       -- LAN interface name
+
+    -- Lua Load 
+    lua_load = './settings.lua ./fmt.lua',
+    lua_startup_hook = 'vars',
+}
+
+conky.text = [[
+${font2}${color green} ${font}${voffset -5}${color cyan} Uptime: ${color white}${uptime_short}${color yellow} | ${color cyan} 󰘚 RAM: ${color white}${lua conky_fmtpct memperc}% ${color yellow}|${color cyan}  CPU: ${color white}${lua conky_fmtpct cpu cpu0}% ${color yellow}| ${color cyan} 󰋊 FS:${color white} ${fs_used /} / ${fs_size /} ${color #99ff33}(${fs_used_perc /}%) \
+${color yellow}|${color cyan} 󰀂 WiFi: ${color white}${if_up ${template1}}${addr ${template1}} ${color yellow}[ ${color white}${color cyan} ${color white}${color green}󰕒 ${lua conky_fmtspeed ${template1} up} KB/s${color red}  󰇚 ${lua conky_fmtspeed ${template1} down} KB/s${color yellow}  ]${else}down${endif}
+#${alignc}${time %H:%M:%S}
+#${voffset -10}${alignc}${font Roboto:style=Medium:size=12}${time %A, %B %d %Y}${font}
+#${voffset -10}${alignc}${font Roboto:style=Meduim:size=20}RAM: ${lua conky_fmtpct memperc}% | CPU: ${lua conky_fmtpct cpu cpu0}% | Uptime: ${uptime_short}${font}
+#${voffset 3}${alignc}${font Roboto:style=Medium:size=12}${if_match "${execi 5 playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null}" != ""}Now Playing: ${color #1ed760}${execi 5 playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null}${font}${endif}
+
+]];

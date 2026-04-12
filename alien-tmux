@@ -1,0 +1,40 @@
+#!/bin/bash
+SESSION="conky"
+
+# --- Window 1: 4 Panes (Scripts 1-4) ---
+# Start session with Window 1 named "Main" running Script 1
+tmux new-session -d -s $SESSION -n "Conky-1" -c "calendar" 'conky -c hcal2.rc'
+
+# Split into 4 panes and run scripts 2, 3, and 4
+tmux split-window -t $SESSION:0 -h -c "calendar" 'conky -c sys-small.rc'
+tmux split-window -t $SESSION:0 -v -c "arc" 'conky -c arc.rc'
+tmux split-window -t $SESSION:0 -v -c "gcal" 'conky -c gcal.rc'
+tmux select-layout -t $SESSION:0 tiled
+tmux select-pane -t $SESSION:0.0
+
+# --- Window 2: 2 Panes (Scripts 5-6) ---
+# Create Window 2 named "Secondary" running Script 5
+tmux new-window -t $SESSION:1 -n "Conky-2" -c "clock" 'conky -c clock.rc'
+tmux split-window -t $SESSION:1 -h -c "clock" 'conky -c song-info.rc'
+tmux split-window -t $SESSION:1 -v -c "weather" 'conky -c forecast.rc'
+tmux split-window -t $SESSION:1 -v -c "" 
+tmux select-layout -t $SESSION:1 tiled
+tmux select-pane -t $SESSION:1.0
+
+
+tmux new-window -t $SESSION:2 -n "Conky-3" -c "vnstat" 'conky -c vnstat.rc'
+tmux split-window -t $SESSION:2 -h -c "rss" 'conky -c rss.rc'
+tmux split-window -t $SESSION:2 -v -c "earth" 'conky -c earth.rc'
+tmux split-window -t $SESSION:2 -v -c "." 
+tmux select-layout -t $SESSION:2 tiled
+tmux select-pane -t $SESSION:2.3
+
+
+
+
+# Split into 2 panes and run Script 6
+#tmux select-layout -t $SESSION:1 even-horizontal
+
+# Attach to the session
+tmux attach-session -t $SESSION
+

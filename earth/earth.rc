@@ -1,0 +1,47 @@
+-- earth.rc - alien display a larger earth in the middle of the screen
+-- v1 01 2026-04-11 @rew62
+
+conky.config = {
+    double_buffer = true,				-- Use the Xdbe extension? (eliminates flicker) 
+    no_buffers = true,				-- Subtract (file system) buffers from used memory? 
+    text_buffer_size = 2048,			-- size of buffer for display of content of large variables - default 256
+    update_interval = 10,				-- update interval
+    imlib_cache_size = 0,                       	-- disable image cache to get a new spotify cover per song
+    
+    --Placement
+    alignment = 'top_middle',			-- top-left,top-middle,top-right,bottom-left,bottom-middle,bottom-right,
+    						-- middle-left,middle-middle,middle-right,none
+    gap_x = 0,					-- pixels between right or left border
+    gap_y = 600,					-- pixels between bottom or left border
+    minimum_height = 180,				-- minimum height of window
+    minimum_width = 300,				-- minimum height of window
+    maximum_width = 300,				-- maximum height of window
+    
+    override_utf8_locale = true,			-- force UTF8 requires xft
+    short_units = true,				-- shorten units from KiB to k
+    use_xft = true,				-- xft font - anti-aliased font
+    xftalpha = 1,					-- alpha of the xft font - between 0-1
+    
+    --Windows
+    
+    own_window = true,				-- create your own window to draw
+    own_window_class = 'Conky',			-- manually set the WM_CLASS name for use with xprop
+    own_window_colour = 'FFFFFF',			-- set colour if own_window_transparent no
+    own_window_hints = 'undecorated,below,above,sticky,skip_taskbar,skip_pager',  -- if own_window true - just hints - own_window_type sets it
+    own_window_transparent = true,		-- True/False. If own_window_argb_visual is true sets background opacity 0%
+    own_window_type = 'normal',			-- if own_window true options are: normal/override/dock/desktop/panel
+    own_window_title = 'earth',
+  
+    --Colors
+    default_color = '8FBC8F',
+
+    --lua load
+    lua_load = './settings.lua ./loadall.lua',
+    lua_draw_hook_post = 'main',
+    lua_startup_hook = 'vars',
+};
+
+conky.text = [[
+${image /dev/shm/earth.png -p 5,15 -s 290x290}
+${voffset 265}${alignr 5}${font MonaspiceNe Nerd Font Mono:size=8}${execi 10 date -r /dev/shm/earth.png "+%-m/%-d/%Y %-I:%M%p" | sed 's/AM/a/;s/PM/p/'}
+]]

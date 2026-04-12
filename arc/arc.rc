@@ -1,0 +1,55 @@
+-- arc.rc - horizon arc & planets & sun/moon & sunrise/sunset times & Icons & current weather.
+-- portions of this code adapted from gtex62-clean-suite/weather.conky.conf widget by @gtex62, with modifications.
+-- v1.0 2026-04-02 @rew62
+
+local HOME        = os.getenv("HOME") or ""
+local DIR         = os.getenv("CONKY_ARC_DIR") or (HOME .. "/.conky/alien/arc")
+local ALIEN_DIR   = os.getenv("ALIEN_DIR")     or (HOME .. "/.conky/alien")
+local XDG         = os.getenv("XDG_CACHE_HOME") or "/dev/shm"
+local CACHE_DIR   = os.getenv("CONKY_CACHE_DIR") or (XDG .. "/conky")
+local CURRENT_PNG = CACHE_DIR .. "/icons/current.png"
+local FETCH_SH    = ALIEN_DIR .. "/scripts/owm_fetch.sh"
+
+conky.config = {
+  alignment              = 'top_middle',
+  background             = false,
+  double_buffer          = true,
+  imlib_cache_size       = 0,
+  update_interval        = 10,
+
+  use_xft                = true,
+  font                   = 'DejaVu Sans Mono:size=10',
+
+  own_window             = true,
+  own_window_title       = 'conky-arc',
+  own_window_type        = 'normal',
+  own_window_hints       = 'undecorated,sticky,skip_taskbar,skip_pager,below',
+  own_window_argb_visual = true,
+  own_window_argb_value  = 0,
+  own_window_transparent = true,
+  own_window_class       = 'Conky',
+
+  gap_x                  = 0,
+  gap_y                  = 190,
+
+  --minimum_width          = 640,
+  minimum_width          = 570,
+  minimum_height         = 280,
+
+  draw_shades            = false,
+  draw_borders           = false,
+  default_color          = 'FFFFFF',
+  color1                 = 'A0A0A0',
+
+  lua_draw_hook_pre      = 'owm_draw_horizon',
+  lua_load               = DIR .. '/arc3.lua ./settings.lua',
+  lua_startup_hook = 'vars',
+}
+
+conky.text = [[
+${execi 120 ]] .. FETCH_SH .. [[}
+${execi  60 python3 ]] .. DIR .. [[/sky_update.py}
+${goto 250}${voffset 36}${color cyan}${font Metropolis:size=12}${lua_parse owm city}${font}${color}
+${lua_parse owm draw_horizon}
+${lua_parse owm_sun_labels}
+]]

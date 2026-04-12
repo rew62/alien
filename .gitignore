@@ -1,0 +1,8 @@
+.env
+*.env
+*.hold
+.claude
+*.dev*
+**/dev/
+**/.cache/
+!.env-example

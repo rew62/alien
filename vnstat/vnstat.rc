@@ -1,0 +1,55 @@
+-- vnstat.rc - vnstat network statistics conky widget
+-- v1.0 2026-04-04 @rew62
+
+conky.config = {
+    -- Window / positioning
+    alignment          = 'middle_left',
+    gap_x              = 20,
+    gap_y              = 0,
+    minimum_width      = 420,
+    maximum_width      = 420,
+
+    -- Transparent background
+    own_window         = true,
+    own_window_type    = 'normal',
+    own_window_title   = 'vnstat',
+    own_window_hints   = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_argb_visual = true,
+    own_window_argb_value  = 0,          -- 0 = fully transparent
+    own_window_colour  = '#000000',
+
+    -- No borders / decorations
+    draw_borders       = false,
+    draw_graph_borders = false,
+    border_width       = 0,
+
+    -- Rendering
+    double_buffer      = true,
+    no_buffers         = true,
+    update_interval    = 60,             -- refresh every 60 s
+    cpu_avg_samples    = 2,
+    use_xft            = true,
+
+    -- Font (monospace is essential for alignment)
+    font               = 'Monospace:size=9',
+    override_utf8_locale = true,
+
+    -- Colors
+    default_color      = 'e8a84a',
+    color1             = 'f5d080',       -- values / totals (bright)
+    color2             = '60c888',       -- RX (green)
+    color3             = 'e07050',       -- TX (red-orange)
+    color4             = '8a6030',       -- dimmed / comments
+    color5             = 'a06828',       -- tree lines
+    color6             = 'f0c070',       -- section headers
+
+    -- Lua script
+    lua_load = './settings.lua ./loadall.lua',
+    lua_draw_hook_post = 'main',
+    lua_startup_hook = 'vars',
+}
+
+conky.text = [[
+
+${lua_parse draw_vnstat}
+]]

@@ -1,0 +1,86 @@
+-- sidepanel-calendar.rc - alien sidepanel calendar widget
+-- v1 01 2026-03-17 @rew62
+ 
+conky.config = {
+    -- Window settings
+    alignment = 'top_right',
+    gap_x = 15,
+    gap_y = 50,
+    minimum_width = 200,
+    minimum_height = 150,
+    -- Appearance
+    own_window = true,
+    own_window_type = 'normal',
+    own_window_title = 'sp-cal',
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_argb_visual = true,
+    own_window_argb_value = 0,
+    own_window_colour = '000000',
+    double_buffer = true,
+    draw_shades = false,
+    draw_outline = false,
+    draw_borders = false,
+
+    -- Font defaults
+    use_xft = true,
+    font = 'DejaVu Sans:size=10',
+    override_utf8_locale = true,
+
+    font = 'Ubuntu Mono',
+    font1 = 'Fira Code:size=10',
+    font2 = 'Fira Code:bold:size=10',
+    font4 = 'Liberation Sans:size=11',
+    font5 = 'IBM Plex Mono:size=11',
+    font6 = 'Noto Sans:size=12',
+    font7 = 'DejaVu Sans:size=11',
+  
+    default_color = '8FBC8F',
+    color1 = '98FB98',  -- PaleGreen
+    color2 = '2E8B57',  -- SeaGreen
+    color3 = 'ADFF2F',  -- GreenYellow
+    color4 = 'ECF0F1',  -- white
+    color5 = 'F0E68C',  -- khaki1
+    color6 = '006400',  
+    color7 = 'FFD500',  -- Ukraine Yellow
+    color8 = '005BBB',  -- Ukraine Blue
+
+    -- Updates
+    update_interval = 60,
+    total_run_times = 0,
+
+    -- Lua
+    lua_load = './settings.lua ./loadall.lua',
+    lua_draw_hook_pre = 'main',
+    lua_startup_hook = 'vars',
+};
+
+conky.text = [[
+# Day of week header (S M T W T F S)
+${voffset 15}${alignc}${font DejaVu Sans:size=14:weight=light}\
+${if_match ${time %u}==7}${font DejaVu Sans:size=14:weight=bold}${color4}S${font DejaVu Sans:size=14:weight=light}${else}${color2}S${endif}  \
+${if_match ${time %u}==1}${font DejaVu Sans:size=14:weight=bold}${color4}M${font DejaVu Sans:size=14:weight=light}${else}${color2}M${endif}  \
+${if_match ${time %u}==2}${font DejaVu Sans:size=14:weight=bold}${color4}T${font DejaVu Sans:size=14:weight=light}${else}${color2}T${endif}  \
+${if_match ${time %u}==3}${font DejaVu Sans:size=14:weight=bold}${color4}W${font DejaVu Sans:size=14:weight=light}${else}${color2}W${endif}  \
+${if_match ${time %u}==4}${font DejaVu Sans:size=14:weight=bold}${color4}T${font DejaVu Sans:size=14:weight=light}${else}${color2}T${endif}  \
+${if_match ${time %u}==5}${font DejaVu Sans:size=14:weight=bold}${color4}F${font DejaVu Sans:size=14:weight=light}${else}${color2}F${endif}  \
+${if_match ${time %u}==6}${font DejaVu Sans:size=14:weight=bold}${color4}S${font DejaVu Sans:size=14:weight=light}${else}${color2}S${endif}
+# Large date number
+${voffset 3}${alignc}${font Metropolis:size=56:weight=light}${color3}${time %d}
+${voffset -115}
+# Month name in script/elegant font
+${alignc}${font Good Times:size=20}\
+${if_match ${time %m}==01}${color E57373}${endif}\
+${if_match ${time %m}==02}${color F06292}${endif}\
+${if_match ${time %m}==03}${color BA68C8}${endif}\
+${if_match ${time %m}==04}${color 9575CD}${endif}\
+${if_match ${time %m}==05}${color 7986CB}${endif}\
+${if_match ${time %m}==06}${color 64B5F6}${endif}\
+${if_match ${time %m}==07}${color 4DD0E1}${endif}\
+${if_match ${time %m}==08}${color 4DB6AC}${endif}\
+${if_match ${time %m}==09}${color 81C784}${endif}\
+${if_match ${time %m}==10}${color AED581}${endif}\
+${if_match ${time %m}==11}${color FFB74D}${endif}\
+${if_match ${time %m}==12}${color A1887F}${endif}\
+${time %B}
+# Two numbers at bottom (you can customize these)
+${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color1}${time %H} ${color5}|${color1} ${time %M}]]

@@ -150,10 +150,13 @@ This will:
 │   ├── loadall.lua
 │   └── settings.lua
 │
-├── fonts/
-│   ├── Inter_Tight/
-│   ├── Orbitron/
-│   └── Oxanium/
+├── fonts
+│   ├── BarlowCondensed-Regular.ttf
+│   ├── Good Times Rg.otf
+│   ├── Metropolis Black.ttf
+│   ├── Orbitron
+│   └── Oxanium
+
 │
 ├── gcal/
 │   ├── gcal.rc                 - Google Calendar month-view via gcalcli (Lua rendered)
@@ -289,7 +292,9 @@ Nerd Fonts: <https://www.nerdfonts.com/>
 
 ## Credits
 
-* **gtex62** — Original Arc / planets widget that inspired and formed the foundation of the enhanced Arc implementation
+* **github/@gtex62** — Original Author of  gtex62-clean-suite - Arc widget inspired and formed the foundation of the enhanced Arc implementation
+* **github/@wim66** — Original Author of background.lua, lua3-bars.lua
+* **allcombined2.lua** - Origional Lua Scripting: Mr Peachy, Modified/Maintained by: Fehlix (MX Linux Team), MX Linux Conky Collection
 * **Aurora Set** — Source of the Earth Viewer component rew62/aurora
 
 ---

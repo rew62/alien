@@ -9,17 +9,22 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # --- Code → "dir|rcfile" map (single source of truth) ---
 declare -A MAP
 
-MAP[c]="calendar|hcal2.rc"
+MAP[a]="arc|arc.rc"
+MAP[hc]="calendar|hcal.rc"
+MAP[h2]="calendar|hcal2.rc"
+MAP[lc]="calendar|lcalendar.rc"
+MAP[kc]="calendar|kcalendar.rc"
+MAP[sc]="calendar|sidepanel-calendar.rc"
 MAP[s]="calendar|sys-small.rc"
-MAP[a]="arc|arc2.rc"
-MAP[g]="gcal|gcal.rc"
 MAP[t]="clock|clock.rc"
 MAP[m]="clock|song-info.rc"
-MAP[wc]="weather|current.rc"
-MAP[dc]="weather|forecast.rc"
-MAP[v]="vnstat|vnstat.rc"
+MAP[e]="earth|earth.rc"
+MAP[g]="gcal|gcal.rc"
 MAP[r]="rss|rss2.rc"
-MAP[e]="earth|earth-standalone.rc"
+MAP[v]="vnstat|vnstat.rc"
+MAP[wc]="weather|current.rc"
+MAP[wf]="weather|forecast.rc"
+MAP[wa]="weather|full.rc"
 
 # --- Input check ---
 if [ "$#" -eq 0 ]; then

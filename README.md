@@ -181,6 +181,9 @@ This will:
 │   ├── json.lua
 │   ├── loadall.lua
 │   └── lua3-bars.lua
+├── utils
+│   ├── rc
+│   └── save-pos.sh
 │
 ├── vnstat/
 │   ├── vnstat.rc               - vnstat network bandwidth history (daily / monthly)
@@ -203,28 +206,35 @@ This will:
 ```
 
 
+## Utilities
 
-## Window Reference
+* **`save-pos.sh`** — Calculates the current position of all running conkys. Using alt+mouse drag, relocate conkys to your desired position and in a separate terminal window run `save-pos.sh`. The script can also be run on individual windows using the keys below.
 
-| Key | Window Title | RC File |
-|---|---|---|
-| `rss` | `rss` | `rss/rss.rc` |
-| `sys-small` | `sys-small` | `calendar/sys-small.rc` |
-| `current` | `w-current` | `weather/current.rc` |
-| `forecast` | `w-forecast` | `weather/forecast.rc` |
-| `full` | `w-full` | `weather/full.rc` |
-| `song-info` | `song-info` | `clock/song-info.rc` |
-| `clock` | `conky_clock` | `clock/clock.rc` |
-| `vnstat` | `vnstat` | `vnstat/vnstat.rc` |
-| `hcal2` | `hcal2` | `calendar/hcal2.rc` |
-| `hcal` | `hcal` | `calendar/hcal.rc` |
-| `arc` | `conky-arc` | `arc/arc.rc` |
-| `sp-cal` | `sp-cal` | `calendar/sidepanel-calendar.rc` |
-| `khal-cal` | `khal-cal` | `calendar/kcalendar.rc` |
-| `ac-cal` | `ac-cal` | `calendar/lcalendar.rc` |
-| `earth` | `earth` | `earth/earth.rc` |
-| `gcal` | `gcal` | `gcal/gcal.rc` |
+  > **Note:** Each conky redraws at its next update interval. Widgets with long intervals
+  > (such as calendar scripts) should be restarted after repositioning to reflect the change immediately.
 
+  **Window Reference** — keys used to target individual windows:
+
+  | Key | Window Title | RC File |
+  |---|---|---|
+  | `rss` | `rss` | `rss/rss.rc` |
+  | `sys-small` | `sys-small` | `calendar/sys-small.rc` |
+  | `current` | `w-current` | `weather/current.rc` |
+  | `forecast` | `w-forecast` | `weather/forecast.rc` |
+  | `full` | `w-full` | `weather/full.rc` |
+  | `song-info` | `song-info` | `clock/song-info.rc` |
+  | `clock` | `conky_clock` | `clock/clock.rc` |
+  | `vnstat` | `vnstat` | `vnstat/vnstat.rc` |
+  | `hcal2` | `hcal2` | `calendar/hcal2.rc` |
+  | `hcal` | `hcal` | `calendar/hcal.rc` |
+  | `arc` | `conky-arc` | `arc/arc.rc` |
+  | `sp-cal` | `sp-cal` | `calendar/sidepanel-calendar.rc` |
+  | `khal-cal` | `khal-cal` | `calendar/kcalendar.rc` |
+  | `ac-cal` | `ac-cal` | `calendar/lcalendar.rc` |
+  | `earth` | `earth` | `earth/earth.rc` |
+  | `gcal` | `gcal` | `gcal/gcal.rc` |
+
+* **`rc`** — Place in your `~/bin` or any directory on `PATH`. Run any conky script with `rc conky`, saving keystrokes. Useful for launching individual conkys quickly.
 
 ---
 
@@ -292,11 +302,9 @@ Nerd Fonts: <https://www.nerdfonts.com/>
 
 ## Credits
 
-* **github/@gtex62** — Original Author of  gtex62-clean-suite - Arc widget inspired and formed the foundation of the enhanced Arc implementation
+* **github/@gtex62** — Original Author of gtex62-clean-suite - weather widget formed the foundation of the enhanced Arc implementation
 * **github/@wim66** — Original Author of background.lua, lua3-bars.lua
-* **allcombined2.lua** - Origional Lua Scripting: Mr Peachy, Modified/Maintained by: Fehlix (MX Linux Team), MX Linux Conky Collection
-* **Aurora Set** — Source of the Earth Viewer component rew62/aurora
+* **allcombined2.lua** - Origional Lua Scripting: Mr Peachy, Modified/Maintained by: github/@Fehlix (MX Linux Team), MX Linux Conky Collection
+* **Aurora Set** — Source of the Earth Viewer component github @rew62/aurora
 
 ---
-
-

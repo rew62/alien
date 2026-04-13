@@ -1,0 +1,68 @@
+#!/bin/bash
+# rc - run conky rc files from current directory
+# usage:
+#   rc             -> auto-select if one .rc, menu if multiple
+#   rc name        -> runs name.rc
+#   rc name.rc     -> runs name.rc
+
+CONFIG_DIR="$(pwd)"
+
+# Ensure *.rc expands to nothing if no matches
+shopt -s nullglob
+
+RC_FILES=("$CONFIG_DIR"/*.rc)
+
+# No .rc files found
+if [[ ${#RC_FILES[@]} -eq 0 ]]; then
+    printf "\e[1;31mNo .rc files in %s\e[0m\n" "$CONFIG_DIR"
+    exit 1
+fi
+
+# If argument provided
+if [[ -n "$1" ]]; then
+    # Append .rc only if not already present
+    if [[ "$1" == *.rc ]]; then
+        FULL_PATH="$CONFIG_DIR/$1"
+    else
+        FULL_PATH="$CONFIG_DIR/$1.rc"
+    fi
+
+    if [[ ! -f "$FULL_PATH" ]]; then
+        printf "\e[1;31mError: %s not found.\e[0m\n" "$FULL_PATH"
+        exit 1
+    fi
+
+else
+    # No argument: auto or select
+    if [[ ${#RC_FILES[@]} -eq 1 ]]; then
+        FULL_PATH="${RC_FILES[0]}"
+    else
+        if command -v fzf >/dev/null 2>&1; then
+            FULL_PATH=$(printf "%s\n" "${RC_FILES[@]}" | fzf --prompt="Select a conky rc: ")
+        else
+            echo "Select a conky rc file to run:"
+            select FILE in "${RC_FILES[@]}"; do
+                [[ -n "$FILE" ]] && { FULL_PATH="$FILE"; break; }
+                printf "\e[1;31mInvalid selection.\e[0m\n"
+            done
+        fi
+
+        # Handle cancel / empty selection
+        if [[ -z "$FULL_PATH" ]]; then
+            printf "\e[1;31mNo file selected.\e[0m\n"
+            exit 1
+        fi
+    fi
+fi
+
+# Final safety check
+if [[ ! -f "$FULL_PATH" ]]; then
+    printf "\e[1;31mNo valid .rc selected.\e[0m\n"
+    exit 1
+fi
+
+# Bold green output (reliable via printf)
+printf "\e[1;32mRunning Conky with: %s\e[0m\n" "$(basename "$FULL_PATH")"
+
+# Run conky
+exec conky -c "$FULL_PATH"

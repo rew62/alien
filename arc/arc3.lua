@@ -430,23 +430,37 @@ end
 
 local function draw_moon_marker(cr, cx, cy, r, ARC_START, ARC_END)
   cairo_save(cr)
-  local rise_ts = read_sky_num("MOON_RISE_TS")
-  local set_ts  = read_sky_num("MOON_SET_TS")
-  if rise_ts and set_ts then
-    local now = os.time()
-    if now >= rise_ts and now <= set_ts then
-      local p     = clamp01((now - rise_ts) / math.max(1, set_ts - rise_ts))
-      local span  = arc_span(ARC_START, ARC_END)
-      local theta = (ARC_END + p * span) % 360
-      local mx, my = pt_on_arc(cx, cy, r, theta)
-      local M = CFG.weather_markers.moon
-      cairo_set_line_width(cr, M.stroke)
-      cairo_set_source_rgba(cr, M.color[1], M.color[2], M.color[3], M.color[4])
-      cairo_arc(cr, mx, my, M.diameter/2, 0, 2*math.pi)
-      cairo_stroke(cr)
-      cairo_new_path(cr)
-    end
+  -- Use azimuth-based MOON_THETA (same approach as planets) for accurate
+  -- position. MOON_THETA is only written by sky_update.py when ALT > 0,
+  -- so its presence implicitly gates drawing to when the moon is up.
+  local theta = read_sky_num("MOON_THETA")
+  if theta and on_visible_arc(theta, ARC_START, ARC_END) then
+    local mx, my = pt_on_arc(cx, cy, r, theta)
+    local M = CFG.weather_markers.moon
+    cairo_set_line_width(cr, M.stroke)
+    cairo_set_source_rgba(cr, M.color[1], M.color[2], M.color[3], M.color[4])
+    cairo_arc(cr, mx, my, M.diameter/2, 0, 2*math.pi)
+    cairo_stroke(cr)
+    cairo_new_path(cr)
   end
+  -- [old: time-based interpolation — inaccurate when moon rises/sets off E/W]
+  -- local rise_ts = read_sky_num("MOON_RISE_TS")
+  -- local set_ts  = read_sky_num("MOON_SET_TS")
+  -- if rise_ts and set_ts then
+  --   local now = os.time()
+  --   if now >= rise_ts and now <= set_ts then
+  --     local p     = clamp01((now - rise_ts) / math.max(1, set_ts - rise_ts))
+  --     local span  = arc_span(ARC_START, ARC_END)
+  --     local theta = (ARC_END + p * span) % 360
+  --     local mx, my = pt_on_arc(cx, cy, r, theta)
+  --     local M = CFG.weather_markers.moon
+  --     cairo_set_line_width(cr, M.stroke)
+  --     cairo_set_source_rgba(cr, M.color[1], M.color[2], M.color[3], M.color[4])
+  --     cairo_arc(cr, mx, my, M.diameter/2, 0, 2*math.pi)
+  --     cairo_stroke(cr)
+  --     cairo_new_path(cr)
+  --   end
+  -- end
   cairo_restore(cr)
 end
 

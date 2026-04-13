@@ -156,7 +156,6 @@ This will:
 │   ├── Metropolis Black.ttf
 │   ├── Orbitron
 │   └── Oxanium
-
 │
 ├── gcal/
 │   ├── gcal.rc                 - Google Calendar month-view via gcalcli (Lua rendered)
@@ -302,9 +301,9 @@ Nerd Fonts: <https://www.nerdfonts.com/>
 
 ## Credits
 
-* **github/@gtex62** — Original Author of gtex62-clean-suite - weather widget formed the foundation of the enhanced Arc implementation
-* **github/@wim66** — Original Author of background.lua, lua3-bars.lua
-* **allcombined2.lua** - Origional Lua Scripting: Mr Peachy, Modified/Maintained by: github/@Fehlix (MX Linux Team), MX Linux Conky Collection
+* **github/@gtex62** — Original author of gtex62-clean-suite - weather widget formed the foundation of the enhanced Arc implementation
+* **github/@wim66** — Original author of background.lua, lua3-bars.lua
+* **allcombined2.lua** - Origional Lua scripting: Mr Peachy, Modified/Maintained by: github/@Fehlix (MX Linux Team),  MX Linux Conky Collection
 * **Aurora Set** — Source of the Earth Viewer component github @rew62/aurora
 
 ---

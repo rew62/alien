@@ -228,7 +228,6 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   ├── loadall.lua
 │   ├── settings.lua
 │   ├── stocks.lua
-│   ├── stocks.rc
 │   ├── symbols.conf
 │   └── ticker.rc               - stock ticker, Place stock symbols in symbols.conf
 │

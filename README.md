@@ -1,11 +1,12 @@
 # Alien Conky Suite
 
-A modular, feature-rich collection of **16 Conky scripts** across 8 categories, designed to create a cohesive and interactive desktop experience.
+A modular, feature-rich collection of **17 Conky scripts** across 9 categories, designed to create a cohesive and interactive desktop experience.
 Run everything together or each component independently.
 
 * All components are **fully modular**
 * Designed for **low clutter, high signal**
 * Easily customizable and extendable
+* Conky scripts built on Linux Mint 22.3/Cinnamon Edition
 
 ---
 
@@ -28,6 +29,7 @@ Run everything together or each component independently.
 | **Arc** | Enhanced Arc (weather + moon phase) |
 | **Google Calendar** | Month-view (gcalcli + Lua) |
 | **RSS** | Click-enabled Feed Viewer |
+| **Stocks** | Current stock prices from https://www.finnhub.io/ api |
 
 The **Earth Viewer** component is adapted from the *Aurora* set.
 
@@ -80,6 +82,10 @@ This will:
   * Current conditions
   * Forecast
 
+## Stock Price table display for current stock prices
+
+* Requires an API key from FinnHub for stock data. You can obtain one free at https://www.finnhub.io/
+
 ### Arc Widget Enhancements
 
 * Includes current forecast and moon phase rendering
@@ -105,6 +111,43 @@ This will:
   ```bash
   tmux kill-session -t conky
   ```
+
+#### alien-tmux2 — Selective Launch
+
+`alien-tmux2` lets you launch any subset of widgets by passing short codes as arguments.
+Up to 4 conky processes are grouped per tmux window; the layout is tiled automatically.
+
+**Usage:**
+
+```bash
+# Launch specific widgets by code
+./alien-tmux2 t a wc wf
+
+# Or pass a bracketed, comma-separated list
+./alien-tmux2 [t,a,wc,wf]
+```
+
+**Widget Codes:**
+
+| Code | RC File | Widget |
+|---|---|---|
+| `a` | `arc/arc.rc` | Arc (horizon, planets, sun/moon, weather) |
+| `e` | `earth/earth.rc` | Earth satellite image viewer |
+| `g` | `gcal/gcal.rc` | Google Calendar month-view |
+| `h2` | `calendar/hcal2.rc` | Horizontal Lua calendar (full-width) |
+| `hc` | `calendar/hcal.rc` | Horizontal calendar (compact, bash) |
+| `kc` | `calendar/kcalendar.rc` | khal-based calendar panel |
+| `lc` | `calendar/lcalendar.rc` | Lua-drawn allcombined calendar |
+| `m` | `clock/song-info.rc` | Now Playing (song info) |
+| `r` | `rss/rss2.rc` | RSS feed viewer |
+| `$` | `stocks/ticker.rc` | Stock price table |
+| `s` | `calendar/sys-small.rc` | Single-line system monitor |
+| `sc` | `calendar/sidepanel-calendar.rc` | Side panel calendar |
+| `t` | `clock/clock.rc` | Animated clock |
+| `v` | `vnstat/vnstat.rc` | vnStat bandwidth monitor |
+| `wa` | `weather/full.rc` | Full weather panel |
+| `wc` | `weather/current.rc` | Current conditions |
+| `wf` | `weather/forecast.rc` | 5-day forecast strip |
 
 ---
 
@@ -180,7 +223,16 @@ This will:
 │   ├── json.lua
 │   ├── loadall.lua
 │   └── lua3-bars.lua
-├── utils
+│
+├── stocks
+│   ├── loadall.lua
+│   ├── settings.lua
+│   ├── stocks.lua
+│   ├── stocks.rc
+│   ├── symbols.conf
+│   └── ticker.rc               - stock ticker, Place stock symbols in symbols.conf
+│
+├── utils0
 │   ├── rc
 │   └── save-pos.sh
 │
@@ -232,6 +284,7 @@ This will:
   | `ac-cal` | `ac-cal` | `calendar/lcalendar.rc` |
   | `earth` | `earth` | `earth/earth.rc` |
   | `gcal` | `gcal` | `gcal/gcal.rc` |
+  | `stocks` | `stocks` | `stocks/ticker.rc` |
 
 * **`rc`** — Place in your `~/bin` or any directory on `PATH`. Run any conky script with `rc conky`, saving keystrokes. Useful for launching individual conkys quickly.
 
@@ -303,7 +356,7 @@ Nerd Fonts: <https://www.nerdfonts.com/>
 
 * **github/@gtex62** — Original author of gtex62-clean-suite - weather widget formed the foundation of the enhanced Arc implementation
 * **github/@wim66** — Original author of background.lua, lua3-bars.lua
-* **allcombined2.lua** - Origional Lua scripting: Mr Peachy, Modified/Maintained by: github/@Fehlix (MX Linux Team),  MX Linux Conky Collection
+* **allcombined2.lua** - Original Lua scripting: Mr Peachy, Modified/Maintained by: github/@Fehlix (MX Linux Team),  MX Linux Conky Collection
 * **Aurora Set** — Source of the Earth Viewer component github @rew62/aurora
 
 ---

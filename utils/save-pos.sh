@@ -39,6 +39,7 @@ RC_FILE["khal-cal"]="$SCRIPT_DIR/calendar/kcalendar.rc"
 RC_FILE["ac-cal"]="$SCRIPT_DIR/calendar/lcalendar.rc"
 RC_FILE["earth"]="$SCRIPT_DIR/earth/earth.rc"
 RC_FILE["gcal"]="$SCRIPT_DIR/gcal/gcal.rc"
+RC_FILE["stocks"]="$SCRIPT_DIR/stocks/ticker.rc"
 
 # Full window titles (used for xdotool --name exact search when needed).
 # If the key already uniquely matches, this is not needed — but listed for clarity.

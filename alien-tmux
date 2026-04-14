@@ -19,13 +19,13 @@ tmux split-window -t $SESSION:1 -h -c "clock" 'conky -c song-info.rc'
 tmux split-window -t $SESSION:1 -v -c "weather" 'conky -c forecast.rc'
 tmux split-window -t $SESSION:1 -v -c "" 
 tmux select-layout -t $SESSION:1 tiled
-tmux select-pane -t $SESSION:1.0
+tmux select-pane -t $SESSION:1.3
 
 
 tmux new-window -t $SESSION:2 -n "Conky-3" -c "vnstat" 'conky -c vnstat.rc'
 tmux split-window -t $SESSION:2 -h -c "rss" 'conky -c rss.rc'
 tmux split-window -t $SESSION:2 -v -c "earth" 'conky -c earth.rc'
-tmux split-window -t $SESSION:2 -v -c "." 
+tmux split-window -t $SESSION:2 -v -c "stocks" 'conky -c ticker.rc' 
 tmux select-layout -t $SESSION:2 tiled
 tmux select-pane -t $SESSION:2.3
 

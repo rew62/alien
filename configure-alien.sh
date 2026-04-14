@@ -1,13 +1,12 @@
 #!/bin/bash
 # configure-alien.sh - Setup and configure the alien conky suite
-#
 # v1.1 2026-04-09 @rew62
 
 set -e
 
-ENV_FILE=".env"
-ENV_EXAMPLE=".env.example"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_FILE="$SCRIPT_DIR/.env"
+ENV_EXAMPLE="$SCRIPT_DIR/.env.example"
 CRONTAB_FILE="$SCRIPT_DIR/earth/crontab"
 
 BLUE='\033[0;34m'
@@ -69,7 +68,8 @@ fi
 echo
 
 # ── Load and display existing .env if present ────────────────────────────
-OWM_API_KEY=""; CITY_ID=""; UNITS=""; LAT=""; LON=""; INTERFACE_NAME=""; CRONPATH=""
+OWM_API_KEY=""; CITY_ID=""; UNITS=""; LAT=""; LON=""; INTERFACE_NAME=""; CRONPATH=""; FINNHUB_API_KEY=""
+LANG=""; ICON_SOURCE=""; CACHE_TTL=""
 
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
@@ -77,14 +77,14 @@ if [ -f "$ENV_FILE" ]; then
     [ -z "$CRONPATH" ]       && CRONPATH="$USER"
 
     echo -e "${YELLOW}Current configuration:${NC}"
-    printf "  %-15s %s\n" "API Key:"         "$OWM_API_KEY"
+    printf "  %-15s %s\n" "OWM API Key:"     "$OWM_API_KEY"
+    printf "  %-15s %s\n" "FinnHub Key:"     "$FINNHUB_API_KEY"
     printf "  %-15s %s\n" "City ID:"         "$CITY_ID"
     printf "  %-15s %s\n" "Latitude:"        "$LAT"
     printf "  %-15s %s\n" "Longitude:"       "$LON"
     printf "  %-15s %s\n" "Temp Unit:"       "$UNITS"
     printf "  %-15s %s\n" "Language:"        "$LANG"
-    printf "  %-15s %s\n" "Timezone:"        "$TZ"
-    printf "  %-15s %s\n" "Icon Source [Local|OWM]:"  "$ICON_SOURCE"
+    printf "  %-15s %s\n" "Icon Source:"     "$ICON_SOURCE"
     printf "  %-15s %s\n" "Cache TTL:"       "$CACHE_TTL"
     printf "  %-15s %s\n" "Interface:"       "$INTERFACE_NAME"
     printf "  %-15s %s\n" "Cron User:"       "$CRONPATH"
@@ -107,14 +107,26 @@ else
 fi
 
 # ── Individual prompts ────────────────────────────────────────────────────
-read -p "API Key [$OWM_API_KEY]: " INPUT
+read -p "OWM API Key [$OWM_API_KEY]: " INPUT
 OWM_API_KEY=${INPUT:-$OWM_API_KEY}
+
+read -p "FinnHub API Key [$FINNHUB_API_KEY]: " INPUT
+FINNHUB_API_KEY=${INPUT:-$FINNHUB_API_KEY}
 
 read -p "City ID [$CITY_ID]: " INPUT
 CITY_ID=${INPUT:-$CITY_ID}
 
 read -p "metric (Celsius) or imperial (Fahrenheit) [$UNITS]: " INPUT
 UNITS=${INPUT:-$UNITS}
+
+read -p "Language code (e.g. en, fr, de) [$LANG]: " INPUT
+LANG=${INPUT:-${LANG:-en}}
+
+read -p "Icon source (cdn or local) [$ICON_SOURCE]: " INPUT
+ICON_SOURCE=${INPUT:-${ICON_SOURCE:-cdn}}
+
+read -p "Cache TTL in seconds [$CACHE_TTL]: " INPUT
+CACHE_TTL=${INPUT:-${CACHE_TTL:-300}}
 
 read -p "Latitude [$LAT]: " INPUT
 LAT=${INPUT:-$LAT}
@@ -130,13 +142,17 @@ CRONPATH=${INPUT:-$CRONPATH}
 
 echo
 echo -e "${GREEN}Updated configuration:${NC}"
-printf "  %-30s %s\n" "API Key:"    "$OWM_API_KEY"
+printf "  %-30s %s\n" "OWM API Key:"    "$OWM_API_KEY"
+printf "  %-30s %s\n" "FinnHub API Key:" "$FINNHUB_API_KEY"
 printf "  %-30s %s\n" "City ID:"    "$CITY_ID"
-printf "  %-30s %s\n" "Temp Unit:"  "$UNITS"
-printf "  %-30s %s\n" "Latitude:"   "$LAT"
-printf "  %-30s %s\n" "Longitude:"  "$LON"
-printf "  %-30s %s\n" "Interface:"  "$INTERFACE_NAME"
-printf "  %-30s %s\n" "Cron User:"  "$CRONPATH"
+printf "  %-30s %s\n" "Temp Unit:"      "$UNITS"
+printf "  %-30s %s\n" "Language:"       "$LANG"
+printf "  %-30s %s\n" "Icon Source:"    "$ICON_SOURCE"
+printf "  %-30s %s\n" "Cache TTL:"      "$CACHE_TTL"
+printf "  %-30s %s\n" "Latitude:"       "$LAT"
+printf "  %-30s %s\n" "Longitude:"      "$LON"
+printf "  %-30s %s\n" "Interface:"      "$INTERFACE_NAME"
+printf "  %-30s %s\n" "Cron User:"      "$CRONPATH"
 echo
 
 # ── Files to be updated ───────────────────────────────────────────────────
@@ -162,8 +178,12 @@ fi
 # ── Write .env ────────────────────────────────────────────────────────────
 cat > "$ENV_FILE" << EOF
 OWM_API_KEY="$OWM_API_KEY"
+FINNHUB_API_KEY="$FINNHUB_API_KEY"
 CITY_ID="$CITY_ID"
 UNITS="$UNITS"
+LANG="$LANG"
+ICON_SOURCE="$ICON_SOURCE"
+CACHE_TTL="$CACHE_TTL"
 LAT=$LAT
 LON=$LON
 INTERFACE_NAME="$INTERFACE_NAME"
@@ -173,45 +193,28 @@ chmod 600 "$ENV_FILE"
 echo -e "${GREEN}✓ Saved $ENV_FILE (permissions: 600)${NC}"
 
 # ── Update interface files ────────────────────────────────────────────────
-if [ -f "calendar/sys-small.rc" ]; then
-    sed -i "s/template1[[:space:]]*=[[:space:]]*\"[^\"]*\"/template1          = \"$INTERFACE_NAME\"/" calendar/sys-small.rc
+if [ -f "$SCRIPT_DIR/calendar/sys-small.rc" ]; then
+    sed -i "s/template1[[:space:]]*=[[:space:]]*\"[^\"]*\"/template1          = \"$INTERFACE_NAME\"/" "$SCRIPT_DIR/calendar/sys-small.rc"
     echo -e "${GREEN}✓ Updated calendar/sys-small.rc${NC}"
 else
     echo -e "${YELLOW}⚠ File calendar/sys-small.rc not found${NC}"
 fi
 
-if [ -f "vnstat/vnstat.lua" ]; then
-    sed -i 's/\(local[[:space:]]\+\)\?IFACE\([[:space:]]*=[[:space:]]*\)"[^"]*"/\1IFACE\2"'"$INTERFACE_NAME"'"/' vnstat/vnstat.lua
+if [ -f "$SCRIPT_DIR/vnstat/vnstat.lua" ]; then
+    sed -i 's/\(local[[:space:]]\+\)\?IFACE\([[:space:]]*=[[:space:]]*\)"[^"]*"/\1IFACE\2"'"$INTERFACE_NAME"'"/' "$SCRIPT_DIR/vnstat/vnstat.lua"
     echo -e "${GREEN}✓ Updated vnstat/vnstat.lua${NC}"
 else
     echo -e "${YELLOW}⚠ File vnstat/vnstat.lua not found${NC}"
 fi
 
-# if [ -f "network/network.rc" ]; then
-#     sed -i "s/template1 = \".*\",/template1 = \"$INTERFACE_NAME\",/" network/network.rc
-#     echo -e "${GREEN}✓ Updated network/network.rc${NC}"
-# else
-#     echo -e "${YELLOW}⚠ File network/network.rc not found${NC}"
-# fi
-# 
-# if [ -f "network/settings.lua" ]; then
-#     sed -i "s/var_NETWORK *= *\".*\"/var_NETWORK = \"$INTERFACE_NAME\"/" network/settings.lua
-#     echo -e "${GREEN}✓ Updated network/settings.lua${NC}"
-# else
-#     echo -e "${YELLOW}⚠ File network/settings.lua not found${NC}"
-# fi
-# 
-# # ── Update crontab ────────────────────────────────────────────────────────
-# if [ -f "$CRONTAB_FILE" ]; then
-#     sed -i "s|/home/<user>/|/home/$CRONPATH/|g" "$CRONTAB_FILE"
-#     echo -e "${GREEN}✓ Updated $CRONTAB_FILE${NC}"
-# fi
-# 
-# echo
-# echo -e "${GREEN}Configuration complete!${NC}"
-# 
-# # ── Font check ────────────────────────────────────────────────────────────
+# ── Update crontab ────────────────────────────────────────────────────────
+if [ -f "$CRONTAB_FILE" ]; then
+    sed -i "s|/home/<user>/|/home/$CRONPATH/|g" "$CRONTAB_FILE"
+    echo -e "${GREEN}✓ Updated $CRONTAB_FILE${NC}"
+fi
+
+echo
+echo -e "${GREEN}Configuration complete!${NC}"
+
+# ── Font check ────────────────────────────────────────────────────────────
 run_font_check
-# 
-# # ── Lyrics dependency check ───────────────────────────────────────────────
-# run_lyrics_check

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SESSION="conky"
+SESSION="conky-by-code"
 PANES_PER_WINDOW=4
 
 # --- Resolve base directory of this script ---
@@ -21,6 +21,7 @@ MAP[m]="clock|song-info.rc"
 MAP[e]="earth|earth.rc"
 MAP[g]="gcal|gcal.rc"
 MAP[r]="rss|rss2.rc"
+MAP[$]="stocks|ticker.rc"
 MAP[v]="vnstat|vnstat.rc"
 MAP[wc]="weather|current.rc"
 MAP[wf]="weather|forecast.rc"
@@ -28,7 +29,28 @@ MAP[wa]="weather|full.rc"
 
 # --- Input check ---
 if [ "$#" -eq 0 ]; then
-    echo "Usage: $0 [codes...]"
+    echo "Usage: $(basename "$0") [codes...]"
+    echo ""
+    echo "  Codes:"
+    echo "    a           arc"
+    echo "    t           clock"
+    echo "    m           song info"
+    echo "    e           earth"
+    echo "    g           gcal"
+    echo "    r           rss"
+    echo "    \$           stocks"
+    echo "    v           vnstat"
+    echo "    hc          calendar  (hcal)"
+    echo "    h2          calendar  (hcal2)"
+    echo "    lc          calendar  (lcalendar)"
+    echo "    kc          calendar  (kcalendar)"
+    echo "    sc          calendar  (sidepanel)"
+    echo "    s           sys-small"
+    echo "    wc          weather   (current)"
+    echo "    wf          weather   (forecast)"
+    echo "    wa          weather   (full)"
+    echo ""
+    echo "  Example: $(basename "$0") t wc wf a"
     exit 1
 fi
 
@@ -98,6 +120,12 @@ for code in "${FILTERED[@]}"; do
 
     ((pane++))
 done
+
+# --- Bail if nothing valid was launched ---
+if (( pane == 0 )); then
+    echo "No valid codes provided. Nothing started."
+    exit 1
+fi
 
 # --- Final layout cleanup ---
 for ((i=0; i<=win; i++)); do

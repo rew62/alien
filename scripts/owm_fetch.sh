@@ -5,8 +5,8 @@
 #
 # Gate:        file age of owm_current.json vs CACHE_TTL (system clock, not a timer)
 # Background:  network fetch is non-blocking; all callers share one cache.
-# Icon:        ICON_SOURCE=local  → local themed PNGs in THEME_ICON_DIR (default)
-#              ICON_SOURCE=owm    → OWM CDN-fetched PNGs from icons/
+# Icon:        ICON_SOURCE=cdn    → OWM CDN-fetched PNGs cached in /dev/shm/conky/icons/ (default)
+#              ICON_SOURCE=local  → local Meteo PNGs from $ALIEN_DIR/icons/ (if dir exists, else falls back to CDN)
 #
 # Config sources (sourced in order; later values win):
 #   ~/.conky/alien/.env          – OWM_API_KEY / LAT / LON / UNITS 
@@ -45,8 +45,7 @@ LON="${LON:-${lon:-}}"
 UNITS="${UNITS:-${units:-imperial}}"
 LANG="${LANG:-en}"
 CACHE_TTL="${CACHE_TTL:-300}"           # seconds between network fetches
-ICON_SOURCE="${ICON_SOURCE:-local}"     # "local" or "owm"
-THEME_ICON_DIR="${THEME_ICON_DIR:-$ALIEN_DIR/icons}"
+ICON_SOURCE="${ICON_SOURCE:-cdn}"      # "cdn" (OWM CDN, default) or "local" (Meteo PNGs in $ALIEN_DIR/icons/)
 
 if [[ -z "$OWM_API_KEY" || -z "$LAT" || -z "$LON" ]]; then
     echo "$(date -Is) ERROR: OWM_API_KEY / LAT / LON not set" >> "$LOG_FILE"
@@ -132,15 +131,16 @@ select_icon() {
 
     local src outpng="$ICON_DIR/current.png"
 
-    if [[ "$ICON_SOURCE" == "owm" ]]; then
-        # Use OWM CDN-fetched icon
+    local LOCAL_ICON_DIR="$ALIEN_DIR/icons"
+    if [[ "$ICON_SOURCE" == "local" && -d "$LOCAL_ICON_DIR" ]]; then
+        # Use local Meteo icons from repo icons/ dir; fall back to CDN cache if file missing
+        src="$LOCAL_ICON_DIR/${code}.png"
+        [[ -f "$src" ]] || src="$LOCAL_ICON_DIR/$(echo "$code" | sed 's/n$/d/').png"
+        [[ -f "$src" ]] || src="$ICON_DIR/${code}.png"
+    else
+        # Use OWM CDN-fetched icon (default)
         src="$ICON_DIR/${code}.png"
         [[ -f "$src" ]] || src="$ICON_DIR/$(echo "$code" | sed 's/n$/d/').png"
-    else
-        # Use local themed icon (default); fall back through variants to CDN cache
-        src="$THEME_ICON_DIR/${code}.png"
-        [[ -f "$src" ]] || src="$THEME_ICON_DIR/$(echo "$code" | sed 's/n$/d/').png"
-        [[ -f "$src" ]] || src="$ICON_DIR/${code}.png"
     fi
     [[ -f "$src" ]] && { cp -f "$src" "${outpng}.tmp" && mv -f "${outpng}.tmp" "$outpng"; } || true
 }
@@ -247,7 +247,7 @@ do_fetch_and_parse() {
 
     mv -f "$TMP_JSON" "$CACHE_JSON"
 
-    # Download OWM CDN icon for the returned code (used when ICON_SOURCE=owm)
+    # Download OWM CDN icon for the returned code (always fetched; used as fallback for local too)
     local icon_code
     icon_code=$(jq -r '.weather[0].icon // empty' "$CACHE_JSON" 2>/dev/null || true)
     if [[ -n "$icon_code" ]]; then

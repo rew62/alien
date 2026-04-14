@@ -29,7 +29,7 @@ Run everything together or each component independently.
 | **Arc** | Enhanced Arc (weather + moon phase) |
 | **Google Calendar** | Month-view (gcalcli + Lua) |
 | **RSS** | Click-enabled Feed Viewer |
-| **Stocks** | Current stock prices from https://www.finnhub.io/ api |
+| **Stocks** | Current stock prices |
 
 The **Earth Viewer** component is adapted from the *Aurora* set.
 
@@ -85,6 +85,7 @@ This will:
 ## Stock Price table display for current stock prices
 
 * Requires an API key from FinnHub for stock data. You can obtain one free at https://www.finnhub.io/
+* Customize stock symbols at stocks/symbols.conf
 
 ### Arc Widget Enhancements
 

@@ -45,14 +45,25 @@ Run the setup script:
 
 This will:
 
-* Create a `.env` file
-* Store your:
+* Create or update `.env` with:
 
-  * API key
-  * Latitude / Longitude
-  * Unit preferences
-* Automatically detect your active network interface
-* Configure required scripts
+  * `OWM_API_KEY` — OpenWeatherMap API key
+  * `FINNHUB_API_KEY` — FinnHub API key (stocks widget)
+  * `CITY_ID` — OWM city ID
+  * `LAT` / `LON` — Latitude and longitude
+  * `UNITS` — `metric` (Celsius) or `imperial` (Fahrenheit)
+  * `LANG` — Language code (e.g. `en`, `fr`, `de`)
+  * `ICON_SOURCE` — `cdn` or `local` weather icons
+  * `CACHE_TTL` — Weather cache lifetime in seconds (default: 300)
+  * `INTERFACE_NAME` — Network interface (auto-detected)
+  * `CRONPATH` — Cron user (defaults to current user)
+* Patch `calendar/sys-small.rc` with the active network interface
+* Patch `vnstat/vnstat.lua` with the active network interface
+* Update `earth/crontab` with the correct home path (if present)
+* Run a font availability check
+* Optionally run the lyrics dependency check
+
+See `.env-example` for the format reference.
 
 ---
 

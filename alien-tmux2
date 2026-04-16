@@ -108,6 +108,12 @@ for code in "${FILTERED[@]}"; do
         continue
     fi
 
+    # --- Skip if already running ---
+    if pgrep -f "conky -c $rc" > /dev/null 2>&1; then
+        echo "Skipping $code → already running (conky -c $rc)"
+        continue
+    fi
+
     cmd="conky -c $rc"
 
     # --- New window every N panes ---

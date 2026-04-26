@@ -1,7 +1,8 @@
 -- loadall.lua - Loader for weather conky modules
 -- v1.6 2026-03-25 @rew62 (Refactored)
 
-package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua" 
+-- package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua"
+package.path = package.path .. ";./?.lua;../?.lua;" .. (os.getenv("HOME") or "") .. "/.conky/alien/scripts/?.lua"
 
 -- Logic Variables
 local update_func = nil

@@ -14,7 +14,8 @@
 --
 -- Config section --------------------------------------------------------
 local env_path = os.getenv("HOME") .. "/.conky/alien/.env"
-package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua" 
+-- package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua"
+package.path = package.path .. ";./?.lua;../?.lua;" .. (os.getenv("HOME") or "") .. "/.conky/alien/scripts/?.lua"
 
 local _env = {}
 do

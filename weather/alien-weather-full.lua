@@ -11,7 +11,8 @@ require 'cairo'
 -- -----------------------------------------------------------------------
 -- JSON DEPENDENCY FALLBACK
 -- -----------------------------------------------------------------------
-package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua" 
+-- package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua"
+package.path = package.path .. ";./?.lua;../?.lua;" .. (os.getenv("HOME") or "") .. "/.conky/alien/scripts/?.lua"
 
 local cjson = nil
 

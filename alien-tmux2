@@ -26,6 +26,8 @@ MAP[v]="vnstat|vnstat.rc"
 MAP[wc]="weather|current.rc"
 MAP[wf]="weather|forecast.rc"
 MAP[wa]="weather|full.rc"
+MAP[asf]="~/.conky/rew62/system|system.rc"
+MAP[anf]="~/.conky/rew62/network|network.rc"
 
 # --- Input check ---
 if [ "$#" -eq 0 ]; then
@@ -94,7 +96,13 @@ for code in "${FILTERED[@]}"; do
     dir="${entry%%|*}"
     rc="${entry##*|}"
 
-    full_dir="$BASE_DIR/$dir"
+    if [[ "$dir" = ~* ]]; then
+        full_dir="${dir/#\~/$HOME}"
+    elif [[ "$dir" = /* ]]; then
+        full_dir="$dir"
+    else
+        full_dir="$BASE_DIR/$dir"
+    fi
     full_rc="$full_dir/$rc"
 
     # --- Validation checks ---

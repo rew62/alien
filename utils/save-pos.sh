@@ -18,6 +18,17 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ---------------------------------------------------------------------------
+# Dependency check
+# ---------------------------------------------------------------------------
+for _dep in xdotool xrandr xprop; do
+    if ! command -v "$_dep" &>/dev/null; then
+        echo "ERROR: '$_dep' not found. Install it and retry." >&2
+        echo "  Ubuntu/Debian: sudo apt install xdotool x11-utils x11-xserver-utils" >&2
+        exit 1
+    fi
+done
+
+# ---------------------------------------------------------------------------
 # Window-title → rc-file mapping
 #   KEY  = string passed to "xdotool search --name <KEY>"  (first match used)
 #   VALUE = path to the .rc file
@@ -60,6 +71,7 @@ WIN_TITLE["khal-cal"]="khal-cal"
 WIN_TITLE["ac-cal"]="ac-cal"
 WIN_TITLE["earth"]="earth"
 WIN_TITLE["gcal"]="gcal"
+WIN_TITLE["stocks"]="stocks"
 
 # ---------------------------------------------------------------------------
 # Helper: integer division (bash only does integers anyway)
@@ -207,10 +219,14 @@ process() {
     local rc="${RC_FILE[$key]}"
 
     if [[ ! -f "$rc" ]]; then
+        echo "  SKIP $key: rc file not found ($rc)"
         return
     fi
 
-    get_window_geometry "$key" || return
+    if ! get_window_geometry "$key"; then
+        echo "  SKIP $key: window '${WIN_TITLE[$key]}' not found (not running?)"
+        return
+    fi
 
     echo "--- $key ---"
 

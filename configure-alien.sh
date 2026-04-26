@@ -73,7 +73,9 @@ LANG=""; ICON_SOURCE=""; CACHE_TTL=""
 
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
-    [ -z "$INTERFACE_NAME" ] && INTERFACE_NAME=$(get_default_interface)
+    if [ -z "$INTERFACE_NAME" ] || ! ip link show "$INTERFACE_NAME" up &>/dev/null 2>&1; then
+        INTERFACE_NAME=$(get_default_interface)
+    fi
     [ -z "$CRONPATH" ]       && CRONPATH="$USER"
 
     echo -e "${YELLOW}Current configuration:${NC}"

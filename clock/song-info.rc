@@ -10,7 +10,7 @@ conky.config = {
     minimum_height     = 20,
 
     gap_x              = 0,
-    gap_y              = 370,
+    gap_y              = 375,
 
     -- Transparent background
     own_window         = true,

@@ -39,8 +39,8 @@ conky.config = {
     use_xft            = true,
 
     -- Fonts
-    font               = 'FiraCode Nerd Font:size=10',
-    font2              = 'SpaceMono Nerd Font:size=18',
+    font               = 'DejaVuSansM Nerd Font Propo:style=Medium:size=10}',
+    font2              = 'Inter Tight:size=12',
     override_utf8_locale = true,
 
     -- Colors
@@ -58,5 +58,5 @@ conky.config = {
 }
 
 conky.text = [[
-${voffset 90}${alignc}${font DejaVu Sans:style=Medium:size=10}${if_match "${execi 1 playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null}" != ""}Now Playing: ${color #1ed760}${execi 5 playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null}${color6}   [ ${execi 1 playerctl position 2>/dev/null | awk '{total = int($1); min = int(total/60); sec = total % 60; printf "%d:%02d", min, sec;}'} / ${execi 1 playerctl metadata mpris:length 2>/dev/null | awk '{total = int($1/1000000); min = int(total/60); sec = total % 60; printf "%d:%02d", min, sec;}'} ]${endif}
+${voffset 90}${alignc}${font2}${if_match "${execi 1 playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null}" != ""}Now Playing: ${color #1ed760}${execi 5 playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null}${color6}   [ ${execi 1 playerctl position 2>/dev/null | awk '{total = int($1); min = int(total/60); sec = total % 60; printf "%d:%02d", min, sec;}'} / ${execi 1 playerctl metadata mpris:length 2>/dev/null | awk '{total = int($1/1000000); min = int(total/60); sec = total % 60; printf "%d:%02d", min, sec;}'} ]${endif}
 ]];

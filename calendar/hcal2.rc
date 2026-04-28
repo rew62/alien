@@ -45,7 +45,7 @@ conky.config = {
 	default_outline_color = 'black',
   	color1 = '98FB98',  -- PaleGreen
   	--font3 = 'Fira Code:size=14:Bold',
-  	font3 = 'GoodTimes:size=12',
+  	font3 = 'Good Times:size=12',
 
         lua_load = './settings.lua ./loadall.lua',
         lua_draw_hook_post = 'main',

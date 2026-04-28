@@ -18,7 +18,7 @@ conky.config = {
   update_interval        = 10,
 
   use_xft                = true,
-  font                   = 'DejaVu Sans Mono:size=10',
+  font                   = 'DejaVuSansM Nerd Font Propo Mono:size=10',
 
   own_window             = true,
   own_window_title       = 'conky-arc',
@@ -30,7 +30,7 @@ conky.config = {
   own_window_class       = 'Conky',
 
   gap_x                  = 0,
-  gap_y                  = 190,
+  gap_y                  = 195,
 
   --minimum_width          = 640,
   minimum_width          = 570,

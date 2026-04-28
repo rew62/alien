@@ -6,7 +6,7 @@ SESSION="conky"
 tmux new-session -d -s $SESSION -n "Conky-1" -c "calendar" 'conky -c hcal2.rc'
 
 # Split into 4 panes and run scripts 2, 3, and 4
-tmux split-window -t $SESSION:0 -h -c "calendar" 'conky -c sys-small.rc'
+tmux split-window -t $SESSION:0 -h -c "calendar" 'conky -c sys-small2.rc'
 tmux split-window -t $SESSION:0 -v -c "arc" 'conky -c arc.rc'
 tmux split-window -t $SESSION:0 -v -c "gcal" 'conky -c gcal.rc'
 tmux select-layout -t $SESSION:0 tiled
@@ -28,12 +28,6 @@ tmux split-window -t $SESSION:2 -v -c "earth" 'conky -c earth.rc'
 tmux split-window -t $SESSION:2 -v -c "stocks" 'conky -c ticker.rc' 
 tmux select-layout -t $SESSION:2 tiled
 tmux select-pane -t $SESSION:2.3
-
-
-
-
-# Split into 2 panes and run Script 6
-#tmux select-layout -t $SESSION:1 even-horizontal
 
 # Attach to the session
 tmux attach-session -t $SESSION

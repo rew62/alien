@@ -1,0 +1,79 @@
+-- sys-small2.rc - Single Line Conky System Monitor
+-- v1.0 2026-04-28 @rew62
+
+conky.config = {
+
+    -- Transparent background
+    own_window         = true,
+    own_window_type    = 'normal',
+    own_window_title   = 'sys-small2',
+
+    -- Window / positioning
+    alignment          = 'top_middle',
+    minimum_width      = 1450, 
+    minimum_height     = 25,
+    maximum_width      = 1450, -- Force it to stay this size
+    gap_x              = 0,
+    gap_y              = 170,
+
+    -- Window
+    own_window_hints   = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    draw_shades        = false,
+    draw_outline       = false,
+    draw_borders       = false,
+    own_window_transparent = true,
+    own_window_argb_visual = true,
+    own_window_argb_value  = 0,          -- 0 = fully transparent
+    own_window_colour  = '#000000',
+
+    -- No borders / decorations
+    draw_borders       = false,
+    draw_graph_borders = false,
+    border_width       = 0,
+
+    -- Rendering
+    double_buffer      = true,
+    --no_buffers       = true,
+    update_interval    = 0.5,
+    short_units        = true,
+    cpu_avg_samples    = 2,
+    use_xft            = true,
+
+    -- Fonts
+    font1              = 'Inter Tight:size=14',
+    font2              = 'DejaVuSansM Nerd Font Propo:size=18',
+    font3              = 'IBM Plex Sans:fontfeatures=tnum:size=14',
+
+    override_utf8_locale = true,
+
+    -- Colors
+    default_color      = 'white',
+    color1             = 'f5d080',       -- values / totals (bright)
+    color2             = '60c888',       -- RX (green)
+    color3             = 'e07050',       -- TX (red-orange)
+    color4             = '8a6030',       -- dimmed / comments
+    color5             = 'a06828',       -- tree lines
+    color6             = 'f0c070',       -- section headers
+
+    -- Templates
+    template1          = "wlp2s0",       -- LAN interface name
+
+    -- Lua Load 
+    lua_load = './settings.lua ./fmt.lua',
+    lua_startup_hook = 'vars',
+}
+
+
+conky.text = [[
+${font2}${color green} ${voffset -2}\
+${font1}${color cyan}Uptime:   ${font3}${color white}${uptime_short}${goto 175} \
+${font1}${color yellow}  | ${voffset -3}${font2}${color cyan} 󰘚 ${voffset -2}${font1}RAM:  ${font3}${color white}${lua conky_fmtpct memperc}% \
+${font1}${color yellow}  | ${voffset -3}${font2}${color cyan}  ${voffset -2}${font1}CPU:  ${font3}${color white}${lua conky_fmtpct cpu cpu0}% \
+${font1}${color yellow}  | ${voffset -3}${font2}${color cyan} 󰋊 ${voffset -2}${font1}FS:  ${font3}${color white} ${fs_used /} / ${fs_size /} ${color #99ff33} (${fs_used_perc /}%) \
+${font1}${color yellow}  | ${voffset 0}${font2}${color cyan} 󰀂 ${voffset -2}${font4}WiFi:   ${font3}${color white}${if_up ${template1}}${voffset -2}${addr ${template1}} \
+${font2}${color yellow}${voffset -1} [ \
+${font3}${color green}${voffset -1}${lua conky_fmtspeed ${template1} up} ${font1}KB/s ${voffset -2}${font2}${color green} 󰕒 ${voffset -2} \
+${font3}${color red}${lua conky_fmtspeed ${template1} down} ${font1}KB/s ${voffset -2}${font2}${color red} 󰇚 \
+${font2}${color yellow}${voffset -1} ] \
+${else}down${endif}
+]]

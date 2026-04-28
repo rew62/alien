@@ -1,22 +1,17 @@
 -- sys-small2.rc - Single Line Conky System Monitor
--- v1.0 2026-04-28 @rew62
+-- v1.0 2026-04-02 @rew62
 
 conky.config = {
+    -- Window / positioning
+    alignment          = 'top_middle',
+    minimum_width      = 1450,
+    gap_x              = 0,
+    gap_y              = 165,
 
     -- Transparent background
     own_window         = true,
     own_window_type    = 'normal',
     own_window_title   = 'sys-small2',
-
-    -- Window / positioning
-    alignment          = 'top_middle',
-    minimum_width      = 1450, 
-    minimum_height     = 25,
-    maximum_width      = 1450, -- Force it to stay this size
-    gap_x              = 0,
-    gap_y              = 170,
-
-    -- Window
     own_window_hints   = 'undecorated,below,sticky,skip_taskbar,skip_pager',
     draw_shades        = false,
     draw_outline       = false,
@@ -70,7 +65,7 @@ ${font1}${color cyan}Uptime:   ${font3}${color white}${uptime_short}${goto 175} 
 ${font1}${color yellow}  | ${voffset -3}${font2}${color cyan} 󰘚 ${voffset -2}${font1}RAM:  ${font3}${color white}${lua conky_fmtpct memperc}% \
 ${font1}${color yellow}  | ${voffset -3}${font2}${color cyan}  ${voffset -2}${font1}CPU:  ${font3}${color white}${lua conky_fmtpct cpu cpu0}% \
 ${font1}${color yellow}  | ${voffset -3}${font2}${color cyan} 󰋊 ${voffset -2}${font1}FS:  ${font3}${color white} ${fs_used /} / ${fs_size /} ${color #99ff33} (${fs_used_perc /}%) \
-${font1}${color yellow}  | ${voffset 0}${font2}${color cyan} 󰀂 ${voffset -2}${font4}WiFi:   ${font3}${color white}${if_up ${template1}}${voffset -2}${addr ${template1}} \
+${font1}${color yellow}  | ${voffset 0}${font2}${color cyan} 󰀂 ${voffset -2}${font1}WiFi:   ${font3}${color white}${if_up ${template1}}${voffset -2}${addr ${template1}} \
 ${font2}${color yellow}${voffset -1} [ \
 ${font3}${color green}${voffset -1}${lua conky_fmtspeed ${template1} up} ${font1}KB/s ${voffset -2}${font2}${color green} 󰕒 ${voffset -2} \
 ${font3}${color red}${lua conky_fmtspeed ${template1} down} ${font1}KB/s ${voffset -2}${font2}${color red} 󰇚 \

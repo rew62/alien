@@ -187,13 +187,13 @@ function conky_info_row()
     if sunrise and sunset then
         sun_line = "${font MonaspiceNe Nerd Font Mono:size=24}${voffset -14}${color FFB74D}󰖜${font MonaspiceNe Nerd Font Mono:size=10}${voffset -6}${color FFECB3} " .. sunrise ..
         --sun_line = "${color FFB74D} ${color FFECB3}" .. sunrise ..
-                   "${font DejaVu Sans:size=10}        " .. moon_phase() .. "      " ..
+                   "${font DejaVuSansM Nerd Font Propo:size=10}        " .. moon_phase() .. "      " ..
                    "${font MonaspiceNe Nerd Font Mono:size=10}${color FFAB91}" .. sunset .. " ${font MonaspiceNe Nerd Font Mono:size=24}${voffset -12}${color FF7043}󰖛 ${font}"
     else
         sun_line = moon_phase()
     end
     -- voffset pushes this line below the Cairo-drawn calendar rows
-    --return "${voffset 38}${alignc}${font DejaVu Sans:size=10}" .. sun_line .. "\n"
+    --return "${voffset 38}${alignc}${font DejaVuSansM Nerd Font Propo:size=10}" .. sun_line .. "\n"
     --return "${voffset 38}${goto 350}" .. sun_line .. "\n"
     return "${voffset 46}${goto 350}" .. sun_line 
 end

@@ -23,7 +23,7 @@ conky.config = {
 
     -- Font defaults
     use_xft = true,
-    font = 'DejaVu Sans:size=10',
+    font = 'DejaVuSansM Nerd Font Propo:size=10',
     override_utf8_locale = true,
 
     font = 'Ubuntu Mono',
@@ -32,7 +32,7 @@ conky.config = {
     font4 = 'Liberation Sans:size=11',
     font5 = 'IBM Plex Mono:size=11',
     font6 = 'Noto Sans:size=12',
-    font7 = 'DejaVu Sans:size=11',
+    font7 = 'DejaVuSansM Nerd Font Propo:size=11',
 
     default_color = 'white',
     color1 = '98FB98',  -- PaleGreen

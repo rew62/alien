@@ -25,7 +25,7 @@ conky.config = {
 
     -- Text (Conky's own renderer — barely used since lua draws everything)
     use_xft                = true,
-    font                   = "DejaVu Sans:size=9",
+    font                   = "DejaVuSansM Nerd Font Propo:size=9",
     xftalpha               = 1,
     default_color          = "ffffff",
 

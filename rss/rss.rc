@@ -21,7 +21,7 @@ conky.config = {
     maximum_width = 420,
 
     use_xft = true,
-    --font = 'DejaVu Sans:size=8',
+    --font = 'DejaVuSansM Nerd Font Propo:size=8',
     --font = 'Archivo Narrow:size=10',
     font = 'Barlow Condensed:size=10',
     default_color = 'white',

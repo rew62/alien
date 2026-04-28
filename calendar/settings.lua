@@ -29,7 +29,7 @@ function conky_vars()
     -- calendar settings
     cal_x = 15
     cal_y = 55
-    cal_font = "DejaVu Sans"
+    cal_font = "DejaVuSansM Nerd Font Propo"
     cal_title_size = 9
     cal_body_size = 11
     cal_body_color = "0xFFFFFF"
@@ -41,7 +41,7 @@ function conky_vars()
     -- month title settings
     txt_x = 110
     txt_y = 25
-    txt_font = "DejaVu Sans"
+    txt_font = "DejaVuSansM Nerd Font Propo"
     txt_size = 12
 
     -- month colors

@@ -41,7 +41,7 @@ local CFG = {
     WIND_PX     = 36,       -- wind arrow display size
 
     -- Font
-    FONT        = cairo_font or "DejaVu Sans",
+    FONT        = cairo_font or "DejaVuSansM Nerd Font Propo",
 
     -- Font sizes
     SIZE_TEMP   = 48,       -- current temperature  (dominant)

@@ -28,7 +28,7 @@ conky.config = {
 
     -- Typography
     use_xft                = true,
-    font                   = "DejaVu Sans:size=9",
+    font                   = "DejaVuSansM Nerd Font Propo:size=9",
     xftalpha               = 1,
     default_color          = "ffffff",
 

@@ -7,7 +7,7 @@ local theme = {
     border_color = 0x89b4fa,
     border_width = 2,
     font         = "Sans 10",
-    cairo_font   = "DejaVu Sans",
+    cairo_font   = "DejaVuSansM Nerd Font Propo",
 }
 
 -- bgtab format:

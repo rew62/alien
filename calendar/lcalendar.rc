@@ -24,7 +24,7 @@ conky.config = {
 
     -- Font defaults
     use_xft = true,
-    font = 'DejaVu Sans:size=10',
+    font = 'DejaVuSansM Nerd Font Propo:size=10',
     override_utf8_locale = true,
 
     -- Updates

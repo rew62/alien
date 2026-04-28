@@ -67,7 +67,7 @@ local ICON_DIR   = "/dev/shm/conky_icons/"
 local OWM_CACHE  = "/dev/shm/owm_current.json"
 local USER_AGENT = "conky-weather-script/1.0"
 local WIN_W, PAD = 300, 12
-local FONT_NAME  = cairo_font or "DejaVu Sans"
+local FONT_NAME  = cairo_font or "DejaVuSansM Nerd Font Propo"
 
 -- Colors (RGBA)
 local COL_TEXT   = { 0.85, 0.85, 0.85, 1.0 }

@@ -45,7 +45,7 @@ local CFG = {
     OFFSET_Y  = 10,
 
     --FONT      = "GE Inspira",
-    FONT      = cairo_font or "DejaVu Sans",
+    FONT      = cairo_font or "DejaVuSansM Nerd Font Propo",
 
     SIZE_DAY    = 10,   -- day abbreviation  (was 12)
     SIZE_DATE   = 12,   -- date line "Mar 22" (unchanged)

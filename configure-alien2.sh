@@ -1,5 +1,5 @@
 #!/bin/bash
-# configure-alien2.sh - Setup and configure the alien conky suite including fonts installed on fonts/ directory
+# configure-alien2.sh - Setup and configure the alien conky suite including fonts installed in fonts/ directory
 # v1.1 2026-04-28 @rew62
 
 set -e

@@ -13,7 +13,7 @@ conky.config = {
     own_window_colour = '000000',
 
     -- Size & position (adjust to taste)
-    minimum_width = 380,
+    minimum_width = 390,
     minimum_height = 95,
     --maximum_width = 0,
     alignment = 'top_middle',

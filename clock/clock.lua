@@ -1,7 +1,6 @@
--- clock.lua - Animated clock widget for Conky - Every second the colon swaps color.
+-- clock2.lua - Animated clock widget for Conky - Every second the colon swaps color.
 -- Font: Metropolis (https://github.com/chrismsimpson/Metropolis/releases)
--- v1.1 2026-04-09 @rew62
---
+-- v1.2 2026-04-29 @rew62
 
 require 'cairo'
 
@@ -97,7 +96,7 @@ function conky_draw_clock()
     local w_h       = get_text_width(cr, h_str,   FONT, TIME_SIZE, false)
     local w_m       = get_text_width(cr, minutes, FONT, TIME_SIZE, false)
     local colon_gap = 30
-    local x_h       = 14 
+    local x_h       = 6
     local x_col     = x_h + w_h + 6
     local x_m       = x_col + colon_gap
     local x_post    = x_m + w_m + 12
@@ -136,7 +135,7 @@ function conky_draw_clock()
               x_post, BASE_Y - TIME_SIZE * 0.60 + 5, COLOR_AMPM, 0.80)
 
     -- ── vertical divider ─────────────────────────────────────────────────────
-    local div_x = x_post + 35
+    local div_x = x_post + 30 
     cairo_set_line_width(cr, 1.2)
     set_color(cr, COLOR_DIV, 0.28)
     cairo_move_to(cr, div_x, BASE_Y - TIME_SIZE * 0.88 + 10)
@@ -145,7 +144,7 @@ function conky_draw_clock()
 
     -- ── date block (centered vertically in divider, centered horizontally) ──
     local date_x  = div_x + 14
-    local date_cx = (date_x + conky_window.width) / 2 - 5  -- horizontal center of date column
+    local date_cx = (date_x + conky_window.width) / 2 - 4  -- horizontal center of date column
 
     local ext_mo  = get_text_extents_full(cr, month,   FONT, 18, true)
     local ext_dy  = get_text_extents_full(cr, day,     FONT, 34, false)

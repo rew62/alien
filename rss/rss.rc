@@ -34,5 +34,4 @@ conky.config = {
 
 conky.text = [[
 ${voffset 10}${execp cat /dev/shm/rss/rss.txt}
-#${voffset 10}${cat /dev/shm/rss/rss.txt | sed 's/▶/${font Noto Sans Symbols:size=10}▶${font}/g' }
 ]];

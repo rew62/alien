@@ -5,7 +5,7 @@ conky.config = {
     -- Window / positioning
     alignment          = 'top_middle',
     gap_x              = 0,
-    gap_y              = 160,
+    gap_y              = 260,
 
     -- Transparent background
     own_window         = true,
@@ -34,18 +34,13 @@ conky.config = {
     use_xft            = true,
 
     -- Fonts
-    font               = 'FiraCode Nerd Font:size=10',
-    font2              = 'SpaceMono Nerd Font:size=18',
+    font              = 'DejaVuSansM Nerd Font Propo:size=10',
+    font2              = 'DejaVuSansM Nerd Font Propo:size=18',
+
     override_utf8_locale = true,
 
     -- Colors
     default_color      = 'white',
-    color1             = 'f5d080',       -- values / totals (bright)
-    color2             = '60c888',       -- RX (green)
-    color3             = 'e07050',       -- TX (red-orange)
-    color4             = '8a6030',       -- dimmed / comments
-    color5             = 'a06828',       -- tree lines
-    color6             = 'f0c070',       -- section headers
 
     -- Templates
     template1          = "wlp2s0",       -- LAN interface name

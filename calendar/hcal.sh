@@ -103,7 +103,7 @@ CONTENT_WIDTH=$((b * 3 + 2))  # Each day takes 3 chars, plus initial space
 HLINE=$(printf '─%.0s' $(seq 1 $CONTENT_WIDTH))
 
 # Output with unicode box
-#echo '${font Ubuntu Mono:Bold:size=10}'"┌${HLINE}┐"
+#echo '${font IBM Plex Mono:Bold:size=10}'"┌${HLINE}┐"
 #echo "┌${HLINE}┐"
 #echo "│${TOP_OUTPUT} │"
 #echo "│${BOTTOM_OUTPUT} │"

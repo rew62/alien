@@ -23,16 +23,13 @@ conky.config = {
 
     -- Font defaults
     use_xft = true,
-    font = 'DejaVuSansM Nerd Font Propo:size=10',
     override_utf8_locale = true,
 
-    font = 'Ubuntu Mono',
+    font =  'DejaVuSansM Nerd Font Propo:size=10',
     font1 = 'Fira Code:size=10',
     font2 = 'Fira Code:bold:size=10',
-    font4 = 'Liberation Sans:size=11',
-    font5 = 'IBM Plex Mono:size=11',
-    font6 = 'Noto Sans:size=12',
-    font7 = 'DejaVuSansM Nerd Font Propo:size=11',
+    font3 = 'IBM Plex Mono:size=11',
+    font4 = 'DejaVuSansM Nerd Font Propo:size=11',
 
     default_color = 'white',
     color1 = '98FB98',  -- PaleGreen
@@ -56,5 +53,5 @@ conky.config = {
 
 conky.text = [[
 ${voffset 8}${color7}${alignc}${font Orbitron:semibold:size=10}${time %A, %B %-d, %Y   Day: %-j   Week: %-U}
-${voffset 20}${font1}${voffset -15}$color${execpi 36000 ./hcal.sh}${color} ${voffset 8}
+${voffset 20}${font4}${voffset -15}$color${execpi 36000 ./hcal.sh}${color} ${voffset 8}
 ]]

@@ -6,7 +6,7 @@ conky.config = {
     alignment = 'top_right',
     gap_x = 15,
     gap_y = 50,
-    minimum_width = 200,
+    minimum_width = 220,
     minimum_height = 150,
     -- Appearance
     own_window = true,
@@ -23,16 +23,10 @@ conky.config = {
 
     -- Font defaults
     use_xft = true,
-    font = 'DejaVuSansM Nerd Font Propo:size=10',
     override_utf8_locale = true,
 
-    font = 'Ubuntu Mono',
-    font1 = 'Fira Code:size=10',
-    font2 = 'Fira Code:bold:size=10',
-    font4 = 'Liberation Sans:size=11',
-    font5 = 'IBM Plex Mono:size=11',
-    font6 = 'Noto Sans:size=12',
-    font7 = 'DejaVuSansM Nerd Font Propo:size=11',
+    font1= 'DejaVuSansM Nerd Font Propo:size=14:weight=bold',
+    font2= 'DejaVuSansM Nerd Font Propo:size=14:weight=light',
   
     default_color = '8FBC8F',
     color1 = '98FB98',  -- PaleGreen
@@ -56,14 +50,14 @@ conky.config = {
 
 conky.text = [[
 # Day of week header (S M T W T F S)
-${voffset 15}${alignc}${font DejaVuSansM Nerd Font Propo:size=14:weight=light}\
-${if_match ${time %u}==7}${font DejaVuSansM Nerd Font Propo:size=14:weight=bold}${color4}S${font DejaVuSansM Nerd Font Propo:size=14:weight=light}${else}${color2}S${endif}  \
-${if_match ${time %u}==1}${font DejaVuSansM Nerd Font Propo:size=14:weight=bold}${color4}M${font DejaVuSansM Nerd Font Propo:size=14:weight=light}${else}${color2}M${endif}  \
-${if_match ${time %u}==2}${font DejaVuSansM Nerd Font Propo:size=14:weight=bold}${color4}T${font DejaVuSansM Nerd Font Propo:size=14:weight=light}${else}${color2}T${endif}  \
-${if_match ${time %u}==3}${font DejaVuSansM Nerd Font Propo:size=14:weight=bold}${color4}W${font DejaVuSansM Nerd Font Propo:size=14:weight=light}${else}${color2}W${endif}  \
-${if_match ${time %u}==4}${font DejaVuSansM Nerd Font Propo:size=14:weight=bold}${color4}T${font DejaVuSansM Nerd Font Propo:size=14:weight=light}${else}${color2}T${endif}  \
-${if_match ${time %u}==5}${font DejaVuSansM Nerd Font Propo:size=14:weight=bold}${color4}F${font DejaVuSansM Nerd Font Propo:size=14:weight=light}${else}${color2}F${endif}  \
-${if_match ${time %u}==6}${font DejaVuSansM Nerd Font Propo:size=14:weight=bold}${color4}S${font DejaVuSansM Nerd Font Propo:size=14:weight=light}${else}${color2}S${endif}
+${voffset 15}${alignc}${font2}\
+${if_match ${time %u}==7}${font1}${color4}S${font2}${else}${color2}S${endif}  \
+${if_match ${time %u}==1}${font1}${color4}M${font2}${else}${color2}M${endif}  \
+${if_match ${time %u}==2}${font1}${color4}T${font2}${else}${color2}T${endif}  \
+${if_match ${time %u}==3}${font1}${color4}W${font2}${else}${color2}W${endif}  \
+${if_match ${time %u}==4}${font1}${color4}T${font2}${else}${color2}T${endif}  \
+${if_match ${time %u}==5}${font1}${color4}F${font2}${else}${color2}F${endif}  \
+${if_match ${time %u}==6}${font1}${color4}S${font2}${else}${color2}S${endif}
 # Large date number
 ${voffset 3}${alignc}${font Metropolis:size=56:weight=light}${color3}${time %d}
 ${voffset -115}

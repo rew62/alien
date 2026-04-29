@@ -5,8 +5,8 @@
 conky.config = {
     -- Window settings
     alignment = 'top_right',
-    gap_x = 15,
-    gap_y = 270,
+    gap_x = 20,
+    gap_y = 700,
     minimum_width = 200,
     minimum_height = 150,
     -- Appearance
@@ -24,16 +24,9 @@ conky.config = {
 
     -- Font defaults
     use_xft = true,
-    font = 'DejaVuSansM Nerd Font Propo:size=10',
+    --font = 'DejaVuSansM Nerd Font Propo:size=10',
+    font = 'MonaspiceNe Nerd Font Mono:size=13',
     override_utf8_locale = true,
-
-    font = 'Ubuntu Mono',
-    font1 = 'Fira Code:size=10',
-    font2 = 'Fira Code:bold:size=10',
-    font4 = 'Liberation Sans:size=11',
-    font5 = 'IBM Plex Mono:size=11',
-    font6 = 'Noto Sans:size=12',
-    font7 = 'DejaVuSansM Nerd Font Propo:size=11',
 
     default_color = '8FBC8F',
     color1 = '98FB98',  -- PaleGreen

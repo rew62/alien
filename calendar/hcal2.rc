@@ -44,8 +44,6 @@ conky.config = {
 	default_shade_color = '#333333',
 	default_outline_color = 'black',
   	color1 = '98FB98',  -- PaleGreen
-  	--font3 = 'Fira Code:size=14:Bold',
-  	font3 = 'Good Times:size=12',
 
         lua_load = './settings.lua ./loadall.lua',
         lua_draw_hook_post = 'main',
@@ -54,6 +52,4 @@ conky.config = {
 
 conky.text = [[
 ${voffset 18}${color1}${alignc}${font Orbitron:semibold:size=14}${time %A, %B %-d, %Y   Day: %-j   Week: %-U}
-#${voffset 18}${color1}${alignc}${font Oxanium:bold:size=14}${time %A, %B %-d, %Y   Day: %-j   Week: %-U}
-#${execi 300 ~/.conky/alien/scripts/owm_fetch.sh}${lua_parse info_row}
 ]]

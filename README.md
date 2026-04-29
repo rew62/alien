@@ -37,10 +37,17 @@ The **Earth Viewer** component is adapted from the *Aurora* set.
 
 ## Getting Started
 
+
+Install conky and dependencies:
+
+````bash
+sudo apt install conky-all tmux curl xdotool vnstat jq python3-ephem playerctl librsvg2-bin luarocks gcalcli git fonts-ibm-plex
+````
+
 Run the setup script:
 
 ```bash
-./configure-alien.sh
+./configure-alien.sh or ./configure-alien2.sh (includes automated font install)
 ```
 
 This will:
@@ -60,8 +67,7 @@ This will:
 * Patch `calendar/sys-small.rc` with the active network interface
 * Patch `vnstat/vnstat.lua` with the active network interface
 * Update `earth/crontab` with the correct home path (if present)
-* Run a font availability check
-* Optionally run the lyrics dependency check
+* Run a font availability check or for ./configure-alien2.sh, installs the fonts in the fonts directory automantically.
 
 See `.env-example` for the format reference.
 
@@ -85,7 +91,7 @@ See `.env-example` for the format reference.
 
 ### Weather System
 
-* Uses **National Weather Service (NWS)** data for forecast and **openweathrmap.org (OWM) api** for current conditions.
+* Uses **National Weather Service (NWS)** data for forecast and **openweathermap.org (OWM) api** for current conditions.
   * Note - OWM requires an api key. You can obtain one free at https://openweathermap.org/
 
 * Separate scripts for:
@@ -154,6 +160,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `r` | `rss/rss2.rc` | RSS feed viewer |
 | `$` | `stocks/ticker.rc` | Stock price table |
 | `s` | `calendar/sys-small.rc` | Single-line system monitor |
+| `s2` | `calendar/sys-small2.rc` | Single-line system monitor (larger font) |
 | `sc` | `calendar/sidepanel-calendar.rc` | Side panel calendar |
 | `t` | `clock/clock.rc` | Animated clock |
 | `v` | `vnstat/vnstat.rc` | vnStat bandwidth monitor |
@@ -163,100 +170,87 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 
 ---
 
-## File Tree
+## Directory and File Tree
 
-```
-.
-├── alien-tmux                  - launch all widgets via tmux
-├── alien-tmux2                 - alternate tmux launch config. Uses 1 or 2 letter codes to launch specified conkys in tmux.
-├── configure-alien.sh          - interactive setup (API key, lat/lon, interface)
-├── theme.lua                   - global colors (borders, backgrounds)
-├── .env-example                - environment variable template
-│
-├── arc/
-│   ├── arc.rc                  - horizon arc, planets, sun/moon, sunrise/sunset, current weather
+```text
+├── alien.png
+├── alien-tmux                          - launch all widgets via tmux
+├── alien-tmux2                         - selective tmux launch (short codes)
+├── background.png                      - Alien theme background (3440×1440)
+├── arc/                                [a]  Arc (horizon, planets, sun/moon, weather)
+│   ├── arc.rc
 │   ├── arc3.lua
 │   ├── settings.lua
 │   └── sky_update.py
-│
 ├── calendar/
-│   ├── hcal2.rc                - full-width horizontal Lua calendar via hcal2.lua (primary)
-│   ├── hcal.rc                 - compact horizontal calendar via hcal.sh
-│   ├── kcalendar.rc            - khal-based calendar panel via khal-calendar.sh 
-│   ├── lcalendar.rc            - Lua-drawn calendar from allcombined2.lua
-│   ├── sidepanel-calendar.rc   - large date/day/month side panel (conky vars)
-│   ├── sys-small.rc            - single-line system monitor (CPU / RAM / FS / WiFi)
+│   ├── hcal2.rc                        [h2] Horizontal Lua calendar (full-width)
+│   ├── hcal.rc                         [hc] Horizontal calendar (compact, bash)
+│   ├── kcalendar.rc                    [kc] khal-based calendar panel
+│   ├── lcalendar.rc                    [lc] Lua-drawn allcombined calendar
+│   ├── sidepanel-calendar.rc           [sc] Side panel calendar
+│   ├── sys-small.rc                    [s]  Single-line system monitor
+│   ├── sys-small2.rc                   [s2] Single-line system monitor (larger font)
 │   ├── fmt.lua
 │   ├── hcal2.lua
 │   ├── hcal.sh
 │   ├── khal-calendar.sh
 │   ├── loadall.lua
 │   └── settings.lua
-│
 ├── clock/
-│   ├── clock.rc                - animated clock widget (0.5 s updates)
-│   ├── song-info.rc            - single-line Now Playing via playerctl
+│   ├── clock.rc                        [t]  Animated clock widget (0.5 s updates)
+│   ├── song-info.rc                    [m]  Now Playing (song info)
 │   ├── clock.lua
 │   ├── loadall.lua
 │   └── settings.lua
-│
-├── earth/
-│   ├── earth.rc                - live Earth satellite image viewer
+├── configure-alien.sh                  - interactive setup (API key, lat/lon, interface)
+├── configure-alien2.sh                 - setup with automated font install
+├── earth/                              [e]  Earth satellite image viewer
+│   ├── earth.rc
+│   ├── crontab
+│   ├── fourmilab-earth.sh
 │   ├── loadall.lua
 │   └── settings.lua
-│
-├── fonts
-│   ├── BarlowCondensed-Regular.ttf
-│   ├── Good Times Rg.otf
-│   ├── Metropolis Black.ttf
-│   ├── Orbitron
-│   └── Oxanium
-│
-├── gcal/
-│   ├── gcal.rc                 - Google Calendar month-view via gcalcli (Lua rendered)
+├── fonts/                              - bundled font files
+├── gcal/                               [g]  Google Calendar month-view
+│   ├── gcal.rc
 │   ├── gcal2.lua
 │   ├── loadall.lua
 │   └── settings.lua
-│
-├── rss/
-│   ├── rss.rc                  - click-enabled RSS feed viewer
+├── rss/                                [r]  RSS feed viewer
+│   ├── rss.rc
 │   ├── feeds.conf
-│   ├── loadall.lua
 │   ├── rss-click.sh
 │   ├── rss-daemon.sh
 │   ├── rss-fetch.sh
 │   ├── rss-next.sh
+│   ├── loadall.lua
 │   └── settings.lua
-│
-├── scripts/
-│   ├── owm_fetch.sh            - shared OWM API fetch & icon cache script
+├── scripts/                            - shared scripts and Lua libraries
+│   ├── owm_fetch.sh
 │   ├── allcombined2.lua
 │   ├── background.lua
 │   ├── json.lua
 │   ├── loadall.lua
 │   └── lua3-bars.lua
-│
-├── stocks
-│   ├── loadall.lua
-│   ├── settings.lua
-│   ├── stocks.lua
-│   ├── symbols.conf
-│   └── ticker.rc               - stock ticker, Place stock symbols in symbols.conf
-│
-├── utils0
-│   ├── rc
-│   └── save-pos.sh
-│
-├── vnstat/
-│   ├── vnstat.rc               - vnstat network bandwidth history (daily / monthly)
+├── stocks/                             [$]  Stock price table
+│   ├── ticker.rc
+│   ├── symbols.conf
+│   ├── stocks.lua
+│   ├── loadall.lua
+│   └── settings.lua
+├── theme.lua                           - global colors (borders, backgrounds)
+├── utils/
+│   ├── rc                              - shortcut launcher (place on PATH)
+│   └── save-pos.sh                     - save all conky window positions
+├── vnstat/                             [v]  vnStat bandwidth monitor
+│   ├── vnstat.rc
 │   ├── vnstat.lua
 │   ├── loadall.lua
 │   └── settings.lua
-│
 └── weather/
-    ├── current.rc              - standalone current conditions widget via alien-weather-current.lua
-    ├── forecast.rc             - compact 5-day forecast strip va alien-weather-forecast.lua
-    ├── full.rc                 - full weather panel va alien-weather-full.lua
+    ├── current.rc                      [wc] Current conditions
+    ├── forecast.rc                     [wf] 5-day forecast strip
+    ├── full.rc                         [wa] Full weather panel
     ├── alien-weather-current.lua
     ├── alien-weather-forecast.lua
     ├── alien-weather-full.lua
@@ -267,6 +261,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
     └── settings.lua
 ```
 
+---
 
 ## Utilities
 
@@ -281,6 +276,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
   |---|---|---|
   | `rss` | `rss` | `rss/rss.rc` |
   | `sys-small` | `sys-small` | `calendar/sys-small.rc` |
+  | `sys-small2` | `sys-small2` | `calendar/sys-small2.rc` |
   | `current` | `w-current` | `weather/current.rc` |
   | `forecast` | `w-forecast` | `weather/forecast.rc` |
   | `full` | `w-full` | `weather/full.rc` |

@@ -1,6 +1,6 @@
 # Alien Conky Suite
 
-A modular, feature-rich collection of **17 Conky scripts** across 9 categories, designed to create a cohesive and interactive desktop experience.
+A modular, feature-rich collection of **18 Conky scripts** across **9 categories**, designed to create a cohesive and interactive desktop experience.
 Run everything together or each component independently.
 
 * All components are **fully modular**
@@ -41,7 +41,7 @@ The **Earth Viewer** component is adapted from the *Aurora* set.
 Install conky and dependencies:
 
 ````bash
-sudo apt install conky-all tmux curl xdotool vnstat jq python3-ephem playerctl librsvg2-bin luarocks gcalcli git fonts-ibm-plex
+sudo apt install conky-all tmux curl xdotool vnstat jq python3-ephem playerctl librsvg2-bin luarocks gcalcli khal git fonts-ibm-plex
 ````
 
 Run the setup script:

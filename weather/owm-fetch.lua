@@ -1,13 +1,11 @@
 -- owm-fetch.lua - OWM data reader for conky weather widgets
 -- Fetch handled by owm_fetch.sh; all callers share one cache
--- v1.1 2026-04-09 @rew62
+-- v2.1 2026-04-09 @rew62 (Refactored: fetch moved to shared owm_fetch.sh)
 -- PUBLIC API:
 --   conky_owm_fetch()   -- trigger background fetch if cache is stale
 --   owm_get(field)      -- read one field from owm_parsed.txt (pure Lua, no subprocess)
 --
 -- Cache location: /dev/shm/conky/owm_parsed.txt
---
--- v2.0 2026-04-01 (Refactored: fetch moved to shared owm_fetch.sh)
 
 local CACHE_JSON   = "/dev/shm/conky/owm_current.json"
 local CACHE_PARSED = "/dev/shm/conky/owm_parsed.txt"

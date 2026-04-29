@@ -1,6 +1,6 @@
 -- stocks.lua - Self-contained stock quote table widget for Conky
--- Reads symbols.conf, fetches from Finnhub, caches to /dev/shm, renders table
 -- v3.0 2026-04-13 @rew62
+-- Reads symbols.conf, fetches from Finnhub, caches to /dev/shm, renders table
 
 local HOME      = os.getenv("HOME")
 local CACHE_DIR = "/dev/shm/stock_cache"

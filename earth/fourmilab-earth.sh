@@ -1,6 +1,6 @@
 #!/bin/bash
-# fourmilab-earth.sh  2026-01-19  @rew62
-# https://www.fourmilab.ch - Earth and Moon Viewer
+# fourmilab-earth.sh - Earth and Moon Viewer - https://www.fourmilab.ch 
+# v1.0 2026-01-19 @rew62
 # Dedicated to John Walker (2024) whose website made this script possible. Your voice remains in the code.
 # 
 # Place this line in your cron with crontab -e. Edit path to script location. Use full path. 

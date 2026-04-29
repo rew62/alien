@@ -1,4 +1,5 @@
 -- arc3.lua - Horizon arc + weather panel + moon phase + sun/moon markers + planets
+-- v1.3 2026-04-11 @rew62  refactor: extract sub-drawing functions, remove dead code
 -- Extended arc.lua:
 --   • 3-column weather panel moved up into the arc interior (y≈172-216),
 --     above the arc endpoints, leaving the lower band free for moon phase.
@@ -13,7 +14,6 @@
 --
 -- Data: owm_current.json, owm_parsed.txt, sky.vars, /dev/shm/owm_wind.png
 -- Icons: /dev/shm/conky_icons/metno_*.png
--- v1.3 2026-04-11 @rew62  refactor: extract sub-drawing functions, remove dead code
 
 local XDG       = os.getenv("XDG_CACHE_HOME") or "/dev/shm"
 local CACHE_DIR = os.getenv("CONKY_CACHE_DIR") or (XDG .. "/conky")

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# v1.0 2026-04-29 @rew62
 # save-pos.sh — Read current xdotool position of conky windows and write
 #               back the computed gap_x / gap_y into their .rc files.
 #

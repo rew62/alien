@@ -36,14 +36,14 @@ function conky_main()
         return
     end
 
-
+    -- DEBUG:
     -- if not daemon_started then
     --     os.execute('pgrep -f rss-daemon.sh >/dev/null 2>&1 || ~/.conky/alien/rss/rss-daemon.sh &')                                             
     --     --local rss = os.getenv("HOME") .. "/.conky/alien/rss/rss-daemon.sh"                                                                     
     --     --os.execute('pkill -f rss-daemon.sh 2>/dev/null; pkill -f "xdotool behave" 2>/dev/null; sleep 1; ' .. rss .. ' &')                      
     --     daemon_started = true
 
-    --     print("deamon started")
+    --     print("daemon started")
     -- end
 
 

@@ -67,7 +67,7 @@ This will:
 * Patch `calendar/sys-small.rc` with the active network interface
 * Patch `vnstat/vnstat.lua` with the active network interface
 * Update `earth/crontab` with the correct home path (if present)
-* Run a font availability check or for ./configure-alien2.sh, installs the fonts in the fonts directory automantically.
+* Run a font availability check or for ./configure-alien2.sh, installs the fonts in the fonts directory automatically.
 
 See `.env-example` for the format reference.
 
@@ -91,8 +91,8 @@ See `.env-example` for the format reference.
 
 ### Weather System
 
-* Uses **National Weather Service (NWS)** data for forecast and **openweathermap.org (OWM) api** for current conditions.
-  * Note - OWM requires an api key. You can obtain one free at https://openweathermap.org/
+* Uses **National Weather Service (NWS)** data for forecast and **openweathermap.org (OWM) API** for current conditions.
+  * Note - OWM requires an API key. You can obtain one free at https://openweathermap.org/
 
 * Separate scripts for:
 

@@ -44,6 +44,13 @@ Install conky and dependencies:
 sudo apt install conky-all tmux curl xdotool vnstat jq python3-ephem playerctl librsvg2-bin luarocks gcalcli khal git fonts-ibm-plex
 ````
 
+Install Alien:
+````bash
+cd ~/.conky
+git clone https://github.com/rew62/alien.git
+cd alien
+````
+
 Run the setup script:
 
 ```bash

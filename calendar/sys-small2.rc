@@ -1,6 +1,9 @@
 -- sys-small2.rc - Single Line Conky System Monitor
 -- v1.0 2026-04-02 @rew62
 
+local HOME = os.getenv("HOME") or ""
+local DIR  = os.getenv("CONKY_CAL_DIR") or (HOME .. "/.conky/alien/calendar")
+
 conky.config = {
     -- Window / positioning
     alignment          = 'top_middle',
@@ -54,7 +57,7 @@ conky.config = {
     template1          = "wlp2s0",       -- LAN interface name
 
     -- Lua Load 
-    lua_load = './settings.lua ./fmt.lua',
+    lua_load = DIR .. '/settings.lua ' .. DIR .. '/fmt.lua',
     lua_startup_hook = 'vars',
 }
 

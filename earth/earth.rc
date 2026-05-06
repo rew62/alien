@@ -1,4 +1,4 @@
--- earth.rc - alien display a larger earth in the middle of the screen
+-- earth.rc - alien display a larger earth
 -- v1 01 2026-04-11 @rew62
 
 conky.config = {
@@ -9,10 +9,10 @@ conky.config = {
     imlib_cache_size = 0,                       	-- disable image cache to get a new spotify cover per song
     
     --Placement
-    alignment = 'top_middle',			-- top-left,top-middle,top-right,bottom-left,bottom-middle,bottom-right,
+    alignment = 'bottom_right',			-- top-left,top-middle,top-right,bottom-left,bottom-middle,bottom-right,
     						-- middle-left,middle-middle,middle-right,none
     gap_x = 0,					-- pixels between right or left border
-    gap_y = 600,					-- pixels between bottom or left border
+    gap_y = 340,					-- pixels between bottom or left border
     minimum_height = 180,				-- minimum height of window
     minimum_width = 300,				-- minimum height of window
     maximum_width = 300,				-- maximum height of window

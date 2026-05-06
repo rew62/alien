@@ -1,0 +1,35 @@
+-- terminator.rc - day/night terminator Map
+-- v1.0 2026-05-04 @rew62
+
+local DIR = debug.getinfo(1, "S").source:match("@(.*/)") or (os.getenv("HOME") .. "/.conky/alien/terminator/")
+
+conky.config = {
+    -- Window
+    alignment            = 'top_middle',
+    gap_x                = 0,
+    gap_y                = 520,
+    minimum_width        = 810,
+    minimum_height       = 415,
+    own_window           = true,
+    own_window_type      = 'normal',
+    own_window_transparent = true,
+    own_window_argb_visual = true,
+    own_window_argb_value  = 0,
+    own_window_hints     = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+
+    -- Rendering
+    double_buffer        = true,
+    background           = false,
+    update_interval      = 60,      -- redraw every 60 s (terminator moves ~0.25°/min)
+
+    -- Lua
+    --lua_load             = DIR .. '~/terminator.lua',
+    --lua_draw_hook_post   = 'draw_terminator',
+
+    -- Lua Load 
+    lua_load = DIR .. '/settings.lua ' .. DIR .. '/loadall.lua',
+    lua_startup_hook = 'vars',
+    lua_draw_hook_post = 'main',
+}
+
+conky.text = [[]]

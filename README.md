@@ -1,6 +1,6 @@
 # Alien Conky Suite
 
-A modular, feature-rich collection of **18 Conky scripts** across **9 categories**, designed to create a cohesive and interactive desktop experience.
+A modular, feature-rich collection of **20 Conky scripts** across **10 categories**, designed to create a cohesive and interactive desktop experience.
 Run everything together or each component independently.
 
 * All components are **fully modular**
@@ -21,6 +21,7 @@ Run everything together or each component independently.
 
 | Category | Scripts |
 |---|---|
+| **Analog Clock** | Analog Clock |
 | **Clock** | Animated Clock, Now Playing (Song Info) |
 | **Weather** | Current Conditions, Forecast, Full Panel |
 | **Calendar** | Horizontal Calendar (Lua), Horizontal Calendar (Bash), khal calendar, allcombined Lua Calendar, Side Panel calendar |
@@ -30,6 +31,7 @@ Run everything together or each component independently.
 | **Google Calendar** | Month-view (gcalcli + Lua) |
 | **RSS** | Click-enabled Feed Viewer |
 | **Stocks** | Current stock prices |
+| **Terminator** | Day/night terminator map |
 
 The **Earth Viewer** component is adapted from the *Aurora* set.
 
@@ -156,6 +158,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 
 | Code | RC File | Widget |
 |---|---|---|
+| `ac` | `aclock/aclock.rc` | Analog clock |
 | `a` | `arc/arc.rc` | Arc (horizon, planets, sun/moon, weather) |
 | `e` | `earth/earth.rc` | Earth satellite image viewer |
 | `g` | `gcal/gcal.rc` | Google Calendar month-view |
@@ -174,6 +177,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `wa` | `weather/full.rc` | Full weather panel |
 | `wc` | `weather/current.rc` | Current conditions |
 | `wf` | `weather/forecast.rc` | 5-day forecast strip |
+| `tm` | `terminator/terminator.rc` | Day/night terminator map |
 
 ---
 
@@ -184,6 +188,8 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 ├── alien-tmux                          - launch all widgets via tmux
 ├── alien-tmux2                         - selective tmux launch (short codes)
 ├── background.png                      - Alien theme background (3440×1440)
+├── aclock/                             [ac] Analog clock
+│   └── aclock.rc
 ├── arc/                                [a]  Arc (horizon, planets, sun/moon, weather)
 │   ├── arc.rc
 │   ├── arc3.lua
@@ -245,6 +251,8 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   ├── stocks.lua
 │   ├── loadall.lua
 │   └── settings.lua
+├── terminator/                         [tm] Day/night terminator map
+│   └── terminator.rc
 ├── theme.lua                           - global colors (borders, backgrounds)
 ├── utils/
 │   ├── rc                              - shortcut launcher (place on PATH)

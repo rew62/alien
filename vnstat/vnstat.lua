@@ -33,8 +33,8 @@ local C = {
     label   = "${color}",
     val     = "${color1}",
     dim     = "${color4}",
-    rx      = "${color2}",
-    tx      = "${color3}",
+    rx      = "${color3}",
+    tx      = "${color2}",
     white   = "${color e8e8e8}",
     reset   = "${color}",
 }

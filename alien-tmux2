@@ -30,8 +30,9 @@ MAP[wf]="weather|forecast.rc"
 MAP[wa]="weather|full.rc"
 MAP[ac]="aclock|aclock.rc"
 MAP[tm]="terminator|terminator.rc"
-MAP[asf]="~/.conky/rew62/system|system.rc"
-MAP[anf]="~/.conky/rew62/network|network.rc"
+MAP[eas]="~/.conky/rew62/system|system.rc"
+MAP[ean]="~/.conky/rew62/network|network.rc"
+MAP[eaq]="~/.conky/rew62/music/eq/|eq.rc"
 
 # --- Input check ---
 if [ "$#" -eq 0 ]; then
@@ -47,7 +48,7 @@ if [ "$#" -eq 0 ]; then
     echo "    r           rss"
     echo "    \$           stocks"
     echo "    v           vnstat"
-    echo "    vs          vnstat short"
+    echo "    vs          vnstat    (summary)"
     echo "    hc          calendar  (hcal)"
     echo "    h2          calendar  (hcal2)"
     echo "    lc          calendar  (lcalendar)"

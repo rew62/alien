@@ -174,6 +174,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `sc` | `calendar/sidepanel-calendar.rc` | Side panel calendar |
 | `t` | `clock/clock.rc` | Animated clock |
 | `v` | `vnstat/vnstat.rc` | vnStat bandwidth monitor |
+| `vs` | `vnstat/vnstat-summary.rc` | vnstat short |
 | `wa` | `weather/full.rc` | Full weather panel |
 | `wc` | `weather/current.rc` | Current conditions |
 | `wf` | `weather/forecast.rc` | 5-day forecast strip |
@@ -259,7 +260,9 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   └── save-pos.sh                     - save all conky window positions
 ├── vnstat/                             [v]  vnStat bandwidth monitor
 │   ├── vnstat.rc
+│   ├── vnstat-summary.rc                   [vs] vnstat short
 │   ├── vnstat.lua
+│   ├── vnstat-summary.lua
 │   ├── loadall.lua
 │   └── settings.lua
 └── weather/
@@ -298,6 +301,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
   | `song-info` | `song-info` | `clock/song-info.rc` |
   | `clock` | `conky_clock` | `clock/clock.rc` |
   | `vnstat` | `vnstat` | `vnstat/vnstat.rc` |
+  | `vnstat-summary` | `vnstat-summary` | `vnstat/vnstat-summary.rc` |
   | `hcal2` | `hcal2` | `calendar/hcal2.rc` |
   | `hcal` | `hcal` | `calendar/hcal.rc` |
   | `arc` | `conky-arc` | `arc/arc.rc` |

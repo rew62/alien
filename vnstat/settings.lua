@@ -21,4 +21,8 @@ function conky_vars()
     print("Script Name: " .. conky_script_name)
 
     conky_title = "vnstat"
+
+    var_NETWORK = "wlp2s0"
+    var_WEEK_START = "sunday"   -- "monday" or "sunday"
+
 end

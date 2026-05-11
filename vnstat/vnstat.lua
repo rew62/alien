@@ -1,5 +1,5 @@
 -- vnstat.lua - vnstat network statistics conky widget
--- v1.0 2026-04-04 @rew62
+-- v1.1 2026-05-11 @rew62
 
 -- -----------------------------------------------------------------------
 -- JSON DEPENDENCY FALLBACK
@@ -22,7 +22,7 @@ local ok, lib = pcall(require, "cjson")
     end
 end
 
-local IFACE      = "wlp2s0"    -- change to your interface
+local IFACE      = "wlp2s0"    -- default; overridden by var_NETWORK from settings.lua
 local MAX_HOURS  = 10          -- how many hourly rows to show
 local MAX_DAYS   = 21          -- how many daily rows to show
 
@@ -35,17 +35,19 @@ local C = {
     dim     = "${color4}",
     rx      = "${color2}",
     tx      = "${color3}",
+    white   = "${color e8e8e8}",
     reset   = "${color}",
 }
 
 -- ── unit formatting ─────────────────────────────────────────────────
 local function fmt_bytes(b)
     b = tonumber(b) or 0
-    if     b >= 1e12 then return string.format("%.2fTB", b / 1e12)
-    elseif b >= 1e9  then return string.format("%.2fGB", b / 1e9)
-    elseif b >= 1e6  then return string.format("%.2fMB", b / 1e6)
-    elseif b >= 1e3  then return string.format("%.2fKB", b / 1e3)
-    else                  return string.format("%.0fB",  b)
+    local K = 1024
+    if     b >= K^4 then return string.format("%.2f TB", b / K^4)
+    elseif b >= K^3 then return string.format("%.2f GB", b / K^3)
+    elseif b >= K^2 then return string.format("%.2f MB", b / K^2)
+    elseif b >= K   then return string.format("%.2f KB", b / K)
+    else                 return string.format("%.0f B",  b)
     end
 end
 
@@ -94,8 +96,8 @@ local function hourly_block(iface)
 
     for i = 1, shown do
         local h  = hours[i]
-        local rx = (h.rx or 0) * 1024
-        local tx = (h.tx or 0) * 1024
+        local rx = h.rx or 0
+        local tx = h.tx or 0
         local tot = rx + tx
         total_rx = total_rx + rx
         total_tx = total_tx + tx
@@ -115,44 +117,76 @@ local function hourly_block(iface)
     local avg   = (shown > 0) and (grand / shown) or 0
 
     local out = ""
-    out = out .. C.tree .. "├── " .. C.label .. "interface : "
-               .. C.val  .. IFACE .. "\n"
+    out = out .. C.tree .. "├─ " .. C.header .. "hourly : "
+               .. C.white .. shown .. " entries\n"
     out = out .. C.tree .. "│\n"
-    out = out .. C.tree .. "├── " .. C.label .. "24 hours  : "
-               .. C.val  .. shown .. " entries (hourly)"
-               .. C.dim  .. " ~ " .. shown .. " shown @ 0\n"
-    out = out .. C.tree .. "│\n"
-    out = out .. C.tree .. "├──── " .. C.label .. "max   : "
-               .. C.val  .. pad(fmt_bytes(max_tot), 10)
-               .. C.dim  .. " ~ " .. max_label .. "\n"
-    out = out .. C.tree .. "├──── " .. C.label .. "min   : "
-               .. C.val  .. pad(fmt_bytes(min_tot), 10)
-               .. C.dim  .. " ~ " .. min_label .. "\n"
-    out = out .. C.tree .. "├──── " .. C.label .. "avg   : "
-               .. C.val  .. pad(fmt_bytes(avg), 10)
-               .. C.dim  .. " = (" .. fmt_bytes(grand) .. " / " .. shown .. ")\n"
-    out = out .. C.tree .. "├──── " .. C.label .. "total : "
-               .. C.val  .. pad(fmt_bytes(grand), 10)
-               .. C.dim  .. " = (TX " .. fmt_bytes(total_tx)
-               .. " + RX " .. fmt_bytes(total_rx) .. ")\n"
+
+    -- detect whether hours span more than one calendar day
+    local multi_day = false
+    if shown > 1 then
+        local first = hours[1]
+        for i = 2, shown do
+            local h = hours[i]
+            if h.date.day ~= first.date.day or h.date.month ~= first.date.month then
+                multi_day = true; break
+            end
+        end
+    end
+
+    -- column layout: label=11, value cols=10 each
+    local LW, VW = 11, 10
+    -- column header aligned to value columns
+    out = out .. C.tree .. "│" .. string.rep(" ", 3 + LW)
+              .. C.tx    .. pad("Upload",   VW)
+              .. "  "
+              .. C.rx    .. pad("Download", VW)
+              .. "  "
+              .. C.val   .. pad("Total",    VW) .. "\n"
     out = out .. C.tree .. "│\n"
 
     -- per-hour rows
     for i = 1, shown do
         local h   = hours[i]
-        local rx  = (h.rx or 0) * 1024
-        local tx  = (h.tx or 0) * 1024
+        local rx  = h.rx or 0
+        local tx  = h.tx or 0
         local tot = rx + tx
-        local prefix = (i == shown) and "└────" or "├────"
-        out = out .. C.tree  .. prefix .. " "
-                  .. C.dim   .. string.format("Hr: %02d ", h.time.hour)
-                  .. C.rx    .. "<RX " .. pad(fmt_bytes(rx),  10)
-                  .. C.dim   .. " + "
-                  .. C.tx    .. "TX "  .. pad(fmt_bytes(tx),   9)
-                  .. C.dim   .. " = TOT "
-                  .. C.val   .. pad(fmt_bytes(tot), 10)
+        local prefix = "├──"
+        local hr_label
+        if multi_day then
+            hr_label = string.format("%02d-%02d %02d:00",
+                h.date.month, h.date.day, h.time.hour)
+        else
+            hr_label = string.format("Hr: %02d:00  ", h.time.hour)
+        end
+        out = out .. C.tree .. prefix .. " "
+                  .. C.val  .. hr_label
+                  .. C.tx   .. pad(fmt_bytes(tx),  VW)
+                  .. "  "
+                  .. C.rx   .. pad(fmt_bytes(rx),  VW)
+                  .. "  "
+                  .. C.white .. pad(fmt_bytes(tot), VW)
                   .. "\n"
     end
+
+    out = out .. "${font Monospace:bold:size=9}"
+              .. C.tree .. "└── " .. C.header .. string.format("%-11s", "total")
+              .. C.tx   .. pad(fmt_bytes(total_tx), VW)
+              .. "  "
+              .. C.rx   .. pad(fmt_bytes(total_rx), VW)
+              .. "  "
+              .. C.white .. pad(fmt_bytes(grand),    VW)
+              .. "${font}" .. "\n"
+
+    out = out .. C.tree .. "│\n"
+    out = out .. C.tree .. "├── " .. C.val .. "max   : "
+               .. C.white .. pad(fmt_bytes(max_tot), 10)
+               .. C.label .. "  " .. max_label .. "\n"
+    out = out .. C.tree .. "├── " .. C.val .. "min   : "
+               .. C.white .. pad(fmt_bytes(min_tot), 10)
+               .. C.label .. "  " .. min_label .. "\n"
+    out = out .. C.tree .. "└── " .. C.val .. "avg   : "
+               .. C.white .. pad(fmt_bytes(avg), 10)
+               .. C.label .. "  (" .. fmt_bytes(grand) .. " / " .. shown .. ")\n"
 
     return out
 end
@@ -177,50 +211,65 @@ local function daily_block(iface)
     local shown  = math.min(MAX_DAYS, #days)
     local total_rx, total_tx = 0, 0
     local max_tot, min_tot   = 0, math.huge
-    local max_label, min_label = "", ""
+    local max_rx,  max_tx    = 0, 0
+    local min_rx,  min_tx    = 0, 0
+    local max_date, min_date = "", ""
 
     for i = 1, shown do
         local d   = days[i]
-        local rx  = (d.rx or 0) * 1024
-        local tx  = (d.tx or 0) * 1024
+        local rx  = d.rx or 0
+        local tx  = d.tx or 0
         local tot = rx + tx
         total_rx  = total_rx + rx
         total_tx  = total_tx + tx
-        local lbl = string.format("[%04d-%02d-%02d - %04d-%02d-%02d]",
-            d.date.year, d.date.month, d.date.day,
-            d.date.year, d.date.month, d.date.day + 1)
-        if tot > max_tot then max_tot = tot; max_label = lbl end
-        if tot < min_tot then min_tot = tot; min_label = lbl end
+        if tot > max_tot then
+            max_tot  = tot; max_rx = rx; max_tx = tx
+            max_date = string.format("%02d-%02d", d.date.month, d.date.day)
+        end
+        if tot < min_tot then
+            min_tot  = tot; min_rx = rx; min_tx = tx
+            min_date = string.format("%02d-%02d", d.date.month, d.date.day)
+        end
     end
 
-    local grand = total_rx + total_tx
-    local avg   = (shown > 0) and (grand / shown) or 0
+    local grand   = total_rx + total_tx
+    local avg_rx  = (shown > 0) and (total_rx / shown) or 0
+    local avg_tx  = (shown > 0) and (total_tx / shown) or 0
+    local avg_tot = (shown > 0) and (grand    / shown) or 0
+
+    -- same column layout as hourly block so the shared header aligns
+    local LW, VW = 11, 10
+    local function row(lbl, rx, tx, tot, last, lbl_color)
+        local prefix = last and "└──" or "├──"
+        return C.tree .. prefix .. " "
+             .. (lbl_color or C.val) .. string.format("%-" .. LW .. "s", lbl)
+             .. C.tx    .. pad(fmt_bytes(tx),  VW)
+             .. "  "
+             .. C.rx    .. pad(fmt_bytes(rx),  VW)
+             .. "  "
+             .. C.white .. pad(fmt_bytes(tot), VW)
+             .. "\n"
+    end
 
     local out = ""
-    out = out .. C.tree .. "├── " .. C.label .. "days      : "
-               .. C.val  .. shown .. " / " .. MAX_DAYS .. " entries (daily)\n"
+    out = out .. C.tree .. "├─ " .. C.header .. "days   : "
+               .. C.white .. (shown < MAX_DAYS and shown .. " of " .. MAX_DAYS .. " days" or MAX_DAYS .. " days") .. "\n"
     out = out .. C.tree .. "│\n"
-    out = out .. C.tree .. "├──── " .. C.label .. "max   : "
-               .. C.val  .. pad(fmt_bytes(max_tot), 10)
-               .. C.dim  .. " ~ " .. max_label .. "\n"
-    out = out .. C.tree .. "├──── " .. C.label .. "min   : "
-               .. C.val  .. pad(fmt_bytes(min_tot), 10)
-               .. C.dim  .. " ~ " .. min_label .. "\n"
-    out = out .. C.tree .. "├──── " .. C.label .. "avg   : "
-               .. C.val  .. pad(fmt_bytes(avg), 10)
-               .. C.dim  .. " = (" .. fmt_bytes(grand) .. " / " .. shown .. ")\n"
-    out = out .. C.tree .. "└──── " .. C.label .. "total : "
-               .. C.val  .. pad(fmt_bytes(grand), 10)
-               .. C.dim  .. " = (TX " .. fmt_bytes(total_tx)
-               .. " + RX " .. fmt_bytes(total_rx) .. ")\n"
+    out = out .. row("max  " .. max_date, max_rx,   max_tx,   max_tot,   false)
+    out = out .. row("min  " .. min_date, min_rx,   min_tx,   min_tot,   false)
+    out = out .. row("avg",               avg_rx,   avg_tx,   avg_tot,   false)
+    out = out .. "${font Monospace:bold:size=9}"
+           .. row("total",            total_rx, total_tx, grand,     true, C.header):sub(1, -2)
+           .. "${font}\n"
     return out
 end
 
 -- ── main entry point called by conky ────────────────────────────────
 function conky_draw_vnstat()
+    IFACE = var_NETWORK or IFACE   -- pick up interface from settings.lua at runtime
     local data = get_vnstat()
     if not data then
-        return C.tree .. "┌─── " .. C.header
+        return C.tree .. "┌─ " .. C.header
                .. "vnstat --- ERROR: no data\n"
                .. C.tree .. "└── " .. C.dim
                .. "is vnstat running? (vnstatd -d)\n"
@@ -234,29 +283,30 @@ function conky_draw_vnstat()
         end
     end
     if not iface then
-        return C.tree .. "┌─── " .. C.header
+        return C.tree .. "┌─ " .. C.header
                .. "vnstat --- interface " .. IFACE .. " not found\n"
     end
 
     -- grand totals for header
     local all_rx = iface.traffic and iface.traffic.total
-                   and (iface.traffic.total.rx or 0) * 1024 or 0
+                   and (iface.traffic.total.rx or 0) or 0
     local all_tx = iface.traffic and iface.traffic.total
-                   and (iface.traffic.total.tx or 0) * 1024 or 0
+                   and (iface.traffic.total.tx or 0) or 0
     local grand  = all_rx + all_tx
 
-    local timestamp = os.date("%H:%M:%S")
+    local timestamp = os.date("%I:%M %p"):lower()
 
     local out = ""
-    out = out .. C.tree .. "┌─── " .. C.header
-               .. "vnstat --- TOTAL: " .. fmt_bytes(grand) .. "\n"
+    out = out .. C.tree .. "┌─ " .. C.header .. "vnstat"
+               .. C.label .. "   Interface: " .. C.white .. IFACE
+               .. C.label .. "   Total: "     .. C.white .. fmt_bytes(grand) .. "\n"
     out = out .. C.tree .. "│\n"
     out = out .. hourly_block(iface)
     out = out .. C.tree .. "│\n"
     out = out .. daily_block(iface)
     out = out .. C.tree .. "│\n"
-    out = out .. C.tree .. "└── " .. C.label
-               .. "updated : " .. C.val .. timestamp .. "\n"
+    out = out .. C.tree .. "└─ " .. C.header
+               .. "updated : " .. C.white .. timestamp .. "\n"
 
     return out
 end

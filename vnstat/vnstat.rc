@@ -1,13 +1,13 @@
 -- vnstat.rc - vnstat network statistics conky widget
--- v1.0 2026-04-04 @rew62
+-- v1.1 2026-05-11 @rew62
 
 conky.config = {
     -- Window / positioning
     alignment          = 'middle_left',
     gap_x              = 20,
     gap_y              = 0,
-    minimum_width      = 420,
-    maximum_width      = 420,
+    minimum_width      = 350,
+    maximum_width      = 350,
 
     -- Transparent background
     own_window         = true,
@@ -41,7 +41,7 @@ conky.config = {
     color3             = 'e07050',       -- TX (red-orange)
     color4             = '8a6030',       -- dimmed / comments
     color5             = 'a06828',       -- tree lines
-    color6             = 'f0c070',       -- section headers
+    color6             = '89b4fa',       -- section headers (theme border blue)
 
     -- Lua script
     lua_load = './settings.lua ./loadall.lua',

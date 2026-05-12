@@ -33,6 +33,7 @@ MAP[tm]="terminator|terminator.rc"
 MAP[eas]="~/.conky/rew62/system|system.rc"
 MAP[ean]="~/.conky/rew62/network|network.rc"
 MAP[eaq]="~/.conky/rew62/music/eq/|eq.rc"
+MAP[eam]="~/.conky/rew62/moon|moon.rc"
 
 # --- Input check ---
 if [ "$#" -eq 0 ]; then

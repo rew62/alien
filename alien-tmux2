@@ -30,6 +30,7 @@ MAP[wf]="weather|forecast.rc"
 MAP[wa]="weather|full.rc"
 MAP[ac]="aclock|aclock.rc"
 MAP[tm]="terminator|terminator.rc"
+MAP[sd]="solardial|solardial.rc"
 MAP[eas]="~/.conky/rew62/system|system.rc"
 MAP[ean]="~/.conky/rew62/network|network.rc"
 MAP[eaq]="~/.conky/rew62/music/eq/|eq.rc"
@@ -61,10 +62,25 @@ if [ "$#" -eq 0 ]; then
     echo "    wf          weather   (forecast)"
     echo "    wa          weather   (full)"
     echo "    tm          day/night terminator map"
+    echo "    sd          solar dial"
+    echo "    all         launch everything"
     echo ""
     echo "  Example: $(basename "$0") t wc wf a"
     exit 1
 fi
+
+# --- Expand "all" to every defined code ---
+expanded=()
+for arg in "$@"; do
+    if [[ "$arg" == "all" ]]; then
+        for k in "${!MAP[@]}"; do
+            expanded+=("$k")
+        done
+    else
+        expanded+=("$arg")
+    fi
+done
+set -- "${expanded[@]}"
 
 # --- Optional bracket parsing ---
 if [[ "$1" =~ ^\[.*\]$ ]]; then

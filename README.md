@@ -1,6 +1,6 @@
 # Alien Conky Suite
 
-A modular, feature-rich collection of **20 Conky scripts** across **10 categories**, designed to create a cohesive and interactive desktop experience.
+A modular, feature-rich collection of **22 Conky scripts** across **12 categories**, designed to create a cohesive and interactive desktop experience.
 Run everything together or each component independently.
 
 * All components are **fully modular**
@@ -32,6 +32,7 @@ Run everything together or each component independently.
 | **RSS** | Click-enabled Feed Viewer |
 | **Stocks** | Current stock prices |
 | **Terminator** | Day/night terminator map |
+| **Solar Dial** | Solar Dial |
 
 The **Earth Viewer** component is adapted from the *Aurora* set.
 
@@ -172,6 +173,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `s` | `calendar/sys-small.rc` | Single-line system monitor |
 | `s2` | `calendar/sys-small2.rc` | Single-line system monitor (larger font) |
 | `sc` | `calendar/sidepanel-calendar.rc` | Side panel calendar |
+| `sd` | `solardial/solardial.rc` | Solar Dial |
 | `t` | `clock/clock.rc` | Animated clock |
 | `v` | `vnstat/vnstat.rc` | vnStat bandwidth monitor |
 | `vs` | `vnstat/vnstat-summary.rc` | vnstat short |
@@ -250,6 +252,11 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   ├── ticker.rc
 │   ├── symbols.conf
 │   ├── stocks.lua
+│   ├── loadall.lua
+│   └── settings.lua
+├── solardial/                          [sd] Solar Dial
+│   ├── solardial.rc
+│   ├── dial2.lua
 │   ├── loadall.lua
 │   └── settings.lua
 ├── terminator/                         [tm] Day/night terminator map

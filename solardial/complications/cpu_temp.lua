@@ -122,10 +122,10 @@ function M.draw(cr, cx, cy, r)
         CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
     cairo_set_font_size(cr, 11)
     local tl = cairo_text_extents_t:create()
-    cairo_text_extents(cr, "CPU", tl)
+    cairo_text_extents(cr, "CPU TEMP", tl)
     cairo_set_source_rgba(cr, 1, 1, 1, 0.70)
     cairo_move_to(cr, (cx * 2) - 6 - (tl.width + tl.x_bearing), ty + 13)
-    cairo_show_text(cr, "CPU")
+    cairo_show_text(cr, "CPU TEMP")
 
     -- ── lo / hi scale labels at arc endpoints ─────────────────────────────
     cairo_select_font_face(cr, "DejaVu Sans",

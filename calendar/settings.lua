@@ -52,4 +52,8 @@ function conky_vars()
     }
     local month = tonumber(os.date("%m"))
     mc = string.format("0x%06X", month_colors[month])
+
+    -- sync first tick to minute boundary so 60s interval stays accurate
+    --local s = tonumber(os.date("%S"))
+    --if s > 0 then os.execute("sleep " .. (60 - s)) end
 end

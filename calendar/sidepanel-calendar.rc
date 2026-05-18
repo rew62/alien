@@ -39,7 +39,7 @@ conky.config = {
     color8 = '005BBB',  -- Ukraine Blue
 
     -- Updates
-    update_interval = 60,
+    update_interval = 10,
     total_run_times = 0,
 
     -- Lua

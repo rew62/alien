@@ -2,7 +2,6 @@
 -- by mrpeachy
 -- v1.1 2026-04-09 @rew62
 require 'cairo'
-require 'imlib2'
 
 function rgb_to_r_g_b(col_a)
 return ((col_a[1] / 0x10000) % 0x100) / 255., ((col_a[1] / 0x100) % 0x100) / 255., (col_a[1] % 0x100) / 255., col_a[2]
@@ -390,6 +389,7 @@ end-- end main function
 
 function conky_luaimage(imtab)
 if conky_window == nil then return end
+require 'imlib2'
 local cs = cairo_xlib_surface_create(conky_window.display, conky_window.drawable, conky_window.visual, conky_window.width, conky_window.height)
 local cr = cairo_create(cs)
 --#########################################################################################################

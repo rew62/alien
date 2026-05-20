@@ -162,6 +162,7 @@ echo "Files to be updated:"
 echo "  - $ENV_FILE"
 echo "  - calendar/sys-small.rc"
 echo "  - vnstat/settings.lua"
+echo "  - vnstat/net.rc"
 #echo "  - network/network.rc"
 #echo "  - network/settings.lua"
 if [ -f "$CRONTAB_FILE" ]; then
@@ -207,6 +208,13 @@ if [ -f "$SCRIPT_DIR/vnstat/settings.lua" ]; then
     echo -e "${GREEN}✓ Updated vnstat/settings.lua${NC}"
 else
     echo -e "${YELLOW}⚠ File vnstat/settings.lua not found${NC}"
+fi
+
+if [ -f "$SCRIPT_DIR/vnstat/net.rc" ]; then
+    sed -i "s/template1[[:space:]]*=[[:space:]]*\"[^\"]*\"/template1 = \"$INTERFACE_NAME\"/" "$SCRIPT_DIR/vnstat/net.rc"
+    echo -e "${GREEN}✓ Updated vnstat/net.rc${NC}"
+else
+    echo -e "${YELLOW}⚠ File vnstat/net.rc not found${NC}"
 fi
 
 # ── Update crontab ────────────────────────────────────────────────────────

@@ -49,7 +49,6 @@ conky.config = {
 conky.text = [[
 ${execi 120 ]] .. FETCH_SH .. [[}
 ${execi  60 python3 ]] .. DIR .. [[/sky_update.py}
-${goto 250}${voffset 36}${color cyan}${font Metropolis:size=12}${lua_parse owm city}${font}${color}
 ${lua_parse owm draw_horizon}
 ${lua_parse owm_sun_labels}
 ]]

@@ -82,7 +82,7 @@ local CFG = {
     pt     = 12,
     color  = { 1, 1, 1, 1 },
     dy     = 24,    -- vertical offset for West and East labels
-    dy_mid = 34,    -- independent vertical offset for South/North label
+    dy_mid = 29,    -- independent vertical offset for South/North label
     lx     = 0,
     cx     = 0,
     rx     = 0,
@@ -158,6 +158,13 @@ local CFG = {
     col_desc  = { 0.80, 0.80, 0.80, 0.90 },
     col_wind  = { 0.85, 0.85, 0.85, 1.00 },
     col_div   = { 0.537, 0.706, 0.980, 1.0 },
+  },
+
+  city_label = {
+    y     = 88,      -- text baseline; adjust if position drifts from old ${voffset 36}
+    size  = 16,
+    font  = "Metropolis",
+    color = { 0.00, 1.00, 1.00, 1.00 },
   },
 }
 
@@ -400,7 +407,7 @@ local function draw_cardinal_labels(cr, cx, cy, r, ARC_START, ARC_END)
   local ext = cairo_text_extents_t:create()
   for _, lbl in ipairs({ {"West", lx, ly}, {apex, mx, my}, {"East", rx, ry} }) do
     cairo_text_extents(cr, lbl[1], ext)
-    cairo_move_to(cr, lbl[2] - ext.width/2, lbl[3])
+    cairo_move_to(cr, lbl[2] - (ext.width/2 + ext.x_bearing), lbl[3])
     cairo_text_path(cr, lbl[1])
     cairo_fill(cr)
   end
@@ -672,6 +679,21 @@ local function draw_weather_panel(cr)
   cairo_restore(cr)
 end
 
+local function draw_city_name(cr, cx)
+  local city = read_field(".name") or ""
+  if city == "" then return end
+  local CL  = CFG.city_label
+  local ext = cairo_text_extents_t:create()
+  cairo_save(cr)
+  cairo_select_font_face(cr, CL.font, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
+  cairo_set_font_size(cr, CL.size)
+  cairo_text_extents(cr, city, ext)
+  cairo_set_source_rgba(cr, CL.color[1], CL.color[2], CL.color[3], CL.color[4])
+  cairo_move_to(cr, cx - (ext.width / 2 + ext.x_bearing), CL.y)
+  cairo_show_text(cr, city)
+  cairo_restore(cr)
+end
+
 -- =========================================================================
 -- Draw: horizon arc + cardinal labels + sun + moon + planets
 --       + weather panel (upper interior) + moon phase (lower interior)
@@ -697,6 +719,7 @@ function conky_owm_draw_horizon()
   draw_planets         (cr, cx, cy, r, ARC_START, ARC_END)
   draw_weather_panel   (cr)
   draw_moon_phase      (cr, cx, cy)
+  draw_city_name       (cr, cx)
 
   cairo_restore(cr)
   cairo_destroy(cr)

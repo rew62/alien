@@ -16,13 +16,13 @@ for k, v in pairs(theme) do
     end
 end
 
-function conky_vars()
-    conky_script_name = conky_config:match("([^/]+)$")
-    print("Script Name: " .. conky_script_name)
+-- Set at load time so loadall.lua can branch on it during require phase
+conky_script_name = conky_config:match("([^/]+)$")
+print("Script Name: " .. conky_script_name)
 
-    conky_title = "vnstat"
+function conky_vars()
+    if conky_script_name == "net.rc"             then conky_title = "network"  end
+    if conky_script_name == "vnstat-summary.rc"  then conky_title = "vnstat"   end
 
     var_NETWORK = "wlp2s0"
-    var_WEEK_START = "sunday"   -- "monday" or "sunday"
-
 end

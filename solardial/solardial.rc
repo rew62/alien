@@ -21,10 +21,10 @@ conky.config = {
 
     maximum_width = 315,
 
-    gap_x = 50,
-    gap_y = 60,
+    gap_x = 260,
+    gap_y = 50,
 
-    alignment = 'top_left',
+    alignment = 'top_right',
 
     draw_shades = false,
     draw_outline = false,

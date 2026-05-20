@@ -13,18 +13,21 @@ MAP[a]="arc|arc.rc"
 MAP[hc]="calendar|hcal.rc"
 MAP[h2]="calendar|hcal2.rc"
 MAP[lc]="calendar|lcalendar.rc"
+MAP[mc]="calendar|multimon.rc"
 MAP[kc]="calendar|kcalendar.rc"
 MAP[sc]="calendar|sidepanel-calendar.rc"
 MAP[s]="calendar|sys-small.rc"
 MAP[s2]="calendar|sys-small2.rc"
 MAP[t]="clock|clock.rc"
-MAP[m]="clock|song-info.rc"
+MAP[m]="music|song-info.rc"
+MAP[mp]="music|playerctl.rc"
 MAP[e]="earth|earth.rc"
 MAP[g]="gcal|gcal.rc"
 MAP[r]="rss|rss2.rc"
 MAP[$]="stocks|ticker.rc"
 MAP[v]="vnstat|vnstat.rc"
 MAP[vs]="vnstat|vnstat-summary.rc"
+MAP[n]="vnstat|net.rc"
 MAP[wc]="weather|current.rc"
 MAP[wf]="weather|forecast.rc"
 MAP[wa]="weather|full.rc"
@@ -36,6 +39,12 @@ MAP[ean]="~/.conky/rew62/network|network.rc"
 MAP[eaq]="~/.conky/rew62/music/eq/|eq.rc"
 MAP[eam]="~/.conky/rew62/moon|moon.rc"
 
+# --- Named groups ---
+declare -A NAMED_GROUPS
+
+NAMED_GROUPS[stack1]="h2 a sc mc sd mp n vs"
+NAMED_GROUPS[stack2]="h2 lc wf"
+
 # --- Input check ---
 if [ "$#" -eq 0 ]; then
     echo "Usage: $(basename "$0") [codes...]"
@@ -45,15 +54,18 @@ if [ "$#" -eq 0 ]; then
     echo "    a           arc"
     echo "    t           clock"
     echo "    m           song info"
+    echo "    mp          now playing sidepanel"
     echo "    e           earth"
     echo "    g           gcal"
     echo "    r           rss"
     echo "    \$           stocks"
     echo "    v           vnstat"
     echo "    vs          vnstat    (summary)"
+    echo "    n           vnstat    (net traffic)"
     echo "    hc          calendar  (hcal)"
     echo "    h2          calendar  (hcal2)"
     echo "    lc          calendar  (lcalendar)"
+    echo "    mc          calendar  (multi-month)"
     echo "    kc          calendar  (kcalendar)"
     echo "    sc          calendar  (sidepanel)"
     echo "    s           sys-small"
@@ -65,8 +77,19 @@ if [ "$#" -eq 0 ]; then
     echo "    sd          solar dial"
     echo "    all         launch everything"
     echo ""
+    echo "  Groups:"
+    for g in "${!NAMED_GROUPS[@]}"; do
+        printf "    %-12s %s\n" "$g" "${NAMED_GROUPS[$g]}"
+    done
+    echo ""
     echo "  Example: $(basename "$0") t wc wf a"
     exit 1
+fi
+
+# --- Quit ---
+if [[ "$1" == "quit" ]]; then
+    tmux kill-session -t "$SESSION" && echo "Killed session: $SESSION" || echo "No session named $SESSION"
+    exit
 fi
 
 # --- Expand "all" to every defined code ---
@@ -76,6 +99,9 @@ for arg in "$@"; do
         for k in "${!MAP[@]}"; do
             expanded+=("$k")
         done
+    elif [[ -n "${NAMED_GROUPS[$arg]}" ]]; then
+        read -ra gcodes <<< "${NAMED_GROUPS[$arg]}"
+        expanded+=("${gcodes[@]}")
     else
         expanded+=("$arg")
     fi

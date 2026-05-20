@@ -22,11 +22,11 @@ Run everything together or each component independently.
 | Category | Scripts |
 |---|---|
 | **Analog Clock** | Analog Clock |
-| **Clock** | Animated Clock, Now Playing (Song Info) |
+| **Clock** | Animated Clock, Now Playing (Song Info), Now Playing Sidepanel |
 | **Weather** | Current Conditions, Forecast, Full Panel |
-| **Calendar** | Horizontal Calendar (Lua), Horizontal Calendar (Bash), khal calendar, allcombined Lua Calendar, Side Panel calendar |
+| **Calendar** | Horizontal Calendar (Lua), Horizontal Calendar (Bash), Multi-Month Calendar, khal calendar, allcombined Lua Calendar, Side Panel calendar |
 | **System** | Single-line System Monitor |
-| **Network** | vnStat Bandwidth Monitor |
+| **Network** | vnStat Bandwidth Monitor, Network Traffic Panel |
 | **Arc** | Enhanced Arc (weather + moon phase) |
 | **Google Calendar** | Month-view (gcalcli + Lua) |
 | **RSS** | Click-enabled Feed Viewer |
@@ -165,9 +165,11 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `g` | `gcal/gcal.rc` | Google Calendar month-view |
 | `h2` | `calendar/hcal2.rc` | Horizontal Lua calendar (full-width) |
 | `hc` | `calendar/hcal.rc` | Horizontal calendar (compact, bash) |
+| `mc` | `calendar/multimon.rc` | Multi-month calendar |
 | `kc` | `calendar/kcalendar.rc` | khal-based calendar panel |
 | `lc` | `calendar/lcalendar.rc` | Lua-drawn allcombined calendar |
-| `m` | `clock/song-info.rc` | Now Playing (song info) |
+| `m` | `music/song-info.rc` | Now Playing (song info) |
+| `mp` | `music/playerctl.rc` | Now Playing sidepanel |
 | `r` | `rss/rss2.rc` | RSS feed viewer |
 | `$` | `stocks/ticker.rc` | Stock price table |
 | `s` | `calendar/sys-small.rc` | Single-line system monitor |
@@ -177,6 +179,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `t` | `clock/clock.rc` | Animated clock |
 | `v` | `vnstat/vnstat.rc` | vnStat bandwidth monitor |
 | `vs` | `vnstat/vnstat-summary.rc` | vnstat short |
+| `n` | `vnstat/net.rc` | network traffic panel |
 | `wa` | `weather/full.rc` | Full weather panel |
 | `wc` | `weather/current.rc` | Current conditions |
 | `wf` | `weather/forecast.rc` | 5-day forecast strip |
@@ -191,16 +194,17 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 ├── alien-tmux                          - launch all widgets via tmux
 ├── alien-tmux2                         - selective tmux launch (short codes)
 ├── background.png                      - Alien theme background (3440×1440)
-├── aclock/                             [ac] Analog clock
-│   └── aclock.rc
-├── arc/                                [a]  Arc (horizon, planets, sun/moon, weather)
-│   ├── arc.rc
+├── aclock/
+│   └── aclock.rc                       [ac] Analog clock
+├── arc/
+│   ├── arc.rc                          [a]  Arc (horizon, planets, sun/moon, weather)
 │   ├── arc3.lua
 │   ├── settings.lua
 │   └── sky_update.py
 ├── calendar/
 │   ├── hcal2.rc                        [h2] Horizontal Lua calendar (full-width)
 │   ├── hcal.rc                         [hc] Horizontal calendar (compact, bash)
+│   ├── multimon.rc                     [mc] Multi-month calendar
 │   ├── kcalendar.rc                    [kc] khal-based calendar panel
 │   ├── lcalendar.rc                    [lc] Lua-drawn allcombined calendar
 │   ├── sidepanel-calendar.rc           [sc] Side panel calendar
@@ -214,26 +218,29 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   └── settings.lua
 ├── clock/
 │   ├── clock.rc                        [t]  Animated clock widget (0.5 s updates)
-│   ├── song-info.rc                    [m]  Now Playing (song info)
 │   ├── clock.lua
 │   ├── loadall.lua
 │   └── settings.lua
 ├── configure-alien.sh                  - interactive setup (API key, lat/lon, interface)
 ├── configure-alien2.sh                 - setup with automated font install
-├── earth/                              [e]  Earth satellite image viewer
-│   ├── earth.rc
+├── earth/
+│   ├── earth.rc                        [e]  Earth satellite image viewer
 │   ├── crontab
 │   ├── fourmilab-earth.sh
 │   ├── loadall.lua
 │   └── settings.lua
 ├── fonts/                              - bundled font files
-├── gcal/                               [g]  Google Calendar month-view
-│   ├── gcal.rc
+├── gcal/
+│   ├── gcal.rc                         [g]  Google Calendar month-view
 │   ├── gcal2.lua
 │   ├── loadall.lua
 │   └── settings.lua
-├── rss/                                [r]  RSS feed viewer
-│   ├── rss.rc
+├── music/
+│   ├── playerctl.rc                    [mp] Now Playing sidepanel
+│   ├── song-info.rc                    [m]  Now Playing (song info)
+│   └── music_info.sh
+├── rss/
+│   ├── rss.rc                          [r]  RSS feed viewer
 │   ├── feeds.conf
 │   ├── rss-click.sh
 │   ├── rss-daemon.sh
@@ -248,26 +255,27 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   ├── json.lua
 │   ├── loadall.lua
 │   └── lua3-bars.lua
-├── stocks/                             [$]  Stock price table
-│   ├── ticker.rc
+├── stocks/
+│   ├── ticker.rc                       [$]  Stock price table
 │   ├── symbols.conf
 │   ├── stocks.lua
 │   ├── loadall.lua
 │   └── settings.lua
-├── solardial/                          [sd] Solar Dial
-│   ├── solardial.rc
+├── solardial/
+│   ├── solardial.rc                    [sd] Solar Dial
 │   ├── dial2.lua
 │   ├── loadall.lua
 │   └── settings.lua
-├── terminator/                         [tm] Day/night terminator map
-│   └── terminator.rc
+├── terminator/
+│   └── terminator.rc                   [tm] Day/night terminator map
 ├── theme.lua                           - global colors (borders, backgrounds)
 ├── utils/
 │   ├── rc                              - shortcut launcher (place on PATH)
 │   └── save-pos.sh                     - save all conky window positions
-├── vnstat/                             [v]  vnStat bandwidth monitor
-│   ├── vnstat.rc
+├── vnstat/
+│   ├── vnstat.rc                       [v]  vnStat bandwidth monitor
 │   ├── vnstat-summary.rc                   [vs] vnstat short
+│   ├── net.rc                              [n]  network traffic panel
 │   ├── vnstat.lua
 │   ├── vnstat-summary.lua
 │   ├── loadall.lua
@@ -305,7 +313,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
   | `current` | `w-current` | `weather/current.rc` |
   | `forecast` | `w-forecast` | `weather/forecast.rc` |
   | `full` | `w-full` | `weather/full.rc` |
-  | `song-info` | `song-info` | `clock/song-info.rc` |
+  | `song-info` | `song-info` | `music/song-info.rc` |
   | `clock` | `conky_clock` | `clock/clock.rc` |
   | `vnstat` | `vnstat` | `vnstat/vnstat.rc` |
   | `vnstat-summary` | `vnstat-summary` | `vnstat/vnstat-summary.rc` |

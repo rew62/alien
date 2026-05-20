@@ -1,0 +1,48 @@
+--multimon.rc - Multi-Month Calendar
+--configure months, start month, Starting DoW in multimon.lua
+-- v1.1 2026-05-19 @rew62
+
+conky.config = {
+  own_window = true,
+  own_window_argb_visual = true,
+  own_window_transparent = true,
+  own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+  own_window_argb_value = 0,
+
+  update_interval = 600,
+
+  double_buffer = true,
+  no_buffers = true,
+  text_buffer_size = 2048,
+
+
+  alignment = 'top_right',
+  gap_x = 20,
+  gap_y = 280,
+  minimum_width = 210,
+  maximum_width = 210,
+
+  border_inner_margin = 8,
+  border_outer_margin = 0,
+  use_spacer = 'none',
+
+  draw_shades = false,
+  draw_outline = false,
+  draw_borders = false,
+  draw_graph_borders = false,
+
+  override_utf8_locale = true,
+  use_xft = true,
+  font = 'ubuntu light:size=12',
+  xftalpha = 0.2,
+  uppercase = false,
+
+-- Lua Load
+  lua_load = './settings.lua ./loadall.lua',
+  lua_startup_hook = 'vars',
+  lua_draw_hook_pre = 'main',
+}
+
+conky.text = [[
+${voffset 5}$color${execpi 3600 ./multimon.sh}${color}
+]]

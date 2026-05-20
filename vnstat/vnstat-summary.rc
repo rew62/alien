@@ -3,11 +3,11 @@
 
 conky.config = {
     -- Window / positioning
-    alignment          = 'middle_left',
-    gap_x              = 20,
-    gap_y              = 0,
-    minimum_width      = 342,
-    maximum_width      = 342,
+    alignment          = 'top_right',
+    gap_x              = 264,
+    gap_y              = 852,
+    minimum_width      = 307,
+    maximum_width      = 307,
 
     -- Transparent background
     own_window         = true,

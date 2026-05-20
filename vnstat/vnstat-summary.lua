@@ -125,15 +125,14 @@ function conky_draw_vnstat_summary()
         end
     end
 
-    -- column widths: label=8 chars left-aligned, values=12 chars right-aligned
-    local LW  = 8
+    -- column widths: label=6 chars left-aligned, values=12 chars right-aligned
+    local LW  = 6
     local VW  = 12
-    local SEP = string.rep("─", LW + VW + VW + 2)
+    local SEP = string.rep("─", LW + VW + VW)
 
     local function row(label, rxval, txval)
         return C.val .. string.format("%-" .. LW .. "s", label)
              .. C.tx   .. pad(fmt_bytes(txval), VW)
-             .. "  "
              .. C.rx   .. pad(fmt_bytes(rxval), VW)
              .. "\n"
     end
@@ -141,12 +140,11 @@ function conky_draw_vnstat_summary()
     local timestamp = os.date("%I:%M %p"):lower()
 
     local out = ""
-    out = out .. C.header .. string.format("%-" .. (LW + VW + 2) .. "s", "vnstat")
+    out = out .. C.header .. string.format("%-" .. (LW + VW) .. "s", "vnstat")
               .. C.white  .. pad(iface_name, VW) .. "\n"
     out = out .. "${voffset 8}"
     out = out .. string.rep(" ", LW)
               .. C.tx     .. pad("Upload",   VW)
-              .. "  "
               .. C.rx     .. pad("Download", VW)
               .. "\n"
     out = out .. C.sep    .. SEP .. "\n"

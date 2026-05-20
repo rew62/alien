@@ -6,9 +6,9 @@ conky.config = {
 -- Size and Position --
   alignment = 'top_right',
   gap_x = 260,
-  gap_y = 720,
-  maximum_width = 330,
-  minimum_width = 311,
+  gap_y = 563,
+  maximum_width = 320,
+  minimum_width = 314,
   minimum_height = 60,
 
 -- Text --

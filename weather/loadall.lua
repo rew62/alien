@@ -49,12 +49,14 @@ if weather_type == "current" then
         draw_func   = conky_weather_current
     end
 elseif weather_type == "forecast" then
-    if try_require("nws_weather") and try_require("alien-weather-forecast") then
+    --if try_require("nws_weather") and try_require("alien-weather-forecast") then
+    if try_require("nws_fetch") and try_require("alien-weather-forecast") then
         update_func = weather_update or conky_weather_update
         draw_func   = conky_weather_main
     end
 else -- Default to "full"
-    if try_require("nws_weather") and try_require("alien-weather-full") then
+    --if try_require("nws_weather") and try_require("alien-weather-full") then
+    if try_require("nws_fetch") and try_require("alien-weather-full") then
         update_func = weather_update or conky_weather_update
         draw_func   = conky_weather_main
     end

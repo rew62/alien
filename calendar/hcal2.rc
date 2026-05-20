@@ -2,65 +2,54 @@
 -- v1.2 2026-05-18 @rew62
 
 conky.config = {
-	background = false,
-	alignment = 'top_middle',
-	gap_x = 0,
-	gap_y = 61,
-	use_xft = true,
-	font = 'Bitstream Charter Regular:size=8',
-	xftalpha = 1,
-	update_interval = 300,
-	total_run_times = 0,
-	own_window = true,
-	own_window_transparent = true,
-	--own_window_color 000000
-	own_window_argb_visual = true,
-	--own_window_argb_value = 250,
-	own_window_type = 'normal',
-        own_window_title = 'hcal3',
-	own_window_hints = 'undecorated,below,skip_taskbar,skip_pager',
-	double_buffer = true,
-	minimum_width = 1060,
-        maximum_width = 1060,
-	minimum_height = 101,
-	text_buffer_size = 2048,
-	draw_shades = false,
-	draw_outline = false,
-	draw_borders = false,
-        border_inner_margin = 0,
-	draw_graph_borders = false,
-	default_color = 'white',
-	default_outline_color = 'white',
-	no_buffers = true,
-	uppercase = false,
-	cpu_avg_samples = 2,
-	override_utf8_locale = true,
-	imlib_cache_flush_interval = 60,
-	imlib_cache_size = 10000,
-	stippled_borders = 5,
-
-	-- Colors
-	default_color = '#ffffff',--ffd579
-	default_shade_color = '#333333',
-	default_outline_color = 'black',
-  	color1 = '98FB98',  -- PaleGreen
-	color2 = 'D0B8E8',  -- light purple
-
-        lua_load = './settings.lua ./loadall.lua',
-        lua_draw_hook_post = 'main',
-        lua_startup_hook = 'vars',
+   background = false,
+   alignment = 'top_middle',
+   gap_x = 0,
+   gap_y = 61,
+   use_xft = true,
+   font = 'Bitstream Charter Regular:size=8',
+   xftalpha = 1,
+   update_interval = 300,
+   total_run_times = 0,
+   own_window = true,
+   own_window_transparent = true,
+   --own_window_color 000000
+   own_window_argb_visual = true,
+   --own_window_argb_value = 250,
+   own_window_type = 'normal',
+   own_window_title = 'hcal3',
+   own_window_hints = 'undecorated,below,skip_taskbar,skip_pager',
+   double_buffer = true,
+   minimum_width = 1060,
+   maximum_width = 1060,
+   minimum_height = 101,
+   text_buffer_size = 2048,
+   draw_shades = false,
+   draw_outline = false,
+   draw_borders = false,
+   border_inner_margin = 0,
+   draw_graph_borders = false,
+   default_color = 'white',
+   default_outline_color = 'white',
+   no_buffers = true,
+   uppercase = false,
+   cpu_avg_samples = 2,
+   override_utf8_locale = true,
+   imlib_cache_flush_interval = 60,
+   imlib_cache_size = 10000,
+   stippled_borders = 5,
+   
+-- Colors
+   default_color = '#ffffff',--ffd579
+   default_shade_color = '#333333',
+   default_outline_color = 'black',
+   color1 = '98FB98',  -- PaleGreen
+   color2 = 'D0B8E8',  -- light purple
+   
+-- Lua Load
+   lua_load = './settings.lua ./loadall.lua',
+   lua_draw_hook_post = 'main',
+   lua_startup_hook = 'vars',
 }
-
--- OLD: single centered line with day/week numbers
---conky.text = [[
---${voffset 18}${color1}${alignc}${font Orbitron:semibold:size=14}${time %A, %B %-d, %Y   Day: %-j   Week: %-U}   Zodiac: ${font DejaVu Sans Mono:size=14}${lua get_zodiac_sym}${font Orbitron:semibold:size=14} ${lua get_zodiac_name}
---]]
-
--- FALLBACK: fixed ${goto} if Cairo draw timing is wrong (adjust 938 for window width)
---conky.text = [[
---${voffset 13}${color2}${font Orbitron:semibold:size=10}${goto 10}${time %A, %B %-d, %Y}
---${voffset -22}${color1}${alignc}${font Orbitron:semibold:size=22}${time %B %Y}
---${voffset -43}${goto 938}${color2}${font DejaVu Sans Mono:size=22}${lua get_zodiac_sym}${voffset -2}${font Orbitron:semibold:size=10}   ${lua get_zodiac_name}
---]]
 
 conky.text = [[]]

@@ -32,7 +32,8 @@ function conky_main()
         conky_luacal(caltab)
         conky_luatext(txttab)
     end
-    if conky_script_name == "hcal2.rc" then 
+    if conky_script_name == "hcal2.rc" then
+        conky_draw_header()
 	conky_draw_calendar()
     end
 

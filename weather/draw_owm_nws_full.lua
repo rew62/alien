@@ -1,73 +1,18 @@
 -- alien-weather-full.lua - full Lua/Cairo script combining NWS forecast and OWM current conditions
--- Data from nws_weather.lua; OWM fetched on file-age timer
--- v1.1 2026-04-09 @rew62
---
--- Public functions (called by loadall.lua):
---   weather_update()       -- NWS fetch (defined in nws_weather.lua)
---   conky_weather_main()   -- draws everything
+-- NWS data via get_forecast() / get_grid_info() from scripts/nws_fetch.lua
+-- OWM data via owm_get() from scripts/owm_fetch.lua
+-- v1.2 2026-05-21 @rew62
 
 require 'cairo'
 
--- -----------------------------------------------------------------------
--- JSON DEPENDENCY FALLBACK
--- -----------------------------------------------------------------------
--- package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua"
 package.path = package.path .. ";./?.lua;../?.lua;" .. (os.getenv("HOME") or "") .. "/.conky/alien/scripts/?.lua"
-
-local cjson = nil
-
-local ok, lib = pcall(require, "cjson")
-  if ok then
-    cjson = lib
-  else
-    local ok2, lib2 = pcall(require, "json")
-    if ok2 then
-        cjson = lib2
-        print("cjson not found, using scripts/json.lua fallback.")
-    else
-        print("FATAL: no JSON library found")
-    end
-end
-
--- -----------------------------------------------------------------------
--- LOAD .env  (parsed as key=value, same as nws_weather.lua)
--- -----------------------------------------------------------------------
-local _env = {}
-do
-    local env_path = os.getenv("HOME") .. "/.conky/alien/.env"
-    local ef = io.open(env_path, "r")
-    if ef then
-        for line in ef:lines() do
-            local stripped = line:match("^([^#]*)") or ""
-            local k, v = stripped:match("^%s*([%w_]+)%s*=%s*([^%s]+)%s*$")
-            if k and v then
-                v = v:match('^"(.*)"$') or v:match("^'(.*)'$") or v
-                _env[k] = v
-            end
-        end
-        ef:close()
-    end
-end
 
 -- -----------------------------------------------------------------------
 -- CONFIGURATION
 -- -----------------------------------------------------------------------
-local OWM_API_KEY   = _env.OWM_API_KEY or ""
-local LATITUDE      = _env.LAT         or "40.7128"
-local LONGITUDE     = _env.LON         or "-74.0060"
-local DAYS_TO_SHOW  = 5
-local OWM_UNITS     = "imperial"
-local TEMP_UNIT_SYM = "°F"
-local OWM_CACHE_MINS = 15        -- minutes between OWM fetches
-
--- -----------------------------------------------------------------------
--- INTERNAL SETTINGS
--- -----------------------------------------------------------------------
-local ICON_DIR   = "/dev/shm/conky_icons/"
-local OWM_CACHE  = "/dev/shm/owm_current.json"
-local USER_AGENT = "conky-weather-script/1.0"
-local WIN_W, PAD = 300, 12
-local FONT_NAME  = cairo_font or "DejaVuSansM Nerd Font Propo"
+local DAYS_TO_SHOW = 5
+local WIN_W, PAD   = 300, 12
+local FONT_NAME    = cairo_font or "DejaVuSansM Nerd Font Propo"
 
 -- Colors (RGBA)
 local COL_TEXT   = { 0.85, 0.85, 0.85, 1.0 }
@@ -78,101 +23,9 @@ local COL_ACCENT = { 0.40, 0.90, 0.40, 1.0 }
 local COL_SEP    = { 0.30, 0.30, 0.30, 0.7 }
 
 -- -----------------------------------------------------------------------
--- FILE HELPERS
--- -----------------------------------------------------------------------
-local function read_file(path)
-    local f = io.open(path, "r")
-    if not f then return nil end
-    local s = f:read("*a")
-    f:close()
-    return s
-end
-
-local function file_age_minutes(path)
-    local f = io.open(path, "r")
-    if not f then return math.huge end
-    f:close()
-    local h = io.popen("stat -c %Y " .. path .. " 2>/dev/null")
-    if not h then return math.huge end
-    local mtime = tonumber(h:read("*l"))
-    h:close()
-    if not mtime then return math.huge end
-    return (os.time() - mtime) / 60
-end
-
--- -----------------------------------------------------------------------
--- OWM CURRENT CONDITIONS
--- File-age throttle -- consistent with nws_weather.lua and owm-fetch.lua
--- Synchronous curl with tmp file to avoid cache corruption on failed fetch
--- -----------------------------------------------------------------------
-local _current = nil
-
-local function owm_fetch()
-    if file_age_minutes(OWM_CACHE) < OWM_CACHE_MINS then
-        -- Cache still fresh -- just parse what we have
-        local raw = read_file(OWM_CACHE)
-        if not raw then return end
-        local ok, data = pcall(cjson.decode, raw)
-        if ok and data and data.main then
-            _current = {
-                temp       = math.floor(data.main.temp + 0.5),
-                feels_like = math.floor(data.main.feels_like + 0.5),
-                desc       = data.weather[1].description,
-                icon       = data.weather[1].icon,
-                wind       = math.floor(data.wind.speed + 0.5),
-            }
-        end
-        return
-    end
-
-    -- Cache stale -- fetch synchronously with tmp file pattern
-    local tmp = OWM_CACHE .. ".tmp"
-    local url = string.format(
-        "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=%s&appid=%s",
-        LATITUDE, LONGITUDE, OWM_UNITS, OWM_API_KEY)
-    local cmd = string.format('curl -sf --max-time 15 -A "%s" "%s" -o "%s"',
-        USER_AGENT, url, tmp)
-    local ret = os.execute(cmd)
-    local ok_curl = (type(ret) == "boolean") and ret or (ret == 0)
-
-    if not ok_curl then
-        print("alien-weather-full: OWM fetch failed")
-        -- Fall back to existing cache if available
-        local raw = read_file(OWM_CACHE)
-        if not raw then return end
-        ret = raw
-    else
-        -- Validate tmp before promoting to cache
-        local raw = read_file(tmp)
-        if not raw then return end
-        local ok, data = pcall(cjson.decode, raw)
-        if not ok or not data or not data.main then
-            print("alien-weather-full: OWM response invalid, keeping old cache")
-            os.execute("rm -f " .. tmp)
-            return
-        end
-        -- Promote tmp → cache
-        os.execute("mv " .. tmp .. " " .. OWM_CACHE)
-    end
-
-    -- Parse final cache
-    local raw = read_file(OWM_CACHE)
-    if not raw then return end
-    local ok, data = pcall(cjson.decode, raw)
-    if ok and data and data.main then
-        _current = {
-            temp       = math.floor(data.main.temp + 0.5),
-            feels_like = math.floor(data.main.feels_like + 0.5),
-            desc       = data.weather[1].description,
-            icon       = data.weather[1].icon,
-            wind       = math.floor(data.wind.speed + 0.5),
-        }
-    end
-end
-
--- -----------------------------------------------------------------------
 -- ICON HELPERS  (MET Norway via jsDelivr CDN)
 -- -----------------------------------------------------------------------
+local ICON_DIR   = "/dev/shm/conky_icons/"
 local METNO_BASE = "https://cdn.jsdelivr.net/gh/metno/weathericons@main/weather/png/"
 
 local NWS_TO_METNO = {
@@ -218,25 +71,12 @@ local NWS_TO_METNO = {
     cold                   = "clearsky_day",
 }
 
-local OWM_TO_METNO = {
-    ["01d"] = "clearsky_day",      ["01n"] = "clearsky_night",
-    ["02d"] = "fair_day",          ["02n"] = "fair_night",
-    ["03d"] = "partlycloudy_day",  ["03n"] = "partlycloudy_night",
-    ["04d"] = "cloudy",            ["04n"] = "cloudy",
-    ["09d"] = "lightrain",         ["09n"] = "lightrain",
-    ["10d"] = "rain",              ["10n"] = "rain",
-    ["11d"] = "rainandthunder",    ["11n"] = "rainandthunder",
-    ["13d"] = "snow",              ["13n"] = "snow",
-    ["50d"] = "fog",               ["50n"] = "fog",
-}
-
 local function fetch_metno_icon(name)
     os.execute("mkdir -p " .. ICON_DIR)
     local path = ICON_DIR .. "metno_" .. name .. ".png"
     local f = io.open(path, "r")
     if f then f:close(); return path end
-    local url = METNO_BASE .. name .. ".png"
-    os.execute(string.format('curl -sfL "%s" -o "%s" &', url, path))
+    os.execute(string.format('curl -sfL "%s" -o "%s" &', METNO_BASE .. name .. ".png", path))
     local fallback = ICON_DIR .. "metno_clearsky_day.png"
     local fb = io.open(fallback, "r")
     if fb then fb:close(); return fallback end
@@ -244,30 +84,19 @@ local function fetch_metno_icon(name)
 end
 
 local function nws_icon_path(icon_token)
-    if not icon_token or icon_token == "" then
-        return fetch_metno_icon("clearsky_day")
-    end
+    if not icon_token or icon_token == "" then return fetch_metno_icon("clearsky_day") end
     local name = NWS_TO_METNO[icon_token]
                or NWS_TO_METNO[icon_token:gsub("_day$",""):gsub("_night$","")]
                or "partlycloudy_day"
     return fetch_metno_icon(name)
 end
 
-local function fetch_icon(owm_code)
-    local name = OWM_TO_METNO[owm_code] or "partlycloudy_day"
-    return fetch_metno_icon(name)
-end
-
 -- -----------------------------------------------------------------------
 -- DRAWING HELPERS
 -- -----------------------------------------------------------------------
-
--- Reusable extents object -- allocated once, not per draw call
 local _text_ext = nil
 local function get_ext(cr)
-    if not _text_ext then
-        _text_ext = cairo_text_extents_t:create()
-    end
+    if not _text_ext then _text_ext = cairo_text_extents_t:create() end
     return _text_ext
 end
 
@@ -290,10 +119,7 @@ end
 
 local function draw_image(cr, path, x, y, w, h)
     local surf = cairo_image_surface_create_from_png(path)
-    if cairo_surface_status(surf) ~= 0 then
-        cairo_surface_destroy(surf)
-        return
-    end
+    if cairo_surface_status(surf) ~= 0 then cairo_surface_destroy(surf); return end
     local iw = cairo_image_surface_get_width(surf)
     local ih = cairo_image_surface_get_height(surf)
     if iw == 0 or ih == 0 then cairo_surface_destroy(surf); return end
@@ -309,24 +135,18 @@ end
 -- -----------------------------------------------------------------------
 -- DATE HELPERS
 -- -----------------------------------------------------------------------
-local MONTHS = {
-    "Jan","Feb","Mar","Apr","May","Jun",
-    "Jul","Aug","Sep","Oct","Nov","Dec"
-}
-local DAYS = { "Sun","Mon","Tue","Wed","Thu","Fri","Sat" }
+local MONTHS = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}
+local DAYS   = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"}
 
--- "2025-04-21" → "Mon", "Apr 21"
 local function parse_date_strings(iso)
     if not iso or iso == "" then return "---", "" end
     local y, m, d = iso:match("(%d%d%d%d)-(%d%d)-(%d%d)")
     if not y then return "---", "" end
     local t = os.time({ year=tonumber(y), month=tonumber(m), day=tonumber(d) })
     local dow = DAYS[tonumber(os.date("%w", t)) + 1]
-    local date_str = MONTHS[tonumber(m)] .. " " .. tostring(tonumber(d))
-    return dow, date_str
+    return dow, MONTHS[tonumber(m)] .. " " .. tostring(tonumber(d))
 end
 
--- NWS cache file mtime formatted as 12h update time
 local function cache_update_time()
     local h = io.popen("stat -c %Y /dev/shm/nws_forecast.json 2>/dev/null")
     if not h then return "" end
@@ -340,11 +160,19 @@ end
 -- MAIN DRAW
 -- -----------------------------------------------------------------------
 local function do_draw(cr)
-    owm_fetch()
+    if conky_owm_fetch then conky_owm_fetch() end
 
     local fc   = get_forecast() or {}
     local grid = get_grid_info() or { city = "Local", state = "Weather" }
-    local cur  = _current
+
+    local temp      = owm_get("temp")
+    local feels     = owm_get("feels_like")
+    local desc      = owm_get("desc", "")
+    local wind      = owm_get("wind_speed")
+    local wind_unit = owm_get("wind_unit", "mph")
+    local temp_unit = owm_get("temp_unit", "°F")
+    local icon_metno = owm_get("icon_metno", "partlycloudy_day")
+    local has_current = (temp ~= "N/A" and temp ~= "--")
 
     local y = 20
 
@@ -355,12 +183,12 @@ local function do_draw(cr)
     y = y + 20
 
     -- Current conditions
-    if cur then
-        draw_text(cr, cur.temp .. TEMP_UNIT_SYM,              PAD, y + 30, 36, COL_TEXT, "left",  true)
-        draw_text(cr, cur.desc:gsub("^%l", string.upper),     PAD, y + 46, 10, COL_DIM,  "left",  false)
-        draw_text(cr, "Feels like " .. cur.feels_like .. "°", PAD, y + 58,  9, COL_DIM,  "left",  false)
-        draw_text(cr, "Wind: " .. (cur.wind or 0) .. " mph",  PAD, y + 70,  9, COL_DIM,  "left",  false)
-        draw_image(cr, fetch_icon(cur.icon), WIN_W - 100, y - 15, 70, 70)
+    if has_current then
+        draw_text(cr, temp .. temp_unit,               PAD, y + 30, 36, COL_TEXT, "left",  true)
+        draw_text(cr, desc,                            PAD, y + 46, 10, COL_DIM,  "left",  false)
+        draw_text(cr, "Feels like " .. feels .. "°",  PAD, y + 58,  9, COL_DIM,  "left",  false)
+        draw_text(cr, "Wind: " .. wind .. " " .. wind_unit, PAD, y + 70, 9, COL_DIM, "left", false)
+        draw_image(cr, fetch_metno_icon(icon_metno), WIN_W - 100, y - 15, 70, 70)
         y = y + 85
     end
 
@@ -379,20 +207,16 @@ local function do_draw(cr)
             local d  = fc[i]
             local cx = PAD + (i - 1) * col_w + col_w / 2 + 2
 
-            -- Day name + date from NWS data (not os.date offset)
             local dow, date_str = parse_date_strings(d.date)
             draw_text(cr, dow,      cx, y,      10, COL_TEXT, "center", true)
             draw_text(cr, date_str, cx, y + 14,  8, COL_DIM,  "center", false)
 
-            -- Icon
             draw_image(cr, nws_icon_path(d.icon), cx - 18, y + 18, 40, 40)
 
-            -- Short forecast
             local short = (d.short_fcst or ""):match("^(.-) then") or d.short_fcst or ""
             if #short > 12 then short = short:sub(1, 10) .. ".." end
             draw_text(cr, short, cx, y + 65, 7, COL_DIM, "center", false)
 
-            -- High / Low / PoP
             local h_val = tonumber(d.temp_high)
             local l_val = tonumber(d.temp_low)
             local pop   = tonumber(d.pop) or 0

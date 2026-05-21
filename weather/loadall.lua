@@ -39,27 +39,41 @@ end
 -- Initial Setup
 try_require("allcombined2")
 print("Lua Version: " .. _VERSION)
-print("Detected Weather Type: " .. tostring(weather_type))
+-- Function Mapping
+local dispatch = {
+    ["owm_current_top.rc"] = {
+        mods = {"owm_fetch", "draw_owm_current_top"},
+        upd  = "conky_owm_fetch",
+        drw  = "conky_weather_current",
+    },
+    ["owm_current_sidepanel.rc"] = {
+        mods = {"owm_fetch", "draw_owm_current_sidepanel"},
+        upd  = "conky_owm_fetch",
+        drw  = "conky_weather_current",
+    },
+    ["nws_forecast_small.rc"] = {
+        mods = {"nws_fetch", "draw_nws_forecast_small"},
+        upd  = "weather_update",
+        drw  = "conky_weather_main",
+    },
+    ["nws_forecast_sidepanel.rc"] = {
+        mods = {"nws_fetch", "draw_nws_forecast_sidepanel"},
+        upd  = "weather_update",
+        drw  = "conky_weather_main",
+    },
+    ["full.rc"] = {
+        mods = {"nws_fetch", "owm_fetch", "draw_owm_nws_full"},
+        upd  = "weather_update",
+        drw  = "conky_weather_main",
+    },
+}
 
--- Function Mapping - maps weather modes to 'update' and 'draw' variables so conky_main doesn't have to check the weather_type every second.
-
-if weather_type == "current" then
-    if try_require("owm-fetch") and try_require("alien-weather-current") then
-        update_func = conky_owm_fetch
-        draw_func   = conky_weather_current
-    end
-elseif weather_type == "forecast" then
-    --if try_require("nws_weather") and try_require("alien-weather-forecast") then
-    if try_require("nws_fetch") and try_require("alien-weather-forecast") then
-        update_func = weather_update or conky_weather_update
-        draw_func   = conky_weather_main
-    end
-else -- Default to "full"
-    --if try_require("nws_weather") and try_require("alien-weather-full") then
-    if try_require("nws_fetch") and try_require("alien-weather-full") then
-        update_func = weather_update or conky_weather_update
-        draw_func   = conky_weather_main
-    end
+local d = dispatch[conky_script_name] or dispatch["full.rc"]
+local ok = true
+for _, mod in ipairs(d.mods) do ok = ok and try_require(mod) end
+if ok then
+    update_func = _G[d.upd]
+    draw_func   = _G[d.drw]
 end
 
 -- Conky Hooks
@@ -69,7 +83,7 @@ function conky_weather_update()
     if update_func then 
         update_func() 
     else
-        print("WARNING: No update function mapped for " .. tostring(weather_type))
+        print("WARNING: No update function mapped for " .. tostring(conky_script_name))
     end
 end
 

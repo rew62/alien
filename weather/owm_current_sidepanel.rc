@@ -1,0 +1,54 @@
+-- owm_current_sidepanel.rc - OWM current conditions sidepanel widget
+-- Visual port of wttr/owm_current_sidepanel.rc; drawn entirely by Lua/Cairo.
+-- v1.0 2026-05-21 @rew62
+
+conky.config = {
+    -- Window
+    own_window             = true,
+    own_window_type        = "normal",
+    own_window_title       = "w-sidepanel",
+    own_window_hints       = "undecorated,below,sticky,skip_taskbar,skip_pager",
+    own_window_transparent = true,
+    own_window_argb_visual = true,
+    own_window_argb_value  = 0,
+    double_buffer          = true,
+    no_buffers             = true,
+
+    -- Size — matches wttr original; Lua may resize via sizes table
+    minimum_width          = 325,
+    maximum_width          = 325,
+    minimum_height         = 125,
+
+    -- Position (matches wttr/owm_current_sidepanel.rc)
+    alignment              = "top_right",
+    gap_x                  = 255,
+    gap_y                  = 380,
+
+    -- Typography
+    use_xft                = true,
+    font                   = "DejaVuSansM Nerd Font Propo:size=9",
+    xftalpha               = 1,
+    default_color          = "ffffff",
+
+    -- Performance
+    update_interval        = 300,
+    total_run_times        = 0,
+
+    -- Drawing
+    draw_shades            = false,
+    draw_outline           = false,
+    draw_borders           = false,
+    draw_graph_borders     = false,
+    border_inner_margin    = 0,
+    border_outer_margin    = 0,
+
+    -- Lua
+    lua_load               = './settings.lua ./loadall.lua',
+    lua_startup_hook       = 'weather_update',
+    lua_draw_hook_post     = 'main',
+}
+
+-- Lua draws everything
+conky.text = [[
+
+]]

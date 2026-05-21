@@ -1,6 +1,6 @@
 -- arc.rc - horizon arc & planets & sun/moon & sunrise/sunset times & Icons & current weather.
 -- portions of this code adapted from gtex62-clean-suite/weather.conky.conf widget by @gtex62, with modifications.
--- v1.0 2026-04-02 @rew62
+-- v1.1 2026-05-21 @rew62
 
 local HOME        = os.getenv("HOME") or ""
 local DIR         = os.getenv("CONKY_ARC_DIR") or (HOME .. "/.conky/alien/arc")
@@ -8,8 +8,6 @@ local ALIEN_DIR   = os.getenv("ALIEN_DIR")     or (HOME .. "/.conky/alien")
 local XDG         = os.getenv("XDG_CACHE_HOME") or "/dev/shm"
 local CACHE_DIR   = os.getenv("CONKY_CACHE_DIR") or (XDG .. "/conky")
 local CURRENT_PNG = CACHE_DIR .. "/icons/current.png"
-local FETCH_SH    = ALIEN_DIR .. "/scripts/owm_fetch.sh"
-
 conky.config = {
   alignment              = 'top_middle',
   background             = false,
@@ -42,12 +40,12 @@ conky.config = {
   color1                 = 'A0A0A0',
 
   lua_draw_hook_pre      = 'owm_draw_horizon',
-  lua_load               = DIR .. '/arc3.lua ./settings.lua',
+  lua_load               = DIR .. '/arc4.lua ./settings.lua ' .. ALIEN_DIR .. '/scripts/owm_fetch.lua',
   lua_startup_hook = 'vars',
 }
 
 conky.text = [[
-${execi 120 ]] .. FETCH_SH .. [[}
+${lua_parse owm_fetch}
 ${execi  60 python3 ]] .. DIR .. [[/sky_update.py}
 ${lua_parse owm draw_horizon}
 ${lua_parse owm_sun_labels}

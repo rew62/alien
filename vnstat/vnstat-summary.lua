@@ -21,10 +21,11 @@ local C = {
     sep    = "${color5}",
     header = "${color6}",
     label  = "${color}",
+    lbl    = "${color 2D9EEA}",
     val    = "${color1}",
     dim    = "${color4}",
-    rx     = "${color3}",
-    tx     = "${color2}",
+    rx     = "${color2}",
+    tx     = "${color3}",
     white  = "${color e8e8e8}",
 }
 
@@ -131,7 +132,7 @@ function conky_draw_vnstat_summary()
     local SEP = string.rep("─", LW + VW + VW)
 
     local function row(label, rxval, txval)
-        return C.val .. string.format("%-" .. LW .. "s", label)
+        return C.lbl .. string.format("%-" .. LW .. "s", label)
              .. C.tx   .. pad(fmt_bytes(txval), VW)
              .. C.rx   .. pad(fmt_bytes(rxval), VW)
              .. "\n"
@@ -140,20 +141,27 @@ function conky_draw_vnstat_summary()
     local timestamp = os.date("%I:%M %p"):lower()
 
     local out = ""
-    out = out .. C.header .. string.format("%-" .. (LW + VW) .. "s", "vnstat")
-              .. C.white  .. pad(iface_name, VW) .. "\n"
+    out = out .. "${font Rubik:Bold:size=12}"
+              .. C.header .. "vnstat"
+              .. C.white  .. "${alignr}" .. iface_name .. "\n"
+              .. "${font DejaVuSansM Nerd Font Propo:size=12}"
     out = out .. "${voffset 8}"
-    out = out .. string.rep(" ", LW)
+              .. "${font Rubik:Bold:size=10}"
+              .. "${goto 122}"
               .. C.tx     .. pad("Upload",   VW)
+              .. "${offset 43}"
               .. C.rx     .. pad("Download", VW)
               .. "\n"
+              .. "${font DejaVuSansM Nerd Font Propo:size=12}"
     out = out .. C.sep    .. SEP .. "\n"
     out = out .. row("today",  day_rx,  day_tx)
     out = out .. row("week",   week_rx, week_tx)
     out = out .. row("month",  mon_rx,  mon_tx)
     out = out .. C.sep    .. SEP .. "\n"
-    out = out .. C.header .. "updated : "
+    out = out .. "${font DejaVuSansM Nerd Font Propo:size=10}"
+              .. C.header .. "${alignr}updated: "
               .. C.white  .. timestamp
+              .. "${font}"
 
     return out
 end

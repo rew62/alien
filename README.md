@@ -23,7 +23,7 @@ Run everything together or each component independently.
 |---|---|
 | **Analog Clock** | Analog Clock |
 | **Clock** | Animated Clock, Now Playing (Song Info), Now Playing Sidepanel |
-| **Weather** | Current Conditions, Forecast, Full Panel |
+| **Weather** | Current Conditions (top + sidepanel), Forecast (small + sidepanel), Full Panel |
 | **Calendar** | Horizontal Calendar (Lua), Horizontal Calendar (Bash), Multi-Month Calendar, khal calendar, allcombined Lua Calendar, Side Panel calendar |
 | **System** | Single-line System Monitor |
 | **Network** | vnStat Bandwidth Monitor, Network Traffic Panel |
@@ -57,7 +57,8 @@ cd alien
 Run the setup script:
 
 ```bash
-./configure-alien.sh or ./configure-alien2.sh (includes automated font install)
+./configure-alien.sh    # interactive setup only
+./configure-alien2.sh   # setup + automated font install from fonts/
 ```
 
 This will:
@@ -77,7 +78,7 @@ This will:
 * Patch `calendar/sys-small.rc` with the active network interface
 * Patch `vnstat/vnstat.lua` with the active network interface
 * Update `earth/crontab` with the correct home path (if present)
-* Run a font availability check or for ./configure-alien2.sh, installs the fonts in the fonts directory automatically.
+* Run a font availability check (`configure-alien.sh`) or install all bundled fonts from `fonts/` and then check (`configure-alien2.sh`)
 
 See `.env-example` for the format reference.
 
@@ -153,7 +154,17 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 
 # Or pass a bracketed, comma-separated list
 ./alien-tmux2 [t,a,wc,wf]
+
+# Launch a named group
+./alien-tmux2 stack1
 ```
+
+**Named Groups:**
+
+| Group | Codes |
+|---|---|
+| `stack1` | `h2 a sc mc sd wfs mp n vs` |
+| `stack2` | `h2 lc wf` |
 
 **Widget Codes:**
 
@@ -181,8 +192,10 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `vs` | `vnstat/vnstat-summary.rc` | vnstat short |
 | `n` | `vnstat/net.rc` | network traffic panel |
 | `wa` | `weather/full.rc` | Full weather panel |
-| `wc` | `weather/current.rc` | Current conditions |
-| `wf` | `weather/forecast.rc` | 5-day forecast strip |
+| `wc` | `weather/owm_current_top.rc` | Current conditions (top bar) |
+| `wcs` | `weather/owm_current_sidepanel.rc` | Current conditions sidepanel |
+| `wf` | `weather/nws_forecast_small.rc` | 5-day forecast strip |
+| `wfs` | `weather/nws_forecast_sidepanel.rc` | Forecast sidepanel |
 | `tm` | `terminator/terminator.rc` | Day/night terminator map |
 
 ---
@@ -250,6 +263,8 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   └── settings.lua
 ├── scripts/                            - shared scripts and Lua libraries
 │   ├── owm_fetch.sh
+│   ├── owm_fetch.lua
+│   ├── nws_fetch.lua
 │   ├── allcombined2.lua
 │   ├── background.lua
 │   ├── json.lua
@@ -281,16 +296,17 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 │   ├── loadall.lua
 │   └── settings.lua
 └── weather/
-    ├── current.rc                      [wc] Current conditions
-    ├── forecast.rc                     [wf] 5-day forecast strip
-    ├── full.rc                         [wa] Full weather panel
-    ├── alien-weather-current.lua
-    ├── alien-weather-forecast.lua
-    ├── alien-weather-full.lua
+    ├── owm_current_top.rc              [wc]  Current conditions (top bar)
+    ├── owm_current_sidepanel.rc        [wcs] Current conditions sidepanel
+    ├── nws_forecast_small.rc           [wf]  5-day forecast strip
+    ├── nws_forecast_sidepanel.rc       [wfs] Forecast sidepanel
+    ├── full.rc                         [wa]  Full weather panel
+    ├── draw_owm_current_top.lua
+    ├── draw_owm_current_sidepanel.lua
+    ├── draw_nws_forecast_small.lua
+    ├── draw_nws_forecast_sidepanel.lua
+    ├── draw_owm_nws_full.lua
     ├── loadall.lua
-    ├── nws_weather.lua
-    ├── owm-current.sh
-    ├── owm-fetch.lua
     └── settings.lua
 ```
 
@@ -310,8 +326,8 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
   | `rss` | `rss` | `rss/rss.rc` |
   | `sys-small` | `sys-small` | `calendar/sys-small.rc` |
   | `sys-small2` | `sys-small2` | `calendar/sys-small2.rc` |
-  | `current` | `w-current` | `weather/current.rc` |
-  | `forecast` | `w-forecast` | `weather/forecast.rc` |
+  | `current` | `w-current` | `weather/owm_current_top.rc` |
+  | `forecast` | `w-forecast` | `weather/nws_forecast_small.rc` |
   | `full` | `w-full` | `weather/full.rc` |
   | `song-info` | `song-info` | `music/song-info.rc` |
   | `clock` | `conky_clock` | `clock/clock.rc` |
@@ -375,12 +391,17 @@ Bundled (in `fonts/`):
 * **Orbitron**
 * **Oxanium**
 * **Barlow Condensed** — `rss.rc`
-* **Metropolis** — `clock.rc`, `sidepanel-calendar.rc`
+* **DejaVuSansM Nerd Font Propo** — monospace / Nerd Font glyphs
+* **Feather** — icon font
+* **GE Inspira**
 * **Good Times** — `sidepanel-calendar.rc`, `hcal2.rc`
+* **Material** — icon font
+* **Metropolis** — `clock.rc`, `sidepanel-calendar.rc`
+* **MonaspiceNe Nerd Font** — primary monospace, `earth.rc`
+* **Rubik** — variable font, weather widgets
 
 Additional fonts required (install separately):
 
-* **MonaspiceNe Nerd Font** — primary monospace, `earth.rc`
 * **FiraCode Nerd Font** — `sys-small.rc`, `song-info.rc`
 * **SpaceMono Nerd Font** — `sys-small.rc`, `song-info.rc`
 

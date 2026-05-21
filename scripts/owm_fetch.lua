@@ -285,6 +285,9 @@ local function parse_owm(data)
         wind_png   = png_path,
         sunrise    = fmt_12h(s.sunrise),
         sunset     = fmt_12h(s.sunset),
+        sunrise_ts = s.sunrise or 0,
+        sunset_ts  = s.sunset  or 0,
+        lat        = data.coord and data.coord.lat or 0,
         location   = data.name or "Unknown",
         updated    = fmt_12h(now),
         timestamp  = now,
@@ -340,14 +343,14 @@ function conky_owm_fetch()
         end
     end
 
-    if file_age_seconds(CACHE_JSON) < CACHE_TTL then return end
+    if file_age_seconds(CACHE_JSON) < CACHE_TTL then return "" end
 
     -- Break stale lock left by a crashed caller (curl max-time 10s; 60s is safe)
     if dir_age_seconds(LOCK_DIR) > 60 then
         os.execute("rmdir '" .. LOCK_DIR .. "' 2>/dev/null")
     end
 
-    if not mkdir_atomic(LOCK_DIR) then return end
+    if not mkdir_atomic(LOCK_DIR) then return "" end
 
     local ok, err = pcall(function()
         if do_fetch() then
@@ -361,6 +364,7 @@ function conky_owm_fetch()
     if not ok then print("owm_fetch: " .. tostring(err)) end
 
     os.execute("rmdir '" .. LOCK_DIR .. "' 2>/dev/null")
+    return ""
 end
 
 function get_current()  return _current end

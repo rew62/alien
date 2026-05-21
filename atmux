@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SESSION="conky-by-code"
+SESSION="conky"
 PANES_PER_WINDOW=4
 
 # --- Resolve base directory of this script ---
@@ -23,7 +23,7 @@ MAP[m]="music|song-info.rc"
 MAP[mp]="music|playerctl.rc"
 MAP[e]="earth|earth.rc"
 MAP[g]="gcal|gcal.rc"
-MAP[r]="rss|rss2.rc"
+MAP[r]="rss|rss.rc"
 MAP[$]="stocks|ticker.rc"
 MAP[v]="vnstat|vnstat.rc"
 MAP[vs]="vnstat|vnstat-summary.rc"
@@ -46,9 +46,10 @@ declare -A NAMED_GROUPS
 
 NAMED_GROUPS[stack1]="h2 a sc mc sd wfs mp n vs"
 NAMED_GROUPS[stack2]="h2 lc wf"
+NAMED_GROUPS[default]="h2 s2 a g t m wf ac vs r e \$ tm"
 
-# --- Input check ---
-if [ "$#" -eq 0 ]; then
+# --- Help ---
+show_help() {
     echo "Usage: $(basename "$0") [codes...]"
     echo ""
     echo "  Codes:"
@@ -87,7 +88,16 @@ if [ "$#" -eq 0 ]; then
     done
     echo ""
     echo "  Example: $(basename "$0") t wc wf a"
-    exit 1
+}
+
+# --- Input check ---
+if [ "$#" -eq 0 ]; then
+    set -- "default"
+fi
+
+if [[ "$1" == "help" || "$1" == "--help" || "$1" == "-h" ]]; then
+    show_help
+    exit 0
 fi
 
 # --- Quit ---

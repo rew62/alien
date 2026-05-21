@@ -130,39 +130,44 @@ See `.env-example` for the format reference.
 
 ### tmux Integration
 
-* Launch all widgets at once:
+* Launch all widgets at once (runs the `default` group):
 
   ```bash
-  ./alien-tmux
+  ./atmux
   ```
 * Stop everything:
 
   ```bash
-  tmux kill-session -t conky
+  ./atmux quit
   ```
 
-#### alien-tmux2 — Selective Launch
+#### atmux — Selective Launch
 
-`alien-tmux2` lets you launch any subset of widgets by passing short codes as arguments.
+`atmux` lets you launch any subset of widgets by passing short codes as arguments.
 Up to 4 conky processes are grouped per tmux window; the layout is tiled automatically.
+With no arguments it launches the `default` group. Use `atmux help` to list all codes.
 
 **Usage:**
 
 ```bash
+# Launch the default group
+./atmux
+
 # Launch specific widgets by code
-./alien-tmux2 t a wc wf
+./atmux t a wc wf
 
 # Or pass a bracketed, comma-separated list
-./alien-tmux2 [t,a,wc,wf]
+./atmux [t,a,wc,wf]
 
 # Launch a named group
-./alien-tmux2 stack1
+./atmux stack1
 ```
 
 **Named Groups:**
 
 | Group | Codes |
 |---|---|
+| `default` | `h2 s2 a g t m wf ac vs r e $ tm` |
 | `stack1` | `h2 a sc mc sd wfs mp n vs` |
 | `stack2` | `h2 lc wf` |
 
@@ -181,7 +186,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 | `lc` | `calendar/lcalendar.rc` | Lua-drawn allcombined calendar |
 | `m` | `music/song-info.rc` | Now Playing (song info) |
 | `mp` | `music/playerctl.rc` | Now Playing sidepanel |
-| `r` | `rss/rss2.rc` | RSS feed viewer |
+| `r` | `rss/rss.rc` | RSS feed viewer |
 | `$` | `stocks/ticker.rc` | Stock price table |
 | `s` | `calendar/sys-small.rc` | Single-line system monitor |
 | `s2` | `calendar/sys-small2.rc` | Single-line system monitor (larger font) |
@@ -204,8 +209,7 @@ Up to 4 conky processes are grouped per tmux window; the layout is tiled automat
 
 ```text
 ├── alien.png
-├── alien-tmux                          - launch all widgets via tmux
-├── alien-tmux2                         - selective tmux launch (short codes)
+├── atmux                               - launch widgets via tmux (default group or codes)
 ├── background.png                      - Alien theme background (3440×1440)
 ├── aclock/
 │   └── aclock.rc                       [ac] Analog clock

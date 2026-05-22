@@ -1,4 +1,4 @@
--- settings.lua - Configuration settings for calendar conky
+-- settings.lua - Configuration settings for solardial conky
 -- v1 04 2026-03-09 @rew62
 
 package.path = package.path .. ";../?.lua"

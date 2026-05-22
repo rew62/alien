@@ -1,4 +1,4 @@
--- nws_forecast.lua - 5-day NWS forecast widget (no current conditions)
+-- draw_nws_forecast_sidepanel.lua - 5-day NWS forecast widget (no current conditions)
 -- Renderer only; data from nws_fetch.lua (loaded first via lua_load)
 -- Modelled on weather/alien-weather-full.lua; current-conditions block removed.
 -- v1.1 2026-05-19 @rew62
@@ -35,6 +35,19 @@ local ICON_RAIN  = "\xEF\x81\x83"   -- nf-fa-tint U+F043
 -- ICON HELPERS  (MET Norway via jsDelivr CDN)
 -- -----------------------------------------------------------------------
 local METNO_BASE = "https://cdn.jsdelivr.net/gh/metno/weathericons@main/weather/png/"
+
+local _mtime_cache   = nil
+local _mtime_checked = 0
+
+do
+    os.execute("mkdir -p " .. ICON_DIR)
+    local h = io.popen("stat -c %Y /dev/shm/nws_forecast.json 2>/dev/null")
+    if h then
+        _mtime_cache   = tonumber(h:read("*l"))
+        _mtime_checked = os.time()
+        h:close()
+    end
+end
 
 local NWS_TO_METNO = {
     clear                  = "clearsky_day",
@@ -80,7 +93,6 @@ local NWS_TO_METNO = {
 }
 
 local function fetch_metno_icon(name)
-    os.execute("mkdir -p " .. ICON_DIR)
     local path = ICON_DIR .. "metno_" .. name .. ".png"
     local f = io.open(path, "r")
     if f then f:close(); return path end
@@ -158,12 +170,16 @@ local function parse_date_strings(iso)
 end
 
 local function cache_update_time()
+    local now = os.time()
+    if _mtime_cache and (now - _mtime_checked) < 300 then
+        return os.date("%I:%M %p", _mtime_cache):gsub("^0", "")
+    end
     local h = io.popen("stat -c %Y /dev/shm/nws_forecast.json 2>/dev/null")
-    if not h then return "" end
+    if not h then return _mtime_cache and os.date("%I:%M %p", _mtime_cache):gsub("^0", "") or "" end
     local t = tonumber(h:read("*l"))
     h:close()
-    if not t then return "" end
-    return os.date("%I:%M %p", t):gsub("^0", "")
+    if t then _mtime_cache = t; _mtime_checked = now end
+    return _mtime_cache and os.date("%I:%M %p", _mtime_cache):gsub("^0", "") or ""
 end
 
 -- Split "Sunny then Thunderstorms" into two lines at the "then" boundary.

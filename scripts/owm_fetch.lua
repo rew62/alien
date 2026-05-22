@@ -256,7 +256,7 @@ local function parse_owm(data)
     elseif wid >= 600 and wid < 700 then emoji = "❄️"
     elseif wid == 771 or wid == 781 then emoji = "🌪️"
     elseif wid >= 700 and wid < 800 then emoji = "🌫️"
-    elseif wid == 800               then emoji = is_day and "☀️" or "🌙"
+    elseif wid == 800               then emoji = is_day and "☀️" or "🌕"  -- 🌙 U+1F319 not in NotoSansSymbols2; 🌕 U+1F315 is
     elseif wid == 801               then emoji = is_day and "⛅" or "☁️"
     elseif wid == 802               then emoji = is_day and "🌤️" or "☁️"
     elseif wid == 803               then emoji = "🌥️"

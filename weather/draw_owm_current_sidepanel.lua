@@ -21,6 +21,29 @@ require 'cairo'
 local METNO_CACHE = "/dev/shm/conky_icons/"
 local METNO_BASE  = "https://cdn.jsdelivr.net/gh/metno/weathericons@main/weather/png/"
 
+local _owm_mtime_cache   = nil
+local _owm_mtime_checked = 0
+
+do
+    local h = io.popen("stat -c %Y /dev/shm/conky/owm_current.json 2>/dev/null")
+    if h then
+        _owm_mtime_cache   = tonumber(h:read("*l"))
+        _owm_mtime_checked = os.time()
+        h:close()
+    end
+end
+
+local function owm_cache_time()
+    local now = os.time()
+    if _owm_mtime_cache and (now - _owm_mtime_checked) < 300 then return _owm_mtime_cache end
+    local h = io.popen("stat -c %Y /dev/shm/conky/owm_current.json 2>/dev/null")
+    if not h then return _owm_mtime_cache end
+    local t = tonumber(h:read("*l"))
+    h:close()
+    if t then _owm_mtime_cache = t; _owm_mtime_checked = now end
+    return _owm_mtime_cache
+end
+
 local function fetch_metno_icon(name)
     local path = METNO_CACHE .. "metno_" .. name .. ".png"
     local fh = io.open(path, "r")
@@ -86,7 +109,7 @@ end
 -- Config  ← x positions match wttr goto values exactly
 ------------------------------------------------------------------------
 local ICON_MODE   = "emoji"   -- "metno" | "emoji"
-local FONT_EMOJI  = "DejaVuSansM Nerd Font Propo"
+local FONT_EMOJI  = "Noto Sans Symbols2"
 
 local CFG = {
     W       = 315,
@@ -140,8 +163,8 @@ local function do_draw(cr)
     -- Icon
     if ICON_MODE == "emoji" then
         local icon_emoji = owm_val("icon_emoji", "?"):gsub("\xef\xb8\x8f", "")  -- strip U+FE0F color selector
-        local ey = OY + (SY + CFG.ICON_PX) / 2 - 14
-        draw_left(cr, icon_emoji, CFG.ICON_X, ey, FONT_EMOJI, 96, C_WHITE, false)
+        local ey = OY + (SY + CFG.ICON_PX) / 2 - 8
+        draw_left(cr, icon_emoji, CFG.ICON_X, ey, FONT_EMOJI, 60, C_WHITE, false)
     else
         draw_image(cr, fetch_metno_icon(icon_metno),
             CFG.ICON_X, OY + (SY - CFG.ICON_PX) / 2, CFG.ICON_PX, CFG.ICON_PX)
@@ -178,13 +201,9 @@ local function do_draw(cr)
 
     -- Cache freshness timestamp (mtime of owm_current.json)
     local ts_str = ""
-    local fh = io.popen("stat -c %Y /dev/shm/conky/owm_current.json 2>/dev/null")
-    if fh then
-        local epoch = tonumber(fh:read("*l"))
-        fh:close()
-        if epoch then
-            ts_str = os.date("%I:%M%p", epoch):gsub("^0", ""):lower():gsub("m$", "")
-        end
+    local epoch = owm_cache_time()
+    if epoch then
+        ts_str = os.date("%I:%M%p", epoch):gsub("^0", ""):lower():gsub("m$", "")
     end
     if ts_str ~= "" then
         local tx = CFG.W - 4

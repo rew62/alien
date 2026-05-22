@@ -1,4 +1,4 @@
--- loadall.lua - Loader for wttr conky modules
+-- loadall.lua - Loader for music conky modules
 -- v1.3 2026-05-19 @rew62
 
 package.path = "./?.lua;scripts/?.lua;../scripts/?.lua;" .. package.path
@@ -10,9 +10,9 @@ local draw_func   = nil
 local function try_require(modname)
     local ok, err = pcall(require, modname)
     if not ok then
-        print("ERROR: could not load '" .. modname .. "': " .. tostring(err))
+        print("Error loading " .. modname .. ": " .. tostring(err))
+        os.exit(1)
     end
-    return ok
 end
 
 try_require("allcombined2")

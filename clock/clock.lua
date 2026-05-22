@@ -1,4 +1,4 @@
--- clock2.lua - Animated clock widget for Conky - Every second the colon swaps color.
+-- clock.lua - Animated clock widget for Conky - Every second the colon swaps color.
 -- Font: Metropolis (https://github.com/chrismsimpson/Metropolis/releases)
 -- v1.2 2026-04-29 @rew62
 

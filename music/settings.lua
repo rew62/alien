@@ -1,4 +1,4 @@
--- settings.lua - Configuration settings for calendar conky
+-- settings.lua - Configuration settings for music conky
 -- v1 05 2026-05-19 @rew62
 
 package.path = package.path .. ";../?.lua"

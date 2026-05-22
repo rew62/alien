@@ -27,13 +27,12 @@ local ok, lib = pcall(require, "cjson")
     end
 end
 
--- Helper function for safe loading
 local function try_require(modname)
     local ok, err = pcall(require, modname)
     if not ok then
-        print("ERROR: could not load '" .. modname .. "': " .. tostring(err))
+        print("Error loading " .. modname .. ": " .. tostring(err))
+        os.exit(1)
     end
-    return ok
 end
 
 -- Initial Setup
@@ -69,12 +68,9 @@ local dispatch = {
 }
 
 local d = dispatch[conky_script_name] or dispatch["full.rc"]
-local ok = true
-for _, mod in ipairs(d.mods) do ok = ok and try_require(mod) end
-if ok then
-    update_func = _G[d.upd]
-    draw_func   = _G[d.drw]
-end
+for _, mod in ipairs(d.mods) do try_require(mod) end
+update_func = _G[d.upd]
+draw_func   = _G[d.drw]
 
 -- Conky Hooks
 

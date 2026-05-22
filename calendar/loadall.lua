@@ -12,7 +12,6 @@ local function try_require(modname)
         print("Error loading " .. modname .. ": " .. tostring(err))
         os.exit(1)
     end
-    return mod
 end
 
 try_require("allcombined2")

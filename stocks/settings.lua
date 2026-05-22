@@ -1,4 +1,4 @@
--- settings.lua - Configuration settings for vnstat conky
+-- settings.lua - Configuration settings for stocks conky
 -- v1.1 2026-04-06 @rew62
 
 package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua" 

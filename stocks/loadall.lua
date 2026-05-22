@@ -1,4 +1,4 @@
--- loadall.lua - Loader for vnstat conky modules
+-- loadall.lua - Loader for stocks conky modules
 -- v1.1 2026-03-17 @rew62
 
 -- Load external modules

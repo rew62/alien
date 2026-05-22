@@ -1,4 +1,4 @@
--- solar_dial.lua - Conky/Lua/Cario widget inspired by Apple iWatch Solar Dial 300x300
+-- dial.lua - Conky/Lua/Cairo widget inspired by Apple iWatch Solar Dial 300x300
 -- Features:
 -- - 24 hour solar dial
 -- - 12 at top / 24 at bottom

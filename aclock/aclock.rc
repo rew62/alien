@@ -9,6 +9,7 @@ conky.config = {
     own_window_argb_visual = true,
     own_window_argb_value  = 0,
     own_window_hints      = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_title      = 'aclock',
 
     -- position — adjust to taste
     alignment             = 'top_middle',

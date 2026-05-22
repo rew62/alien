@@ -168,7 +168,7 @@ local function hourly_block(iface)
                   .. "\n"
     end
 
-    out = out .. "${font Monospace:bold:size=9}"
+    out = out .. "${font MonaspiceNe Nerd Font Mono:bold:size=9}"
               .. C.tree .. "└── " .. C.header .. string.format("%-11s", "total")
               .. C.tx   .. pad(fmt_bytes(total_tx), VW)
               .. "  "
@@ -258,7 +258,7 @@ local function daily_block(iface)
     out = out .. row("max  " .. max_date, max_rx,   max_tx,   max_tot,   false)
     out = out .. row("min  " .. min_date, min_rx,   min_tx,   min_tot,   false)
     out = out .. row("avg",               avg_rx,   avg_tx,   avg_tot,   false)
-    out = out .. "${font Monospace:bold:size=9}"
+    out = out .. "${font MonaspiceNe Nerd Font Mono:bold:size=9}"
            .. row("total",            total_rx, total_tx, grand,     true, C.header):sub(1, -2)
            .. "${font}\n"
     return out

@@ -32,7 +32,6 @@ conky.config = {
     use_xft            = true,
 
     -- Font (monospace is essential for alignment)
-    --font               = 'Monospace:size=9',
     --font              = 'Inter Tight:size=14',
     --font              = 'DejaVuSansM Nerd Font Propo:size=12',
     --font              = 'IBM Plex Mono:fontfeatures=tnum:size=12',

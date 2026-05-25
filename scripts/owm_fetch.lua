@@ -62,7 +62,8 @@ end
 ------------------------------------------------------------------------
 -- Module state
 ------------------------------------------------------------------------
-local _current = nil
+local _current     = nil
+local _cache_mtime = nil  -- mtime when _current was last loaded from disk
 
 ------------------------------------------------------------------------
 -- File helpers
@@ -79,22 +80,25 @@ local function file_exists(path)
     return false
 end
 
-local function file_age_seconds(path)
-    local f = io.open(path, "r")
-    if not f then return math.huge end
-    f:close()
+local function file_mtime(path)
     local h = io.popen("stat -c %Y " .. path .. " 2>/dev/null")
-    if not h then return math.huge end
-    local mtime = tonumber(h:read("*l")); h:close()
-    if not mtime then return math.huge end
-    return os.time() - mtime
+    if not h then return nil end
+    local t = tonumber(h:read("*l")); h:close()
+    return t
+end
+
+local function file_age_seconds(path)
+    local t = file_mtime(path)
+    return t and (os.time() - t) or math.huge
 end
 
 local function dir_age_seconds(path)
     local h = io.popen("stat -c %Y " .. path .. " 2>/dev/null")
-    if not h then return math.huge end
+    --if not h then return math.huge end
+    if not h then return 0 end
     local mtime = tonumber(h:read("*l")); h:close()
-    if not mtime then return math.huge end
+    --if not mtime then return math.huge end  -- math.huge caused stale-check to strip live locks
+    if not mtime then return 0 end  -- doesn't exist: not stale, let mkdir_atomic decide
     return os.time() - mtime
 end
 
@@ -334,12 +338,14 @@ end
 function conky_owm_fetch()
     mkdir_p(CACHE_DIR)
 
-    -- Warm module state from disk cache (e.g. after conky restart within TTL)
-    if not _current and file_exists(CACHE_JSON) then
+    -- Sync _current from disk whenever another process has updated the cache
+    local disk_mtime = file_mtime(CACHE_JSON)
+    if disk_mtime and disk_mtime ~= _cache_mtime then
         local raw = read_file(CACHE_JSON)
         local ok, data = pcall(cjson.decode, raw or "")
         if ok and data and data.weather then
-            _current = parse_owm(data)
+            _current    = parse_owm(data)
+            _cache_mtime = disk_mtime
         end
     end
 
@@ -357,7 +363,8 @@ function conky_owm_fetch()
             local raw = read_file(CACHE_JSON)
             local ok2, data = pcall(cjson.decode, raw or "")
             if ok2 and data and data.weather then
-                _current = parse_owm(data)
+                _current     = parse_owm(data)
+                _cache_mtime = file_mtime(CACHE_JSON)
             end
         end
     end)

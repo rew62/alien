@@ -1,6 +1,6 @@
 -- nws_fetch.lua - NWS forecast fetcher, shared across multiple callers
 -- Atomic-safe: tmp→mv writes + mkdir lock prevents duplicate concurrent fetches
--- v1.4 2026-05-19 @rew62
+-- v1.5 2026-05-26 @rew62  mtime gate: only re-parse when cache file changes
 
 local env_path = os.getenv("HOME") .. "/.conky/alien/.env"
 package.path = package.path .. ";./?.lua;../?.lua;" .. (os.getenv("HOME") or "") .. "/.conky/alien/scripts/?.lua"
@@ -53,16 +53,17 @@ end
 ------------------------------------------------------------------------
 -- File helpers
 ------------------------------------------------------------------------
-local function file_age_minutes(path)
-    local f = io.open(path, "r")
-    if not f then return math.huge end
-    f:close()
+local function file_mtime(path)
     local h = io.popen("stat -c %Y " .. path .. " 2>/dev/null")
-    if not h then return math.huge end
-    local mtime = tonumber(h:read("*l"))
-    h:close()
-    if not mtime then return math.huge end
-    return (os.time() - mtime) / 60
+    if not h then return nil end
+    local t = tonumber(h:read("*l")); h:close()
+    return t
+end
+
+local function file_age_minutes(path)
+    local t = file_mtime(path)
+    if not t then return math.huge end
+    return (os.time() - t) / 60
 end
 
 local function file_age_days(path)
@@ -496,9 +497,11 @@ end
 ------------------------------------------------------------------------
 -- Module state
 ------------------------------------------------------------------------
-local _forecast = nil
-local _grid     = nil
-local _current  = nil
+local _forecast   = nil
+local _grid       = nil
+local _current    = nil
+local _fcst_mtime = nil   -- mtime when _forecast was last parsed from disk
+local _curr_mtime = nil   -- mtime when _current was last decoded from disk
 
 ------------------------------------------------------------------------
 -- Public API
@@ -509,22 +512,36 @@ function weather_update()
         print("nws_fetch: could not resolve grid")
         return
     end
-    local raw = fetch_forecast(_grid)
-    if not raw then
-        print("nws_fetch: no forecast data")
-        return
-    end
-    local fc, err = parse_forecast(raw)
-    if not fc then
-        print("nws_fetch: parse error: " .. tostring(err))
-        return
-    end
-    _forecast = fc
 
+    -- fetch_forecast handles TTL check and network refresh internally;
+    -- only re-parse the JSON when the cache file has actually changed
+    local raw = fetch_forecast(_grid)
+    local fcst_mtime = file_mtime(FCST_CACHE_FILE)
+    if fcst_mtime ~= _fcst_mtime then
+        if raw then
+            local fc, err = parse_forecast(raw)
+            if fc then
+                _forecast  = fc
+                _fcst_mtime = fcst_mtime
+            else
+                print("nws_fetch: parse error: " .. tostring(err))
+            end
+        else
+            print("nws_fetch: no forecast data")
+        end
+    end
+
+    -- Same gate for current observations
     local curr_raw = fetch_current_obs(_grid)
-    if curr_raw then
-        local ok, data = pcall(cjson.decode, curr_raw)
-        if ok and data then _current = data end
+    local curr_mtime = file_mtime(CURR_CACHE_FILE)
+    if curr_mtime ~= _curr_mtime then
+        if curr_raw then
+            local ok, data = pcall(cjson.decode, curr_raw)
+            if ok and data then
+                _current   = data
+                _curr_mtime = curr_mtime
+            end
+        end
     end
 end
 

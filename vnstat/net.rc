@@ -71,7 +71,7 @@ ${offset 10}${voffset 25}${color2}${font Rubik:size=8}DOWN : ${goto 50}${color}$
 ${offset 10}${voffset 0}${color2}${downspeedgraph ${template1} 28,115}
 ${offset 10}${voffset 5}${color2}${font Rubik:size=8}UP : ${goto 50}${color}${upspeed ${template1}}${goto 80}  |    ${totalup ${template1}}
 ${offset 10}${voffset 0}${color2}${upspeedgraph ${template1} 28,115}
-${offset 155}${voffset -120}${font Material:size=14}${voffset -3}${font Rubik:bold:size=8}${color}   ${wireless_essid ${template1}}
+${offset 155}${voffset -120}${font Material:size=14}${voffset -3}${font Rubik:bold:size=8}${color}   ${wireless_essid ${template1}}${if_match "${wireless_essid ${template1}}" != "off/any"}   (${wireless_link_qual_perc ${template1}}%)${endif}
 ${offset 155}${voffset 8}${color2}${font Rubik:bold:size=8}LOCAL IP
 ${offset 155}${voffset 0}${color}${font Rubik:bold:size=9}${addr ${gw_iface}}
 ${offset 155}${voffset 8}${color2}${font Rubik:bold:size=8}PUBLIC IP

@@ -40,7 +40,9 @@ conky.config = {
   color1                 = 'A0A0A0',
 
   lua_draw_hook_pre      = 'owm_draw_horizon',
-  lua_load               = DIR .. '/arc4.lua ./settings.lua ' .. ALIEN_DIR .. '/scripts/owm_fetch.lua',
+  --lua_load               = DIR .. '/arc4.lua ./settings.lua ' .. ALIEN_DIR .. '/scripts/owm_fetch.lua',
+  --lua_load               = DIR .. '/arc5.lua ./settings.lua ' .. ALIEN_DIR .. '/scripts/owm_fetch.lua ' .. ALIEN_DIR .. '/scripts/nws_fetch.lua',
+  lua_load               = DIR .. '/arc6.lua ./settings.lua ' .. ALIEN_DIR .. '/scripts/owm_fetch.lua ' .. ALIEN_DIR .. '/scripts/nws_fetch.lua',
   lua_startup_hook = 'vars',
 }
 

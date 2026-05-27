@@ -135,7 +135,7 @@ if conky then
     own_window_title       = 'c2',
     own_window_colour      = '#000000',
 
-    xinerama_head       = 2,
+    xinerama_head       = 0,
     alignment           = 'ml',
     gap_x               = 0,
     gap_y               = 90,

@@ -37,8 +37,8 @@ conky.config = {
 -- Colors
    default_color      = 'e8a84a',
    color1             = 'f5d080',       -- values / totals (bright)
-   color2             = '60c888',       -- RX (green)
-   color3             = 'e07050',       -- TX (red-orange)
+   color2             = 'f05555',       -- TX (red)
+   color3             = '60c888',       -- RX (green)
    color4             = '8a6030',       -- dimmed / comments
    color5             = 'a06828',       -- tree lines
    color6             = '89b4fa',       -- section headers (theme border blue)

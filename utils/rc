@@ -1,68 +1,83 @@
 #!/bin/bash
-# rc - run conky rc files from current directory
+# rc - run conky config files from current directory tree
 # usage:
-#   rc             -> auto-select if one .rc, menu if multiple
-#   rc name        -> runs name.rc
-#   rc name.rc     -> runs name.rc
+#   rc             -> fzf select from all .rc/.lua files in tree
+#   rc name        -> finds name.rc in tree
+#   rc name.rc     -> finds name.rc in tree
+#   rc name.lua    -> finds name.lua in tree
 
 CONFIG_DIR="$(pwd)"
 
-# Ensure *.rc expands to nothing if no matches
-shopt -s nullglob
+fzf_select() {
+    local -n _files=$1
+    local prompt=$2
+    local rel selected
+    rel=$(printf "%s\n" "${_files[@]}" | sed "s|^$CONFIG_DIR/||" | fzf --prompt="$prompt")
+    [[ -n "$rel" ]] && selected="$CONFIG_DIR/$rel"
+    printf "%s" "$selected"
+}
 
-RC_FILES=("$CONFIG_DIR"/*.rc)
+select_menu() {
+    local -n _files=$1
+    local chosen
+    echo "Select a conky config file to run:"
+    select FILE in "${_files[@]}"; do
+        [[ -n "$FILE" ]] && { chosen="$FILE"; break; }
+        printf "\e[1;31mInvalid selection.\e[0m\n"
+    done
+    printf "%s" "$chosen"
+}
 
-# No .rc files found
-if [[ ${#RC_FILES[@]} -eq 0 ]]; then
-    printf "\e[1;31mNo .rc files in %s\e[0m\n" "$CONFIG_DIR"
-    exit 1
-fi
-
-# If argument provided
-if [[ -n "$1" ]]; then
-    # Append .rc only if not already present
-    if [[ "$1" == *.rc ]]; then
-        FULL_PATH="$CONFIG_DIR/$1"
+pick_file() {
+    local -n _candidates=$1
+    if [[ ${#_candidates[@]} -eq 1 ]]; then
+        printf "%s" "${_candidates[0]}"
+    elif command -v fzf >/dev/null 2>&1; then
+        fzf_select _candidates "Select a conky config: "
     else
-        FULL_PATH="$CONFIG_DIR/$1.rc"
+        select_menu _candidates
+    fi
+}
+
+if [[ -n "$1" ]]; then
+    if [[ "$1" == *.* ]]; then
+        TARGET="$1"
+    else
+        TARGET="$1.rc"
     fi
 
-    if [[ ! -f "$FULL_PATH" ]]; then
-        printf "\e[1;31mError: %s not found.\e[0m\n" "$FULL_PATH"
+    mapfile -t MATCHES < <(find "$CONFIG_DIR" -type f -name "$TARGET")
+
+    if [[ ${#MATCHES[@]} -eq 0 ]]; then
+        printf "\e[1;31mError: %s not found under %s\e[0m\n" "$TARGET" "$CONFIG_DIR"
         exit 1
     fi
 
+    FULL_PATH=$(pick_file MATCHES)
 else
-    # No argument: auto or select
-    if [[ ${#RC_FILES[@]} -eq 1 ]]; then
-        FULL_PATH="${RC_FILES[0]}"
-    else
-        if command -v fzf >/dev/null 2>&1; then
-            FULL_PATH=$(printf "%s\n" "${RC_FILES[@]}" | fzf --prompt="Select a conky rc: ")
-        else
-            echo "Select a conky rc file to run:"
-            select FILE in "${RC_FILES[@]}"; do
-                [[ -n "$FILE" ]] && { FULL_PATH="$FILE"; break; }
-                printf "\e[1;31mInvalid selection.\e[0m\n"
-            done
-        fi
+    mapfile -t RC_FILES < <(find "$CONFIG_DIR" -type f \( -name "*.rc" -o -name "*.lua" \) | sort)
 
-        # Handle cancel / empty selection
-        if [[ -z "$FULL_PATH" ]]; then
-            printf "\e[1;31mNo file selected.\e[0m\n"
-            exit 1
-        fi
+    if [[ ${#RC_FILES[@]} -eq 0 ]]; then
+        printf "\e[1;31mNo .rc or .lua files found under %s\e[0m\n" "$CONFIG_DIR"
+        exit 1
     fi
+
+    FULL_PATH=$(pick_file RC_FILES)
 fi
 
-# Final safety check
-if [[ ! -f "$FULL_PATH" ]]; then
-    printf "\e[1;31mNo valid .rc selected.\e[0m\n"
+if [[ -z "$FULL_PATH" ]]; then
+    printf "\e[1;31mNo file selected.\e[0m\n"
     exit 1
 fi
 
-# Bold green output (reliable via printf)
+if [[ ! -f "$FULL_PATH" ]]; then
+    printf "\e[1;31mNo valid config selected.\e[0m\n"
+    exit 1
+fi
+
+TARGET_DIR="$(dirname "$FULL_PATH")"
+cd "$TARGET_DIR" || { printf "\e[1;31mFailed to cd into %s\e[0m\n" "$TARGET_DIR"; exit 1; }
+
 printf "\e[1;32mRunning Conky with: %s\e[0m\n" "$(basename "$FULL_PATH")"
 
-# Run conky
 exec conky -c "$FULL_PATH"

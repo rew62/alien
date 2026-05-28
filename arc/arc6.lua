@@ -366,8 +366,8 @@ local function draw_horizon_line(cr, cx, cy)
   local H   = CFG.weather.hline
   local arc = CFG.weather.arc
   local y   = cy + H.dy
-  local lx  = cx - arc.r    -- left arc base  (x=115)
-  local rx  = cx + arc.r    -- right arc base (x=455)
+  local lx  = cx - arc.r + 16    -- left arc base  (x=115) inset 16px
+  local rx  = cx + arc.r - 16    -- right arc base (x=455) inset 16px
 
   local r_, g_, b_, a_ = hex_to_rgba(H.color, 1.0)
   cairo_save(cr)
@@ -405,7 +405,7 @@ local function draw_horizon_line(cr, cx, cy)
     local range  = hi_n - lo_n
     local t      = range > 0 and math.max(0, math.min(1, (cur_f - lo_n) / range)) or 0.5
     local cx_r   = lx + t * bar_w
-    local rect_h = 16
+    local rect_h = 10
     local rect_w = math.max(4, range > 0 and bar_w / range or 8)
     local rx_l   = math.max(lx, math.min(cx_r - rect_w / 2, rx - rect_w))
     local ry_t   = y - rect_h / 2
@@ -432,12 +432,12 @@ local function draw_horizon_line(cr, cx, cy)
   --if tu == "N/A" or tu == "" then tu = "°F" end
 
   if lo_n and hi_n then
-    local lo_str   = string.format("%.0f", lo_n)
-    local hi_str   = string.format("%.0f", hi_n)
+    local lo_str   = string.format("%.0f°", lo_n)
+    local hi_str   = string.format("%.0f°", hi_n)
     --local lo_str   = string.format("%.0f%s", lo_n, tu)
     --local hi_str   = string.format("%.0f%s", hi_n, tu)
     local label_sz = 16
-    local gap      = 6
+    local gap      = 8
     local ext      = cairo_text_extents_t:create()
 
     cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD)

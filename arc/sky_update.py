@@ -143,11 +143,12 @@ def write_vars(lat, lon):
 
         if name == "MOON":
             try:
-                # Use previous_rising so the timestamp is in the past when
-                # the moon is currently up; next_setting gives the upcoming
-                # set time.  Together, now >= rise_ts and now <= set_ts
-                # correctly evaluates to True while the moon is above the horizon.
-                mr = obs.previous_rising(ephem.Moon())
+                # When moon is up: previous_rising = when it rose (past).
+                # When moon is down: next_rising = when it will rise next.
+                if alt_d > 0:
+                    mr = obs.previous_rising(ephem.Moon())
+                else:
+                    mr = obs.next_rising(ephem.Moon())
                 ms = obs.next_setting(ephem.Moon())
                 lines.append(f"MOON_RISE_TS={ephem_ts(mr)}")
                 lines.append(f"MOON_SET_TS={ephem_ts(ms)}")

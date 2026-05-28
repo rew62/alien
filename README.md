@@ -418,11 +418,24 @@ Nerd Fonts: <https://www.nerdfonts.com/>
 
 ---
 
+## Related Projects
+
+* **[auzia-conky](https://github.com/rew62/auzia-conky)** — Forked and modified from [SZinedine/auzia-conky](https://github.com/SZinedine/auzia-conky)
+  ```bash
+  git clone https://github.com/rew62/auzia-conky.git
+  ```
+
+* **[conky-aurora](https://github.com/rew62/conky-aurora)** — Aurora conky set (source of the Earth Viewer component used in this suite)
+  ```bash
+  git clone https://github.com/rew62/conky-aurora.git
+  ```
+
+---
+
 ## Credits
 
 * **github/@gtex62** — Original author of gtex62-clean-suite - weather widget formed the foundation of the enhanced Arc implementation
 * **github/@wim66** — Original author of background.lua, lua3-bars.lua
 * **allcombined2.lua** - Original Lua scripting: Mr Peachy, Modified/Maintained by: github/@Fehlix (MX Linux Team),  MX Linux Conky Collection
-* **Aurora Set** — Source of the Earth Viewer component github @rew62/aurora
 
 ---

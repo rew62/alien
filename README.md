@@ -1,6 +1,6 @@
 # Alien Conky Suite
 
-A modular, feature-rich collection of **22 Conky scripts** across **12 categories**, designed to create a cohesive and interactive desktop experience.
+A modular, feature-rich collection of **30 Conky scripts** across **12 categories**, designed to create a cohesive and interactive desktop experience.
 Run everything together or each component independently.
 
 * All components are **fully modular**
@@ -21,7 +21,7 @@ Run everything together or each component independently.
 
 | Category | Scripts |
 |---|---|
-| **Analog Clock** | Analog Clock |
+| **Analog Clock** | Analog Clock, Analog Clock Rings |
 | **Clock** | Animated Clock, Now Playing (Song Info), Now Playing Sidepanel |
 | **Weather** | Current Conditions (top + sidepanel), Forecast (small + sidepanel), Full Panel |
 | **Calendar** | Horizontal Calendar (Lua), Horizontal Calendar (Bash), Multi-Month Calendar, khal calendar, allcombined Lua Calendar, Side Panel calendar |
@@ -32,7 +32,7 @@ Run everything together or each component independently.
 | **RSS** | Click-enabled Feed Viewer |
 | **Stocks** | Current stock prices |
 | **Terminator** | Day/night terminator map |
-| **Solar Dial** | Solar Dial |
+| **Solar Dial** | Solar Dial, Solar Dial Ring |
 
 The **Earth Viewer** component is adapted from the *Aurora* set.
 
@@ -176,6 +176,7 @@ With no arguments it launches the `default` group. Use `atmux help` to list all 
 | Code | RC File | Widget |
 |---|---|---|
 | `ac` | `aclock/aclock.rc` | Analog clock |
+| `ac2` | `clock/alien-clock2.lua` | Analog clock rings |
 | `a` | `arc/arc.rc` | Arc (horizon, planets, sun/moon, weather) |
 | `e` | `earth/earth.rc` | Earth satellite image viewer |
 | `g` | `gcal/gcal.rc` | Google Calendar month-view |
@@ -192,6 +193,7 @@ With no arguments it launches the `default` group. Use `atmux help` to list all 
 | `s2` | `calendar/sys-small2.rc` | Single-line system monitor (larger font) |
 | `sc` | `calendar/sidepanel-calendar.rc` | Side panel calendar |
 | `sd` | `solardial/solardial.rc` | Solar Dial |
+| `sdr` | `solardial/solardialring.rc` | Solar Dial Ring |
 | `t` | `clock/clock.rc` | Animated clock |
 | `v` | `vnstat/vnstat.rc` | vnStat bandwidth monitor |
 | `vs` | `vnstat/vnstat-summary.rc` | vnstat short |
@@ -202,6 +204,7 @@ With no arguments it launches the `default` group. Use `atmux help` to list all 
 | `wf` | `weather/nws_forecast_small.rc` | 5-day forecast strip |
 | `wfs` | `weather/nws_forecast_sidepanel.rc` | Forecast sidepanel |
 | `tm` | `terminator/terminator.rc` | Day/night terminator map |
+| `kr` | `utils/kroy.lua` | Killroy Was Here |
 
 ---
 
@@ -234,6 +237,7 @@ With no arguments it launches the `default` group. Use `atmux help` to list all 
 │   ├── loadall.lua
 │   └── settings.lua
 ├── clock/
+│   ├── alien-clock2.lua                [ac2] Analog clock rings
 │   ├── clock.rc                        [t]  Animated clock widget (0.5 s updates)
 │   ├── clock.lua
 │   ├── loadall.lua
@@ -281,7 +285,8 @@ With no arguments it launches the `default` group. Use `atmux help` to list all 
 │   ├── loadall.lua
 │   └── settings.lua
 ├── solardial/
-│   ├── solardial.rc                    [sd] Solar Dial
+│   ├── solardial.rc                    [sd]  Solar Dial
+│   ├── solardialring.rc                [sdr] Solar Dial Ring
 │   ├── dial2.lua
 │   ├── loadall.lua
 │   └── settings.lua
@@ -289,6 +294,7 @@ With no arguments it launches the `default` group. Use `atmux help` to list all 
 │   └── terminator.rc                   [tm] Day/night terminator map
 ├── theme.lua                           - global colors (borders, backgrounds)
 ├── utils/
+│   ├── kroy.lua                        [kr] Killroy Was Here
 │   ├── rc                              - shortcut launcher (place on PATH)
 │   └── save-pos.sh                     - save all conky window positions
 ├── vnstat/

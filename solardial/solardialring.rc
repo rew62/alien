@@ -1,0 +1,50 @@
+conky.config = {
+-- ─────────────────────────────────────────────────────────────────────────────
+--  Solar Dial  –  Apple Watch–style 24-hour solar face
+--  v1.0  2026-05-14  @rew62
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- Window
+    own_window            = true,
+    own_window_type       = 'normal',
+    own_window_transparent = true,
+    own_window_argb_visual = true,
+    own_window_argb_value  = 0,
+    own_window_class      = 'Conky',
+    own_window_hints      = 'undecorated,sticky,skip_taskbar,skip_pager,below',
+
+-- Size & position  (adjust gap_x / gap_y to taste)
+    alignment             = 'top_left',
+    gap_x                 =  20,
+    gap_y                 =  40,
+    minimum_width         = 300,
+    minimum_height        = 300,
+    maximum_width         = 300,
+
+-- Rendering
+    double_buffer         = true,
+    update_interval       = 60,     -- updates every minute (sun moves slowly)
+
+-- Text / font (the Lua script does all real drawing)
+    use_xft               = true,
+    font                  = 'DejaVu Sans:size=8',
+    override_utf8_locale  = true,
+    out_to_console        = false,
+    out_to_stderr         = false,
+    extra_newline         = false,
+
+-- Misc
+    draw_shades           = false,
+    draw_borders          = false,
+    draw_graph_borders    = false,
+    draw_outline          = false,
+    stippled_borders      = 0,
+    uppercase             = false,
+    use_spacer            = 'none',
+
+-- Lua
+    lua_load              = '~/.conky/solardial/solar_dial.lua',
+    lua_draw_hook_post    = 'draw_solar_dial',
+}
+
+conky.text = [[]]

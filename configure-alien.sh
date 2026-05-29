@@ -161,6 +161,7 @@ echo
 echo "Files to be updated:"
 echo "  - $ENV_FILE"
 echo "  - calendar/sys-small.rc"
+echo "  - calendar/sys-small2.rc"
 echo "  - vnstat/settings.lua"
 echo "  - vnstat/net.rc"
 #echo "  - network/network.rc"
@@ -201,6 +202,13 @@ if [ -f "$SCRIPT_DIR/calendar/sys-small.rc" ]; then
     echo -e "${GREEN}✓ Updated calendar/sys-small.rc${NC}"
 else
     echo -e "${YELLOW}⚠ File calendar/sys-small.rc not found${NC}"
+fi
+
+if [ -f "$SCRIPT_DIR/calendar/sys-small2.rc" ]; then
+    sed -i "s/template1[[:space:]]*=[[:space:]]*\"[^\"]*\"/template1          = \"$INTERFACE_NAME\"/" "$SCRIPT_DIR/calendar/sys-small2.rc"
+    echo -e "${GREEN}✓ Updated calendar/sys-small2.rc${NC}"
+else
+    echo -e "${YELLOW}⚠ File calendar/sys-small2.rc not found${NC}"
 fi
 
 if [ -f "$SCRIPT_DIR/vnstat/settings.lua" ]; then

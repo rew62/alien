@@ -22,7 +22,19 @@ local ok, lib = pcall(require, "cjson")
     end
 end
 
-local IFACE      = "wlp2s0"    -- default; overridden by var_NETWORK from settings.lua
+local function _read_env_iface()
+    local home = os.getenv("HOME") or ""
+    local f = io.open(home .. "/.conky/alien/.env", "r")
+    if f then
+        for line in f:lines() do
+            local v = line:match("^INTERFACE_NAME=(.+)$")
+            if v then f:close(); return v:gsub('"',''):gsub("'","") end
+        end
+        f:close()
+    end
+    return "eth0"
+end
+local IFACE = _read_env_iface()   -- overridden by var_NETWORK from settings.lua at runtime
 local MAX_HOURS  = 10          -- how many hourly rows to show
 local MAX_DAYS   = 21          -- how many daily rows to show
 

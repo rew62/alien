@@ -19,7 +19,19 @@ local DW = 1400
 local DH = 800
 
 -- ── User config ───────────────────────────────────────────────────────────────
-local NET_IFACE   = "wlp2s0"
+local function _read_env_iface()
+    local home = os.getenv("HOME") or ""
+    local f = io.open(home .. "/.conky/alien/.env", "r")
+    if f then
+        for line in f:lines() do
+            local v = line:match("^INTERFACE_NAME=(.+)$")
+            if v then f:close(); return v:gsub('"',''):gsub("'","") end
+        end
+        f:close()
+    end
+    return "eth0"
+end
+local NET_IFACE   = _read_env_iface()
 local NET_MAX_KBS = 1250     -- ceiling for 100 % fill: 1250 KiB/s = 10 Mbps
 local LOAD_CEIL   = 2.0      -- load average that pegs nose to max droop
 --local LINE_R      = 0.33   -- line/outline color (RGB, 0.0–1.0 each)

@@ -73,7 +73,7 @@ local function date_num(d)
 end
 
 function conky_draw_vnstat_summary()
-    local iface_name = var_NETWORK or "wlp2s0"
+    local iface_name = var_NETWORK or "eth0"
     local data = get_vnstat(iface_name)
 
     if not data then

@@ -392,7 +392,7 @@ This file defines:
 
 ### Media
 
-* `playerctl` — MPRIS media player control; used by `song-info.rc`
+* `playerctl` — MPRIS media player control; used by `song-info.rc`, `playerctl.rc`
 
 ### Fonts
 

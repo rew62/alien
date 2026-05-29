@@ -5,6 +5,7 @@ conky.config = {
 -- ─────────────────────────────────────────────────────────────────────────────
 
 -- Window
+    background            = false,
     own_window            = true,
     own_window_type       = 'normal',
     own_window_transparent = true,
@@ -14,9 +15,9 @@ conky.config = {
     own_window_hints      = 'undecorated,sticky,skip_taskbar,skip_pager,below',
 
 -- Size & position  (adjust gap_x / gap_y to taste)
-    alignment             = 'top_left',
-    gap_x                 =  20,
-    gap_y                 =  40,
+    alignment             = 'bottom_middle',
+    gap_x                 =  0,
+    gap_y                 =  130,
     minimum_width         = 300,
     minimum_height        = 300,
     maximum_width         = 300,

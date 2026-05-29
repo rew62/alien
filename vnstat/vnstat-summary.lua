@@ -18,6 +18,7 @@ else
 end
 
 local C = {
+    tree   = "${color5}",
     sep    = "${color5}",
     header = "${color6}",
     label  = "${color}",

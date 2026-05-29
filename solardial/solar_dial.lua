@@ -14,7 +14,7 @@ local SCRIPT_DIR = debug.getinfo(1,'S').source:match("@?(.*/)" ) or "./"
 
 -- ── Configuration ─────────────────────────────────────────────────────────
 local C = {
-    lat = 40.7128, lon = -74.0060,
+    lat = 40.7128, lon = -74.0060,   -- overridden by .env
 
     cx = 150, cy = 150,
     face_r  = 150,   -- outer widget boundary  (diameter 300 px)

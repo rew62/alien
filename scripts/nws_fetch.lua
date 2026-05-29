@@ -306,7 +306,7 @@ local function fetch_current_obs(grid)
         local humidity      = nv(op.relativeHumidity   and op.relativeHumidity.value)
         local pressure_pa   = nv(op.barometricPressure and op.barometricPressure.value)
         local wind_speed_ms = nv(op.windSpeed          and op.windSpeed.value)
-        local icon_url     = op.icon or ""
+        local icon_url     = type(op.icon) == "string" and op.icon or ""
         local nws_token    = icon_from_url(icon_url)
         local is_day       = icon_url:find("/day/") ~= nil
 

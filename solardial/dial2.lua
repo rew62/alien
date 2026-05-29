@@ -24,7 +24,7 @@ local OFFSET_Y = 15
 -- Set THEME = "ghost" for any wallpaper: day vanishes, night is dark navy
 ----------------------------------------------------------
 
-local THEME = "ghost"
+local THEME = "light"
 
 local function lerp(a, b, t) return a + (b - a) * t end
 
@@ -78,9 +78,9 @@ local THEMES = {
     },
     light = {
         -- pale green bezel
-        bezel_fill     = { 0.596, 0.984, 0.596, 0.90 },
+        bezel_fill     = { 1.00, 1.00, 1.00, 0.20 },
         -- ring stroke
-        ring_stroke    = { 0.20, 0.25, 0.40, 0.55 },
+        ring_stroke    = { 1.00, 1.00, 1.00, 0.55 },
         -- ticks
         tick           = { 1.00, 1.00, 1.00 },
         tick_hi_a      = 0.60,
@@ -112,10 +112,10 @@ local THEMES = {
                 return lerp(0.65,0.88,t), lerp(0.48,0.62,t), lerp(0.60,0.48,t), lerp(0.70,0.62,t)
             elseif alt <   6 then local t = alt/6
                 return lerp(0.88,0.72,t), lerp(0.62,0.78,t), lerp(0.48,0.56,t), lerp(0.62,0.58,t)
-            else  return 0.52, 0.74, 0.92, 0.55
+            else  return 0.52, 0.74, 0.92, 0.30
             end
         end,
-        frosted_base  = true,
+        frosted_base  = false,
         annular_bezel = false,
         vignette      = { 0.35, 0.08, 0.00 },
         atm_alphas    = { 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 },

@@ -51,13 +51,13 @@ conky.config = {
 conky.text = [[
 # Day of week header (S M T W T F S)
 ${voffset 15}${alignc}${font2}\
-${if_match ${time %u}==7}${font1}${color4}S${font2}${else}${color2}S${endif}  \
-${if_match ${time %u}==1}${font1}${color4}M${font2}${else}${color2}M${endif}  \
-${if_match ${time %u}==2}${font1}${color4}T${font2}${else}${color2}T${endif}  \
-${if_match ${time %u}==3}${font1}${color4}W${font2}${else}${color2}W${endif}  \
-${if_match ${time %u}==4}${font1}${color4}T${font2}${else}${color2}T${endif}  \
-${if_match ${time %u}==5}${font1}${color4}F${font2}${else}${color2}F${endif}  \
-${if_match ${time %u}==6}${font1}${color4}S${font2}${else}${color2}S${endif}
+${if_match ${time %u}==7}${font1}${color4}S${font2}${else}${color1}S${endif}  \
+${if_match ${time %u}==1}${font1}${color4}M${font2}${else}${color1}M${endif}  \
+${if_match ${time %u}==2}${font1}${color4}T${font2}${else}${color1}T${endif}  \
+${if_match ${time %u}==3}${font1}${color4}W${font2}${else}${color1}W${endif}  \
+${if_match ${time %u}==4}${font1}${color4}T${font2}${else}${color1}T${endif}  \
+${if_match ${time %u}==5}${font1}${color4}F${font2}${else}${color1}F${endif}  \
+${if_match ${time %u}==6}${font1}${color4}S${font2}${else}${color1}S${endif}
 # Large date number
 ${voffset 3}${alignc}${font Metropolis:size=56:weight=light}${color3}${time %d}
 ${voffset -115}
@@ -77,4 +77,6 @@ ${if_match ${time %m}==11}${color FFB74D}${endif}\
 ${if_match ${time %m}==12}${color A1887F}${endif}\
 ${time %B}
 # Two numbers at bottom (you can customize these)
-${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color1}${time %H} ${color5}|${color1} ${time %M}]]
+# ${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color1}${time %H} ${color5}|${color1} ${time %M}
+# ${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color1}${time %l} ${color5}|${color1} ${time %M} ${color5}${time %P}
+${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color5}${time %l}:${time %M} ${font GE Inspira:size=22:weight=light}${time %P}]]

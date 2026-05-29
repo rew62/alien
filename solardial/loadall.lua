@@ -15,7 +15,7 @@ local function try_require(modname)
 end
 
 try_require("allcombined2")
-try_require("dial")
+try_require("dial2")
 
 function conky_main()
     if conky_window == nil then return end

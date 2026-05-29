@@ -20,11 +20,11 @@ end
 conky_script_name = conky_config:match("([^/]+)$")
 print("Script Name: " .. conky_script_name)
 
-if conky_script_name == "full.rc"                  then conky_title = "weather"   end
-if conky_script_name == "nws_forecast_small.rc"       then conky_title = "weather forecast"         end
-if conky_script_name == "nws_forecast_sidepanel.rc"   then conky_title = "weather forecast sidepanel" end
-if conky_script_name == "owm_current_top.rc"       then conky_title = "current conditions" end
-if conky_script_name == "owm_current_sidepanel.rc" then conky_title = "current conditions" end
+if conky_script_name == "full.rc"                  then conky_title = "weather"             end
+if conky_script_name == "nws_forecast_small.rc"       then conky_title = "weather forecast" end
+if conky_script_name == "nws_forecast_sidepanel.rc"   then conky_title = "weather forecast" end
+if conky_script_name == "owm_current_top.rc"       then conky_title = "current conditions"  end
+if conky_script_name == "owm_current_sidepanel.rc" then conky_title = "current conditions"  end
 
 local sizes = {
     ["full.rc"]                  = { w = 302, h = 262 },

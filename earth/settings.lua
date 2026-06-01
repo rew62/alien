@@ -6,8 +6,8 @@ package.path = package.path .. ";./?.lua;../?.lua;scripts/?.lua;../scripts/?.lua
 theme = require("theme")
 
 -- override just one thing
-bg_color = 0xff0000
-bgtab = '{10,0,0,0,0,0x000000,0.7,3,2,0x89b4fa,1.0}'
+--bg_color = 0xff0000
+--bgtab = '{10,0,0,0,0,0x000000,0.7,3,2,0x89b4fa,1.0}'
 
 -- fill in the rest from theme
 for k, v in pairs(theme) do

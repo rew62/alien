@@ -4,9 +4,9 @@
 conky.config = {
 
 -- Size and Position --
-   alignment = 'mm',
-   gap_x = 0,
-   gap_y = -360,
+   alignment = 'tr',
+   gap_x = 600,
+   gap_y = 50,
    minimum_height = 130,
    minimum_width = 200,
    maximum_width = 200,

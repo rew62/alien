@@ -20,10 +20,10 @@ run_font_check() {
     echo -e "${BLUE}Checking fonts...${NC}"
     echo "================================"
     {
-        grep -roh --exclude-dir=dev '{font [^}]*}' "$SCRIPT_DIR" | \
+        grep -roh --exclude-dir=.git --exclude-dir=dev -I '{font [^}]*}' "$SCRIPT_DIR" | \
             grep -o '{font [^:}]*' | \
             sed 's/{font //';
-        grep -rh --exclude-dir=dev "font[0-9]\+ *= *'[^']*'" "$SCRIPT_DIR" | \
+        grep -rh --exclude-dir=.git --exclude-dir=dev -I "font[0-9]\+ *= *'[^']*'" "$SCRIPT_DIR" | \
             grep -v '^\s*--' | \
             grep -o "font[0-9]\+ *= *'[^']*'" | \
             grep -o "'[^']*'" | \
@@ -98,6 +98,113 @@ get_default_interface() {
     echo "$iface"
 }
 
+# ── Geolocation helper ────────────────────────────────────────────────────
+_geo_json_get() {
+    local json="$1" key="$2"
+    if command -v jq &>/dev/null; then
+        echo "$json" | jq -r "${key} // empty" 2>/dev/null
+    else
+        python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    keys = '${key}'.lstrip('.').split('.')
+    v = d
+    for k in keys:
+        v = v[k]
+    print(v if v is not None else '')
+except Exception:
+    pass
+" <<< "$json" 2>/dev/null
+    fi
+}
+
+# ── Geolocation function ──────────────────────────────────────────────────
+run_geolocation() {
+    echo -e "${BLUE}Detecting location...${NC}"
+    local _lat="" _lon="" _source="" GEOCLUE_CMD=""
+
+    for _path in "/usr/libexec/geoclue-2.0/demos/where-am-i" "/usr/lib/geoclue-2.0/demos/where-am-i" "/usr/bin/where-am-i"; do
+        [[ -x "$_path" ]] && GEOCLUE_CMD="$_path" && break
+    done
+
+    if [[ -n "$GEOCLUE_CMD" ]]; then
+        local _agent="/usr/lib/geoclue-2.0/demos/agent"
+        if [[ -x "$_agent" ]] && ! pgrep -f "$_agent" >/dev/null; then
+            "$_agent" &>/dev/null &
+            disown
+        fi
+        local _gc_data
+        _gc_data=$(timeout 3s "$GEOCLUE_CMD" --timeout=2 2>/dev/null) || _gc_data=""
+        if [[ -n "$_gc_data" ]]; then
+            _lat=$(echo "$_gc_data" | grep "Latitude:"  | cut -d: -f2 | tr -d '[:space:]' | sed 's/[^0-9.-]//g')
+            _lon=$(echo "$_gc_data" | grep "Longitude:" | cut -d: -f2 | tr -d '[:space:]' | sed 's/[^0-9.-]//g' | sed 's/\.$//')
+            _source="geoclue"
+        fi
+    fi
+
+    if [[ -z "$_lat" || "$_lat" == "null" ]] && command -v python3 &>/dev/null; then
+        local _py_data
+        _py_data=$(python3 - 2>/dev/null <<'PYEOF'
+import gi, sys
+try:
+    gi.require_version('Geoclue', '2.0')
+    from gi.repository import Geoclue
+    client = Geoclue.Simple.new_sync('get-location', Geoclue.AccuracyLevel.EXACT, None)
+    loc = client.get_location()
+    print(loc.get_property('latitude'))
+    print(loc.get_property('longitude'))
+except Exception:
+    sys.exit(1)
+PYEOF
+) || _py_data=""
+        if [[ -n "$_py_data" ]]; then
+            _lat=$(echo "$_py_data" | sed -n '1p')
+            _lon=$(echo "$_py_data" | sed -n '2p')
+            _source="geoclue-dbus"
+        fi
+    fi
+
+    if [[ -z "$_lat" || "$_lat" == "null" ]]; then
+        local _providers=(
+            "https://ipapi.co/json|.latitude|.longitude"
+            "https://freeipapi.com/api/json|.latitude|.longitude"
+            "http://ip-api.com/json|.lat|.lon"
+            "https://ipinfo.io/json|.loc|"
+        )
+        local _purl _lpath _lonpath _gdata _loc
+        for _pentry in "${_providers[@]}"; do
+            IFS='|' read -r _purl _lpath _lonpath <<< "$_pentry"
+            _gdata=$(curl -s --max-time 5 -k "$_purl" 2>/dev/null || wget -qO- -T 5 --no-check-certificate "$_purl" 2>/dev/null) || _gdata=""
+            [[ -z "$_gdata" ]] && continue
+            if [[ "$_lpath" == ".loc" ]]; then
+                _loc=$(_geo_json_get "$_gdata" ".loc") || _loc=""
+                if [[ "$_loc" =~ ^(-?[0-9]+\.?[0-9]*),(-?[0-9]+\.?[0-9]*)$ ]]; then
+                    _lat="${BASH_REMATCH[1]}"
+                    _lon="${BASH_REMATCH[2]}"
+                fi
+            else
+                _lat=$(_geo_json_get "$_gdata" "$_lpath") || _lat=""
+                _lon=$(_geo_json_get "$_gdata" "$_lonpath") || _lon=""
+            fi
+            if [[ -n "$_lat" && "$_lat" != "null" && "$_lat" =~ ^-?[0-9]+(\.[0-9]+)?$ ]]; then
+                _source="$_purl"
+                break
+            else
+                _lat="" _lon=""
+            fi
+        done
+    fi
+
+    if [[ -n "$_lat" && "$_lat" =~ ^-?[0-9]+(\.[0-9]+)?$ ]]; then
+        LAT="$_lat"
+        LON="$_lon"
+        echo -e "${GREEN}✓ Location detected: $LAT, $LON (via $_source)${NC}"
+    else
+        echo -e "${YELLOW}⚠ Could not determine location automatically.${NC}"
+    fi
+}
+
 # ─────────────────────────────────────────────────────────────────────────
 echo -e "${BLUE}Configuration Script${NC}"
 echo "================================"
@@ -148,6 +255,13 @@ else
     INTERFACE_NAME=$(get_default_interface)
     CRONPATH="$USER"
     echo -e "${YELLOW}No existing configuration found. Please enter your settings.${NC}"
+    echo
+fi
+
+# ── Geolocation prompt ────────────────────────────────────────────────────
+read -p "Identify current location? (yes/no): " GET_LOC
+if [[ "$GET_LOC" =~ ^[Yy][Ee]?[Ss]?$ ]]; then
+    run_geolocation
     echo
 fi
 

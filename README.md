@@ -68,7 +68,7 @@ This will:
   * `OWM_API_KEY` — OpenWeatherMap API key
   * `FINNHUB_API_KEY` — FinnHub API key (stocks widget)
   * `CITY_ID` — OWM city ID
-  * `LAT` / `LON` — Latitude and longitude
+  * `LAT` / `LON` — Latitude and longitude (auto-detected via GeoClue or IP geolocation if you accept the prompt)
   * `UNITS` — `metric` (Celsius) or `imperial` (Fahrenheit)
   * `LANG` — Language code (e.g. `en`, `fr`, `de`)
   * `ICON_SOURCE` — `cdn` or `local` weather icons
@@ -78,6 +78,7 @@ This will:
 * Patch `calendar/sys-small.rc` with the active network interface
 * Patch `vnstat/vnstat.lua` with the active network interface
 * Update `earth/crontab` with the correct home path (if present)
+* Optionally auto-detect your latitude/longitude via GeoClue (if available) or IP geolocation, pre-filling the `LAT`/`LON` defaults
 * Run a font availability check (`configure-alien.sh`) or install all bundled fonts from `fonts/` and then check (`configure-alien2.sh`)
 
 See `.env-example` for the format reference.

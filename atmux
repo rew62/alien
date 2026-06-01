@@ -43,11 +43,12 @@ MAP[eas]="~/.conky/rew62/system|system.rc"
 MAP[ean]="~/.conky/rew62/network|network.rc"
 MAP[eaq]="~/.conky/rew62/music/eq/|eq.rc"
 MAP[eam]="~/.conky/rew62/moon|moon.rc"
+MAP[auzia]="~/.conky/auzia-conky|auzia.rc"
 
 # --- Named groups ---
 declare -A NAMED_GROUPS
 
-NAMED_GROUPS[stack1]="h2 a sc mc sd wfs mp n vs"
+NAMED_GROUPS[stack1]="h2 a sc mc sd wfs mp n vs auzia kr sdr"
 NAMED_GROUPS[stack2]="h2 lc wf"
 NAMED_GROUPS[default]="h2 s2 a g t m wf ac vs r e \$ tm"
 
@@ -86,6 +87,7 @@ show_help() {
     echo "    sdr         solardial ring"
     echo "    kr          killroy was here!"
     echo "    ac2         clock variant with sweep rings"
+    echo "    auzia       auzia rings"
     echo "    all         launch everything"
     echo ""
     echo "  Groups:"

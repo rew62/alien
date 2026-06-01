@@ -10,7 +10,7 @@ conky.config = {
 
     own_window = true,
     own_window_type = 'normal',
-    own_window_hints  = 'undecorated',
+    own_window_hints  = 'undecorated,sticky,skip_taskbar,skip_pager,below',
     own_window_title  = 'solardial',
 
     own_window_transparent = true,

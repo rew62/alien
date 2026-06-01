@@ -79,4 +79,4 @@ ${time %B}
 # Two numbers at bottom (you can customize these)
 # ${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color1}${time %H} ${color5}|${color1} ${time %M}
 # ${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color1}${time %l} ${color5}|${color1} ${time %M} ${color5}${time %P}
-${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color5}${time %l}:${time %M} ${font GE Inspira:size=22:weight=light}${time %P}]]
+${voffset 2}${alignc}${font GE Inspira:size=32:weight=light}${color5}${time %l}:${time %M}${font GE Inspira:size=22:weight=light}${if_match ${time %H}<12}a${else}p${endif}]]

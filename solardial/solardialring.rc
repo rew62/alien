@@ -44,7 +44,7 @@ conky.config = {
     use_spacer            = 'none',
 
 -- Lua
-    lua_load              = '~/.conky/solardial/solar_dial.lua',
+    lua_load              = '~/.conky/alien/solardial/solar_dial.lua',
     lua_draw_hook_post    = 'draw_solar_dial',
 }
 

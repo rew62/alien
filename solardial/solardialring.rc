@@ -12,6 +12,7 @@ conky.config = {
     own_window_argb_visual = true,
     own_window_argb_value  = 0,
     own_window_class      = 'Conky',
+    own_window_title      = 'solardialring',
     own_window_hints      = 'undecorated,sticky,skip_taskbar,skip_pager,below',
 
 -- Size & position  (adjust gap_x / gap_y to taste)

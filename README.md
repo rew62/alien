@@ -353,6 +353,17 @@ With no arguments it launches the `default` group. Use `atmux help` to list all 
   | `earth` | `earth` | `earth/earth.rc` |
   | `gcal` | `gcal` | `gcal/gcal.rc` |
   | `stocks` | `stocks` | `stocks/ticker.rc` |
+  | `aclock` | `aclock` | `aclock/aclock.rc` |
+  | `c2` | `c2` | `clock/alien-clock2.lua` |
+  | `multimon` | `multimon` | `calendar/multimon.rc` |
+  | `sp-playerctl` | `sp-playerctl` | `music/playerctl.rc` |
+  | `solardial` | `solardial` | `solardial/solardial.rc` |
+  | `solardialring` | `solardialring` | `solardial/solardialring.rc` |
+  | `terminator` | `terminator` | `terminator/terminator.rc` |
+  | `sp-net` | `sp-net` | `vnstat/net.rc` |
+  | `wcs` | `w-sidepanel` | `weather/owm_current_sidepanel.rc` |
+  | `wfs` | `w-forecast-sidepanel` | `weather/nws_forecast_sidepanel.rc` |
+  | `killroy` | `killroy` | `utils/kroy.lua` |
 
 * **`rc`** — Place in your `~/bin` or any directory on `PATH`. Run any conky script with `rc conky`, saving keystrokes. Useful for launching individual conkys quickly.
 

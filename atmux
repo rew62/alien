@@ -109,7 +109,7 @@ if [[ "$1" == "help" || "$1" == "--help" || "$1" == "-h" ]]; then
 fi
 
 # --- Quit ---
-if [[ "$1" == "quit" ]]; then
+if [[ "$1" == "quit" || "$1" == "stop" ]]; then
     tmux kill-session -t "$SESSION" && echo "Killed session: $SESSION" || echo "No session named $SESSION"
     exit
 fi

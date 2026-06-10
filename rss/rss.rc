@@ -30,6 +30,7 @@ conky.config = {
     lua_load = './settings.lua ./loadall.lua',
     lua_draw_hook_post = 'main',
     lua_startup_hook = 'startup',
+    lua_mouse_hook = 'mouse_hook',
 };
 
 conky.text = [[

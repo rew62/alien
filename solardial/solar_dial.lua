@@ -372,6 +372,10 @@ function conky_draw_solar_dial()
     -- ── 7. Sun dot ────────────────────────────────────────────────────────
     local sa=h2a(cur_h)
     local sx=cx+C.arc_r*math.cos(sa); local sy=cy+C.arc_r*math.sin(sa)
+    cairo_new_path(cr)
+    cairo_move_to(cr, cx, cy)
+    cairo_line_to(cr, cx+(C.arc_r+9+8)*math.cos(sa), cy+(C.arc_r+9+8)*math.sin(sa))
+    cairo_set_source_rgba(cr,1,1,1,0.55); cairo_set_line_width(cr,1.0); cairo_stroke(cr)
     local dr,dg,db
     if cur_alt>0 then dr,dg,db=1.00,0.92,0.35
     elseif cur_alt>-8 then
@@ -381,9 +385,26 @@ function conky_draw_solar_dial()
         cairo_arc(cr,sx,sy,i,0,TWO_PI)
         cairo_set_source_rgba(cr,dr,dg,db, 0.030*(17-i)/16); cairo_fill(cr)
     end
-    cairo_arc(cr,sx,sy,9,0,TWO_PI); cairo_set_source_rgba(cr,dr,dg,db,1.0); cairo_fill(cr)
-    cairo_arc(cr,sx,sy,9,0,TWO_PI); cairo_set_source_rgba(cr,0,0,0,0.40); cairo_set_line_width(cr,2.2); cairo_stroke(cr)
-    cairo_arc(cr,sx-3,sy-3,3,0,TWO_PI); cairo_set_source_rgba(cr,1,1,1,0.50); cairo_fill(cr)
+    -- split disc: radial split line (center→sun) within ±2° of alt=0
+    -- local +y = clockwise tangent; morning rotates extra π so day side is always local −y
+    local dot_r=9; local split_alt=2
+    if cur_alt>=split_alt then
+        cairo_arc(cr,sx,sy,dot_r,0,TWO_PI); cairo_set_source_rgba(cr,1.00,0.92,0.35,1.0); cairo_fill(cr)
+    elseif cur_alt<=-split_alt then
+        cairo_arc(cr,sx,sy,dot_r,0,TWO_PI); cairo_set_source_rgba(cr,0.40,0.50,0.75,1.0); cairo_fill(cr)
+    else
+        local hr=clamp(cur_alt/split_alt,-1,1)*dot_r
+        local rot=(cur_h<(ev.noon or 12)) and (sa+math.pi) or sa
+        cairo_save(cr); cairo_translate(cr,sx,sy); cairo_rotate(cr,rot)
+        cairo_save(cr); cairo_rectangle(cr,-dot_r-1,-dot_r-1,dot_r*2+2,hr+dot_r+1); cairo_clip(cr)
+        cairo_arc(cr,0,0,dot_r,0,TWO_PI); cairo_set_source_rgba(cr,1.00,0.92,0.35,1.0); cairo_fill(cr); cairo_restore(cr)
+        -- dark half (below horizon); remove these 2 lines to let sky show through instead
+        cairo_save(cr); cairo_rectangle(cr,-dot_r-1,hr,dot_r*2+2,dot_r+1-hr); cairo_clip(cr)
+        cairo_arc(cr,0,0,dot_r,0,TWO_PI); cairo_set_source_rgba(cr,0.40,0.50,0.75,1.0); cairo_fill(cr); cairo_restore(cr)
+        cairo_restore(cr)
+    end
+    cairo_arc(cr,sx,sy,dot_r,0,TWO_PI); cairo_set_source_rgba(cr,0,0,0,0.40); cairo_set_line_width(cr,2.2); cairo_stroke(cr)
+    if cur_alt>0 then cairo_arc(cr,sx-3,sy-3,3,0,TWO_PI); cairo_set_source_rgba(cr,1,1,1,0.50); cairo_fill(cr) end
 
     -- ── 8. Central frosted clock disc ─────────────────────────────────────
     local cg=cairo_pattern_create_radial(cx,cy,0, cx,cy,C.clock_r)

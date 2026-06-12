@@ -1,3 +1,5 @@
+local HOME = os.getenv("HOME") or ""
+
 conky.config = {
 -- ─────────────────────────────────────────────────────────────────────────────
 --  Solar Dial  –  Apple Watch–style 24-hour solar face
@@ -45,7 +47,7 @@ conky.config = {
     use_spacer            = 'none',
 
 -- Lua
-    lua_load              = '~/.conky/alien/solardial/solar_dial.lua',
+    lua_load              = HOME .. '/.conky/alien/solardial/solar_dial.lua',
     lua_draw_hook_post    = 'draw_solar_dial',
 }
 

@@ -596,8 +596,10 @@ local function draw_moon_phase(cr, cx, cy)
   cairo_show_text(cr, sym)
 
   -- ── Row 2: moonrise (right/east) and moonset (left/west) ─────────────────
-  local rise_ts = read_sky_num("MOON_RISE_TS")
-  local set_ts  = read_sky_num("MOON_SET_TS")
+  local rise_ts  = read_sky_num("MOON_RISE_TS")
+  local set_ts   = read_sky_num("MOON_SET_TS")
+  local moon_alt = read_sky_num("MOON_ALT")
+  if moon_alt and moon_alt <= 0 then set_ts = nil end
 
   local function fmt_time(ts)
     if not ts then return nil end

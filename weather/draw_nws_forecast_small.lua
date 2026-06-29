@@ -72,7 +72,7 @@ local COL_DIM    = { 0.55, 0.55, 0.55, 1.00 }
 -- -----------------------------------------------------------------------
 -- ICON HELPERS  (MET Norway via jsDelivr CDN)
 -- -----------------------------------------------------------------------
-local ICON_DIR   = "/dev/shm/conky_icons/"
+local ICON_DIR   = "/dev/shm/conky/icons/"
 local METNO_BASE = "https://cdn.jsdelivr.net/gh/metno/weathericons@main/weather/png/"
 
 local _mtime_cache   = nil
@@ -80,7 +80,7 @@ local _mtime_checked = 0
 
 do
     os.execute("mkdir -p " .. ICON_DIR)
-    local h = io.popen("stat -c %Y /dev/shm/nws_forecast.json 2>/dev/null")
+    local h = io.popen("stat -c %Y /dev/shm/conky/nws_forecast.json 2>/dev/null")
     if h then
         _mtime_cache   = tonumber(h:read("*l"))
         _mtime_checked = os.time()
@@ -153,7 +153,7 @@ end
 local function cache_mtime()
     local now = os.time()
     if _mtime_cache and (now - _mtime_checked) < 300 then return _mtime_cache end
-    local h = io.popen("stat -c %Y /dev/shm/nws_forecast.json 2>/dev/null")
+    local h = io.popen("stat -c %Y /dev/shm/conky/nws_forecast.json 2>/dev/null")
     if not h then return _mtime_cache end
     local t = tonumber(h:read("*l"))
     h:close()

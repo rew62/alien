@@ -17,7 +17,7 @@ local Y_OFFSET     = 7      -- shift content down within the window
 -- -----------------------------------------------------------------------
 -- INTERNAL SETTINGS
 -- -----------------------------------------------------------------------
-local ICON_DIR  = "/dev/shm/conky_icons/"
+local ICON_DIR  = "/dev/shm/conky/icons/"
 local WIN_W     = 318       -- window width (325) minus X_OFFSET
 local PAD       = 12
 local FONT_NAME = cairo_font or "DejaVuSansM Nerd Font Propo"
@@ -41,7 +41,7 @@ local _mtime_checked = 0
 
 do
     os.execute("mkdir -p " .. ICON_DIR)
-    local h = io.popen("stat -c %Y /dev/shm/nws_forecast.json 2>/dev/null")
+    local h = io.popen("stat -c %Y /dev/shm/conky/nws_forecast.json 2>/dev/null")
     if h then
         _mtime_cache   = tonumber(h:read("*l"))
         _mtime_checked = os.time()
@@ -174,7 +174,7 @@ local function cache_update_time()
     if _mtime_cache and (now - _mtime_checked) < 300 then
         return os.date("%I:%M %p", _mtime_cache):gsub("^0", "")
     end
-    local h = io.popen("stat -c %Y /dev/shm/nws_forecast.json 2>/dev/null")
+    local h = io.popen("stat -c %Y /dev/shm/conky/nws_forecast.json 2>/dev/null")
     if not h then return _mtime_cache and os.date("%I:%M %p", _mtime_cache):gsub("^0", "") or "" end
     local t = tonumber(h:read("*l"))
     h:close()

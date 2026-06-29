@@ -5,7 +5,7 @@
 local M = {}
 
 local RSS_DIR   = os.getenv("HOME") .. "/.conky/alien/rss"
-local CACHE_DIR = "/dev/shm/rss"
+local CACHE_DIR = "/dev/shm/conky/rss"
 local FEEDS     = RSS_DIR .. "/feeds.conf"
 local IDX_FILE  = CACHE_DIR .. "/feed_idx"
 local MAP_FILE  = CACHE_DIR .. "/rss.map"

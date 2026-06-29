@@ -132,8 +132,8 @@ local function wind_cardinal(deg)
 end
 
 local function generate_wind_arrow(speed, deg)
-    local svg_path = "/dev/shm/owm_wind.svg"
-    local png_path = "/dev/shm/owm_wind.png"
+    local svg_path = "/dev/shm/conky/owm_wind.svg"
+    local png_path = "/dev/shm/conky/owm_wind.png"
     local arrow_deg = (deg + 180) % 360
     local thick = math.min(1 + speed / 3.0, 12)
     local color = speed >= 40 and "#ff0000" or speed >= 15 and "#ffff00" or "white"

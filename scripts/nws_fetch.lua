@@ -27,8 +27,8 @@ local NWS_STATION     = _env.NWS_STATION or nil   -- optional override, e.g. NWS
 local USER_AGENT      = "conky-nws-weather/1.0"
 
 local GRID_CACHE_FILE = "/tmp/nws_grid.json"
-local FCST_CACHE_FILE = "/dev/shm/nws_forecast.json"
-local CURR_CACHE_FILE = "/dev/shm/nws_current.json"
+local FCST_CACHE_FILE = "/dev/shm/conky/nws_forecast.json"
+local CURR_CACHE_FILE = "/dev/shm/conky/nws_current.json"
 local GRID_CACHE_DAYS = 14
 local FCST_CACHE_MINS = 30
 local CURR_CACHE_MINS = 10

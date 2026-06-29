@@ -11,12 +11,12 @@
 --
 -- In CORNER_POS use: { cx = 150, cy = 150, r = 150 }
 --
--- Reads /dev/shm/wttr/weather.json (°F), cached per minute.
+-- Reads /dev/shm/conky/wttr/weather.json (°F), cached per minute.
 -- v1.0 2026-05-16 @rew62
 
 local M = {}
 
-local WEATHER_FILE = "/dev/shm/wttr/weather.json"
+local WEATHER_FILE = "/dev/shm/conky/wttr/weather.json"
 
 -- Derive this file's directory so we can find the shared .env
 local _DIR = debug.getinfo(1, "S").source:match("@?(.*/)")  or "./"
@@ -55,12 +55,12 @@ local function ensure_weather_file()
     -- Validate before injecting into shell command
     if tonumber(lat) and tonumber(lon) then
         os.execute(
-            "mkdir -p /dev/shm/wttr"
-            .. " && mkdir /dev/shm/wttr/.fetching 2>/dev/null"
+            "mkdir -p /dev/shm/conky/wttr"
+            .. " && mkdir /dev/shm/conky/wttr/.fetching 2>/dev/null"
             .. " && (curl -s 'https://wttr.in/"
             .. lat .. "," .. lon .. "?format=j1'"
-            .. " -o /dev/shm/wttr/weather.json"
-            .. "; rmdir /dev/shm/wttr/.fetching) &"
+            .. " -o /dev/shm/conky/wttr/weather.json"
+            .. "; rmdir /dev/shm/conky/wttr/.fetching) &"
         )
     end
 end

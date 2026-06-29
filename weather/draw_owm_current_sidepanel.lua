@@ -18,7 +18,7 @@ require 'cairo'
 ------------------------------------------------------------------------
 -- Metno icon helper
 ------------------------------------------------------------------------
-local METNO_CACHE = "/dev/shm/conky_icons/"
+local METNO_CACHE = "/dev/shm/conky/icons/"
 local METNO_BASE  = "https://cdn.jsdelivr.net/gh/metno/weathericons@main/weather/png/"
 
 local _owm_mtime_cache   = nil

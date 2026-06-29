@@ -44,6 +44,6 @@ conky.config = {
 }
 
 conky.text = [[
-${image /dev/shm/earth.png -p 5,15 -s 190x190}
-${voffset 165}${alignr 5}${font MonaspiceNe Nerd Font Mono:size=8}${execi 10 date -r /dev/shm/earth.png "+%-m/%-d/%Y %-I:%M%p" | sed 's/AM/a/;s/PM/p/'}
+${image /dev/shm/conky/earth.png -p 5,15 -s 190x190}
+${voffset 165}${alignr 5}${font MonaspiceNe Nerd Font Mono:size=8}${execi 10 date -r /dev/shm/conky/earth.png "+%-m/%-d/%Y %-I:%M%p" | sed 's/AM/a/;s/PM/p/'}
 ]]

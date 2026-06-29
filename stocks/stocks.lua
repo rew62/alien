@@ -3,7 +3,7 @@
 -- Reads symbols.conf, fetches from Finnhub, caches to /dev/shm, renders table
 
 local HOME      = os.getenv("HOME")
-local CACHE_DIR = "/dev/shm/stock_cache"
+local CACHE_DIR = "/dev/shm/conky/stocks"
 local CACHE_TTL = 120
 local ENV_FILE  = HOME .. "/.conky/alien/.env"
 local CONF_DIR  = HOME .. "/.conky/alien/stocks"

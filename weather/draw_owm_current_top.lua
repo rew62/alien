@@ -14,7 +14,7 @@ require 'cairo'
 ------------------------------------------------------------------------
 -- Metno icon helper
 ------------------------------------------------------------------------
-local METNO_CACHE = "/dev/shm/conky_icons/"
+local METNO_CACHE = "/dev/shm/conky/icons/"
 local METNO_BASE  = "https://cdn.jsdelivr.net/gh/metno/weathericons@main/weather/png/"
 
 local function fetch_metno_icon(name)
@@ -136,7 +136,7 @@ local CFG = {
     COL_WIND_W = 60,
     PAD        = 5,
     ICON_PX    = 48,
-    WIND_PNG   = "/dev/shm/owm_wind.png",
+    WIND_PNG   = "/dev/shm/conky/owm_wind.png",
     WIND_PX    = 36,
     FONT       = cairo_font or "DejaVuSansM Nerd Font Propo",
     SIZE_TEMP  = 48,

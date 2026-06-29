@@ -18,7 +18,7 @@ local GLYPH_DROP     = "\xEF\x81\x83"   -- nf-fa-tint     U+F043
 local GLYPH_UMBRELLA = "\xEF\x83\xA9"   -- nf-fa-umbrella U+F0E9
 local GLYPH_FONT     = "MonaspiceNe Nerd Font Mono"
 local SKY_VARS   = CACHE_DIR .. "/sky.vars"
-local ICON_DIR   = "/dev/shm/conky_icons/"
+local ICON_DIR   = "/dev/shm/conky/icons/"
 local METNO_BASE = "https://cdn.jsdelivr.net/gh/metno/weathericons@main/weather/png/"
 
 -- =========================================================================

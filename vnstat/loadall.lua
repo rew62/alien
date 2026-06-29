@@ -23,6 +23,7 @@ function conky_vars()
     if _orig_vars then _orig_vars() end
     if     conky_script_name == "vnstat.rc"         then try_require("vnstat")
     elseif conky_script_name == "vnstat-summary.rc" then try_require("vnstat-summary")
+    elseif conky_script_name == "vnstat-sum2.rc"    then try_require("vnstat-sum2")
     end
 end
 
@@ -30,7 +31,8 @@ function conky_main()
     if conky_window == nil then return end
 
     conky_draw_bg(bgtab)
-    if conky_script_name == "vnstat.rc" then conky_draw_vnstat() end
+    if conky_script_name == "vnstat.rc"      then conky_draw_vnstat()      end
+    if conky_script_name == "vnstat-sum2.rc" then conky_draw_vnstat_sum2() end
 
     -- One-time window size log
     if not cwsize and conky_window.width > 0 and conky_window.height > 0 then

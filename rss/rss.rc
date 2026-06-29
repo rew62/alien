@@ -34,5 +34,5 @@ conky.config = {
 };
 
 conky.text = [[
-${voffset 10}${execp cat /dev/shm/rss/rss.txt}
+${voffset 10}${execp cat /dev/shm/conky/rss/rss.txt}
 ]];

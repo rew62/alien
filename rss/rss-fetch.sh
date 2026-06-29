@@ -5,7 +5,7 @@
 
 DIR="$(cd "$(dirname "$0")"; pwd)"
 FEEDS="$DIR/feeds.conf"
-CACHE_DIR="/dev/shm/rss"
+CACHE_DIR="/dev/shm/conky/rss"
 IDX_FILE="$CACHE_DIR/feed_idx"
 OUT_TXT="$CACHE_DIR/rss.txt"
 OUT_MAP="$CACHE_DIR/rss.map"

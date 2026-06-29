@@ -12,7 +12,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # File configuration
 #Save Earth.png to SCRIPT_DIR or tempfs. /dev/shm is standard on Debian based systems including Ubuntu and Linux Mint.
-OUTPUT_DIR="/dev/shm"              # or use $SCRIPT_DIR for persistent storage
+OUTPUT_DIR="/dev/shm/conky"        # or use $SCRIPT_DIR for persistent storage
 FILENAME="earth"
 FILE_EXT="png"                     # png or jpg
 

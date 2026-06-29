@@ -23,6 +23,7 @@ print("Script Name: " .. conky_script_name)
 function conky_vars()
     if conky_script_name == "net.rc"             then conky_title = "network"  end
     if conky_script_name == "vnstat-summary.rc"  then conky_title = "vnstat"   end
+    if conky_script_name == "vnstat-sum2.rc"     then conky_title = "vnstat"   end
 
     var_NETWORK = "wlp2s0"
 end

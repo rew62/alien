@@ -12,7 +12,7 @@
 
 local M = {}
 
-local CACHE_DIR  = "/dev/shm/owm"
+local CACHE_DIR  = "/dev/shm/conky"
 local CACHE_FILE = CACHE_DIR .. "/owm_current.json"
 local LOCK_DIR   = CACHE_DIR .. "/.fetching"
 

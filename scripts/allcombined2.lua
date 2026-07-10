@@ -140,7 +140,7 @@ function conky_draw_bg(bgtab)
     if title then
         cairo_select_font_face(cr, title_font, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL)
         cairo_set_font_size(cr, title_size)
-        local ext = cairo_text_extents_t:create()
+        local ext = cairo_text_extents_t:create(); tolua.takeownership(ext)
         cairo_text_extents(cr, title, ext)
         text_w = ext.x_advance
     end
@@ -243,7 +243,7 @@ function conky_draw_bg(bgtab)
         cairo_set_font_size(cr, title_size)
         cairo_set_source_rgba(cr, sr,sg,sb,sa)
 
-        local ext = cairo_text_extents_t:create()
+        local ext = cairo_text_extents_t:create(); tolua.takeownership(ext)
         cairo_text_extents(cr, title, ext)
 
         cairo_move_to(
@@ -505,7 +505,7 @@ local j=txttab[7]
 local txt=txttab[8]
 cairo_select_font_face (cr, f, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 cairo_set_font_size (cr, fs)
-local extents=cairo_text_extents_t:create()
+local extents=cairo_text_extents_t:create(); tolua.takeownership(extents)
 cairo_text_extents(cr,txt,extents)
 local wx=extents.x_advance
 cairo_set_source_rgba (cr,rgb_to_r_g_b({c,a}))

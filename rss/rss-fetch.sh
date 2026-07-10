@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # rss-fetch.sh - Fetch RSS feeds and cache to /dev/shm/rss
 #
-# v1.1 2026-04-09 @rew62
+# v1.2 2026-07-08 @rew62
 
 DIR="$(cd "$(dirname "$0")"; pwd)"
 FEEDS="$DIR/feeds.conf"
@@ -24,7 +24,7 @@ FEED_NAME=$(grep -v '^\s*#\|^\s*$' "$FEEDS" | awk -F'|' -v i="$IDX" 'NR==i {prin
 FEED_URL=$(grep -v '^\s*#\|^\s*$' "$FEEDS" | awk -F'|'  -v i="$IDX" 'NR==i {print $2}')
 
 # fetch XML
-curl -sL "$FEED_URL" -o "$TMP_XML"
+curl -sL --max-time 15 "$FEED_URL" -o "$TMP_XML"
 
 # parse XML and validate in one pass
 ITEMS=$(python3 - "$TMP_XML" "$MAX_ITEMS" <<'PYEOF'
